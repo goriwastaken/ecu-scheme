@@ -53,6 +53,7 @@ gcc_release/
 doc/doxygen/html
 Build*/
 build*/
+cmake*/
 .idea/
 venv/
 
