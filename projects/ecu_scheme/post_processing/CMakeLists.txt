@@ -20,6 +20,7 @@ add_library(${TARGET} ${SOURCES})
 target_compile_definitions(${TARGET} PUBLIC PROJECT_BUILD_DIR=\"${CMAKE_BINARY_DIR}\")
 
 target_link_libraries(${TARGET} PUBLIC ${LIBRARIES})
+set_target_properties(${TARGET} PROPERTIES FOLDER "projects/ecu_scheme")
 target_include_directories(${TARGET} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(${TARGET} PUBLIC cxx_std_17)
 
