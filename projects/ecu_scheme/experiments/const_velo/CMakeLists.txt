@@ -2,6 +2,8 @@ project(projects.ecu_scheme.experiments.const_velo)
 
 set(SOURCES
         const_velo_test.cc
+        const_velo_solution.cc
+        const_velo_solution.h
         )
 
 set(LIBRARIES
@@ -10,6 +12,9 @@ set(LIBRARIES
         lf.io
         lf.mesh
         lf.mesh.hybrid2d
+        lf.mesh.utils
+        lf.uscalfe
+        lf.refinement
         projects.ecu_scheme.mesh
         projects.ecu_scheme.assemble
         projects.ecu_scheme.postprocessing
@@ -17,7 +22,7 @@ set(LIBRARIES
 
 set(TARGET ${PROJECT_NAME})
 
-add_executable(${TARGET} ${SOURCES} const_velo_solution.cc const_velo_solution.h)
+add_executable(${TARGET} ${SOURCES} )
 target_compile_definitions(${TARGET} PRIVATE CURRENT_SOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/${DIR}\")
 target_compile_definitions(${TARGET} PRIVATE CURRENT_BINARY_DIR=\"${CMAKE_CURRENT_BINARY_DIR}\")
 target_link_libraries(${TARGET} ${LIBRARIES})

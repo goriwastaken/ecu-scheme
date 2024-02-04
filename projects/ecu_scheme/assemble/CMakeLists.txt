@@ -4,7 +4,7 @@ set(SOURCES
         diffusion_matrix_provider.cc
         convection_upwind_matrix_provider.h
         convection_upwind_matrix_provider.cc
-        load_vector_provider.h supg_matrix_provider.cc supg_matrix_provider.h)
+        load_vector_provider.h supg_matrix_provider.cc supg_matrix_provider.h lumped_mass_matrix_provider.cc lumped_mass_matrix_provider.h supg_linear_matrix_provider.h supg_linear_matrix_provider.cc)
 set(LIBRARIES
         Eigen3::Eigen
         lf.assemble

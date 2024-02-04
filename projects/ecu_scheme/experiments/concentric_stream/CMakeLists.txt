@@ -11,6 +11,10 @@ set(LIBRARIES
         lf.io
         lf.mesh
         lf.mesh.hybrid2d
+        lf.refinement
+        lf.assemble
+        lf.uscalfe
+        lf.mesh.utils
         projects.ecu_scheme.mesh
         projects.ecu_scheme.assemble
         projects.ecu_scheme.postprocessing

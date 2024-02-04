@@ -1,13 +1,16 @@
 set(SOURCES
         post_processing.h
-        results_processing.h)
+        results_processing.h norms.h)
 set(LIBRARIES
         Eigen3::Eigen
         lf.base
         lf.geometry
         lf.io
+        lf.uscalfe
+        lf.fe
         lf.mesh
         lf.mesh.utils
+        lf.mesh.hybrid2d
         lf.assemble
         projects.ecu_scheme.mesh
         )

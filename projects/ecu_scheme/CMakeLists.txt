@@ -37,6 +37,7 @@ add_custom_target(projects.ecu_scheme.plots)
 #
 ##Enable testing
 #enable_testing()
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,leak,undefined")
 
 #debug show what the source/binary directories are
 message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
