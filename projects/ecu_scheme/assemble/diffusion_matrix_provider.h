@@ -25,7 +25,7 @@ class DiffusionMatrixProvider {
 template <typename SCALAR, typename DIFF_COEFF>
 DiffusionMatrixProvider<SCALAR, DIFF_COEFF>::DiffusionMatrixProvider(
     std::shared_ptr<const lf::fe::ScalarFESpace<SCALAR>> fe_space, DIFF_COEFF d)
-    : fe_space_(std::move(fe_space)), diff_coeff_(std::move(d)) {}
+    : fe_space_(fe_space), diff_coeff_(d) {}
 
 } // assemble
 

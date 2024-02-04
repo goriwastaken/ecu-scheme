@@ -3,7 +3,7 @@
 //
 
 #include "convection_upwind_matrix_provider.h"
-
+#include <Eigen/LU>
 namespace ecu_scheme::assemble {
 
 /**
@@ -70,7 +70,7 @@ Eigen::Matrix<double, 2, 3> computeOutwardNormalsTria(const lf::mesh::Entity &en
   Eigen::Matrix<double, 3, 3> delta;
   delta.block<3,2>(0,0) = corners.transpose();
   delta.block<3,1>(0,2) = Eigen::Vector3d::Ones();
-  const auto det = delta.determinant();
+  const double det = delta.determinant();
   //rotation matrix of angle pi/2 is: 0, -1,
   //                                  1,  0
   const Eigen::Matrix<double,2,2> rotation_matrix = (Eigen::Matrix<double,2,2>() << 0, -1, 1, 0).finished();
@@ -82,6 +82,26 @@ Eigen::Matrix<double, 2, 3> computeOutwardNormalsTria(const lf::mesh::Entity &en
   if(det > 0){
     // flip sign
     normals *= -1;
+  }
+
+  return normals;
+}
+
+Eigen::Matrix<double, 2, 3> computeOutwardNormalsTriaAlt(const lf::mesh::Entity &entity){
+  Eigen::Matrix<double, 2, 3> normals;
+  int idx = 0;
+  for(const lf::mesh::Entity* edge : entity.SubEntities(1)){
+    LF_ASSERT_MSG(idx < 3, "Triangle has more than 3 edges");
+    const lf::geometry::Geometry *geo_ptr = edge->Geometry();
+    const Eigen::MatrixXd corners = lf::geometry::Corners(*geo_ptr);
+    Eigen::Vector2d direction = corners.col(1) - corners.col(0);
+    direction /= direction.norm();
+    normals.col(idx) = Eigen::Vector2d(-direction(1), direction(0));
+    if(normals.col(idx).dot(direction) < 0){
+      normals.col(idx) *= -1;
+    }
+
+    idx++;
   }
 
   return normals;

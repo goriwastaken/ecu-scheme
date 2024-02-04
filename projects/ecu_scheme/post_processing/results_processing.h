@@ -19,8 +19,49 @@
 #include <Eigen/Dense>
 namespace ecu_scheme::post_processing {
 
-//todo wrappers for solution vectors
-//todo method for comparing results
+
+
+/**
+ * @brief Wrapper for storing the solutions at different refinement levels of an experiment
+ * @tparam SCALAR base type of the solution vector
+ */
+template <typename SCALAR>
+struct ExperimentSolutionWrapper{
+  unsigned int refinement_levels;
+  double eps;
+  Eigen::VectorXd max_meshwidth_per_level;
+  std::shared_ptr<lf::refinement::MeshHierarchy> mesh_hierarchy_p;
+  std::vector<Eigen::VectorXd> final_time_solutions;
+};
+
+
+Eigen::Vector2d linearFit(const Eigen::VectorXd& x, const Eigen::VectorXd& y){
+  assert(x.rows() == y.rows());
+  Eigen::Matrix<double, Eigen::Dynamic, 2> X(x.rows(), 2);
+
+  X.col(0) = Eigen::VectorXd::Constant(x.rows(), 1.0);
+  X.col(1) = x;
+
+  return X.fullPivHouseholderQr().solve(y);
+}
+
+double eoc(Eigen::VectorXd &N, Eigen::VectorXd &err,
+           unsigned int from_index = 0){
+  const unsigned dim = N.size();
+
+  // truncate pre-asymptotic behaviour if desired
+  const unsigned int newdim = dim - from_index;
+  // compute log(N) and log(err) component-wise
+  auto logfun = [](double d) {return std::log(d); };
+  Eigen::VectorXd Nlog(newdim), errlog(newdim);
+  std::transform(N.data()+from_index, N.data()+dim, Nlog.data(), logfun);
+  std::transform(err.data()+from_index, err.data()+dim, errlog.data(), logfun);
+
+  Eigen::Vector2d polyfit = linearFit(Nlog, errlog);
+  double alpha = -polyfit[1];
+
+  return alpha;
+}
 
 /**
  * @brief Concatenate objects defining an operator<<(std::ostream&)
