@@ -108,6 +108,16 @@ namespace ecu_scheme::post_processing {
     return result;
   }
 
+  /**
+   * @brief Sample a mesh function at points along a curve
+   * @tparam CURVE type of the curve function
+   * @tparam MF type of the mesh function
+   * @param mesh_p underlying triangular mesh
+   * @param gamma function representing the curve
+   * @param mf mesh function to sample
+   * @param num_points number of points to sample
+   * @param file_name name of the file to write the results to
+   */
   template <typename CURVE, typename MF>
   void SampleMeshFunctionOnCurve(std::shared_ptr<const lf::mesh::Mesh> mesh_p,
                                  const CURVE& gamma,
