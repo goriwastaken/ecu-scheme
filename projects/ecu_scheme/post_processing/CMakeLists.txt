@@ -1,6 +1,6 @@
 set(SOURCES
         post_processing.h
-        results_processing.h norms.h)
+        results_processing.h norms.h ecu_tools.cc ecu_tools.h)
 set(LIBRARIES
         Eigen3::Eigen
         lf.base
