@@ -27,6 +27,7 @@ set(LIBRARIES
         lf.geometry
         lf.io
         lf.mesh.hybrid2d
+        lf.refinement
         lf.mesh
         lf.mesh.utils
         lf.uscalfe

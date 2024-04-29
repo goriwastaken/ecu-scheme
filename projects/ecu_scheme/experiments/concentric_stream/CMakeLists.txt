@@ -22,7 +22,7 @@ set(LIBRARIES
 
 set(TARGET ${PROJECT_NAME})
 
-add_executable(${TARGET} ${SOURCES} )
+add_executable(${TARGET} ${SOURCES} concentric_stream_solution.cc)
 target_compile_definitions(${TARGET} PRIVATE CURRENT_SOURCE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/${DIR}\")
 target_compile_definitions(${TARGET} PRIVATE CURRENT_BINARY_DIR=\"${CMAKE_CURRENT_BINARY_DIR}\")
 target_link_libraries(${TARGET} ${LIBRARIES})

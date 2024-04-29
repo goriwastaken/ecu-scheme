@@ -5,6 +5,7 @@ set(SOURCES
         smooth_vertex_solution.h
         smooth_vertex_solution.cc
         )
+
 set(LIBRARIES
         Eigen3::Eigen
         lf.base
@@ -14,6 +15,7 @@ set(LIBRARIES
         lf.mesh.utils
         lf.uscalfe
         lf.refinement
+        lf.assemble
         projects.ecu_scheme.mesh
         projects.ecu_scheme.assemble
         projects.ecu_scheme.postprocessing
