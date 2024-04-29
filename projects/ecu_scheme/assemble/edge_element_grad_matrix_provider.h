@@ -13,18 +13,14 @@ namespace ecu_scheme::assemble {
 /**
  * @brief Class providing the edge element gradient matrix for a given FE space
  * and velocity field
- * * The element matrix provider works in a 3 dimensional world with 2
- * dimensional triangular cells. And evaluates the bilinear form
+ * * The element matrix provider evaluates the bilinear form
  * \f[
- * (u, \mathbf{v}) \mapsto \int\limits_K \mathbf{grad}_{\Gamma}(u) \, \mathbf{v}
+ * (u, \mathbf{v}) \mapsto \int\limits_K \mathbf{grad}(u) \, \mathbf{v}
  * \ dx
  * \f]
  *
- * Basis functions are the Whitney 1-forms, surface edge elements for
+ * Basis functions are edge element basis functions, for
  * @f$\mathbf{v}@f$ and the barycentric basis functions for @f$u@f$
- *
- * The whitney 1-forms, surface edge elements are associated with
- * edges and defined as
  *
  * @f[
  *  \mathbf{b}_i = s_i (\lambda_i \mathbf{grad}_{\Gamma}(\lambda_{i+1}) -
