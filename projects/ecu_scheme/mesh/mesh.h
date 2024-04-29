@@ -3,16 +3,15 @@
 #define THESIS_MESH_MESH_H_
 
 #include <basic_mesh_builder.h>
-//todo include other mesh builders
+// todo include other mesh builders
 
-namespace ecu_scheme{
+namespace ecu_scheme {
 
+/**
+ * @brief Collection of mesh factory builder classes
+ */
 
-    /**
-     * @brief Collection of mesh factory builder classes
-     */
+namespace mesh {}  // namespace mesh
+}  // namespace ecu_scheme
 
-    namespace mesh {} // namespace mesh
-} // namespace ecu_scheme
-
-#endif //THESIS_MESH_MESH_H_
+#endif  // THESIS_MESH_MESH_H_

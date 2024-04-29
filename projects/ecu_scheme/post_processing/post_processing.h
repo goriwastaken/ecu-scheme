@@ -2,17 +2,16 @@
 #ifndef THESIS_POST_PROCESSING_POST_PROCESSING_H_
 #define THESIS_POST_PROCESSING_POST_PROCESSING_H_
 
-#include "results_processing.h"
 #include "ecu_tools.h"
+#include "results_processing.h"
 
-namespace ecu_scheme{
+namespace ecu_scheme {
 
-  /**
-   * @brief Collection of post processing classes and methods
-   */
-  namespace post_processing{} // namespace post_processing
+/**
+ * @brief Collection of post processing classes and methods
+ */
+namespace post_processing {}  // namespace post_processing
 
-} // namespace ecu_scheme
+}  // namespace ecu_scheme
 
-
-#endif //THESIS_POST_PROCESSING_POST_PROCESSING_H_
+#endif  // THESIS_POST_PROCESSING_POST_PROCESSING_H_

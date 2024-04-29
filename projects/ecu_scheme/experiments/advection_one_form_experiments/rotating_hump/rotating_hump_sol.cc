@@ -3,15 +3,15 @@
 
 namespace ecu_scheme::experiments {
 
-
-void EnforceBoundaryConditions(const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>> &fe_space,
-                               lf::assemble::COOMatrix<double> &A,
-                               Eigen::VectorXd &phi,
-                               std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet
-) {
-  lf::mesh::utils::MeshFunctionGlobal<decltype(dirichlet)> mf_g_dirichlet{dirichlet};
+void EnforceBoundaryConditions(
+    const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>>& fe_space,
+    lf::assemble::COOMatrix<double>& A, Eigen::VectorXd& phi,
+    std::function<double(const Eigen::Matrix<double, 2, 1, 0>&)> dirichlet) {
+  lf::mesh::utils::MeshFunctionGlobal<decltype(dirichlet)> mf_g_dirichlet{
+      dirichlet};
   lf::mesh::utils::AllCodimMeshDataSet<bool> bd_flags(fe_space->Mesh(), false);
-  // set a fixed epsilon value for the geometric test involving double comparison
+  // set a fixed epsilon value for the geometric test involving double
+  // comparison
   const double kTol = 1e-8;
   // Loop over all edges
   for (const auto& edge : fe_space->Mesh()->Entities(1)) {
@@ -48,5 +48,4 @@ void EnforceBoundaryConditions(const std::shared_ptr<lf::uscalfe::UniformScalarF
       A, phi);
 }
 
-
-}  // namespace ecu_scheme
+}  // namespace ecu_scheme::experiments

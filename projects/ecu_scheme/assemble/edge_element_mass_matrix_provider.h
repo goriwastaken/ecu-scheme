@@ -2,21 +2,24 @@
 #ifndef LEHRFEMPP_PROJECTS_ECU_SCHEME_ASSEMBLE_EDGE_ELEMENT_MASS_MATRIX_PROVIDER_H_
 #define LEHRFEMPP_PROJECTS_ECU_SCHEME_ASSEMBLE_EDGE_ELEMENT_MASS_MATRIX_PROVIDER_H_
 
+#include <Eigen/Core>
+
 #include "convection_upwind_matrix_provider.h"
 #include "lf/fe/scalar_fe_space.h"
 #include "lf/mesh/utils/utils.h"
 #include "lf/uscalfe/uscalfe.h"
 
-#include <Eigen/Core>
-
 namespace ecu_scheme::assemble {
 
 template <typename SCALAR, typename FUNCTOR>
-class EdgeElementMassMatrixProvider{
+class EdgeElementMassMatrixProvider {
  public:
-  EdgeElementMassMatrixProvider(const std::shared_ptr<lf::fe::ScalarFESpace<SCALAR>>& fe_space, FUNCTOR v);
+  EdgeElementMassMatrixProvider(
+      const std::shared_ptr<lf::fe::ScalarFESpace<SCALAR>>& fe_space,
+      FUNCTOR v);
 
-  Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> Eval(const lf::mesh::Entity& entity) const;
+  Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> Eval(
+      const lf::mesh::Entity& entity) const;
 
   bool isActive(const lf::mesh::Entity& /*entity*/) const { return true; }
 
@@ -31,37 +34,48 @@ EdgeElementMassMatrixProvider<SCALAR, FUNCTOR>::EdgeElementMassMatrixProvider(
     : fe_space_(fe_space), v_(v) {}
 
 template <typename SCALAR, typename FUNCTOR>
-Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> EdgeElementMassMatrixProvider<SCALAR, FUNCTOR>::Eval(const lf::mesh::Entity& entity) const {
+Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic>
+EdgeElementMassMatrixProvider<SCALAR, FUNCTOR>::Eval(
+    const lf::mesh::Entity& entity) const {
   // Only triangles are supported
-  LF_VERIFY_MSG(entity.RefEl() == lf::base::RefEl::kTria(), "Unsupported cell type" << entity.RefEl());
+  LF_VERIFY_MSG(entity.RefEl() == lf::base::RefEl::kTria(),
+                "Unsupported cell type" << entity.RefEl());
 
   // Get the geometry of the cell
-  const lf::geometry::Geometry *geo_ptr = entity.Geometry();
+  const lf::geometry::Geometry* geo_ptr = entity.Geometry();
   const Eigen::MatrixXd corners = lf::geometry::Corners(*geo_ptr);
   const double area = lf::geometry::Volume(*geo_ptr);
   LF_ASSERT_MSG(area > 0, "Area of cell must be positive");
   // Fetch edges of cell
-  const nonstd::span<const lf::mesh::Entity *const> edges{entity.SubEntities(1)};
+  const nonstd::span<const lf::mesh::Entity* const> edges{
+      entity.SubEntities(1)};
 
   const size_t num_local_dofs = fe_space_->LocGlobMap().NumLocalDofs(entity);
-  LF_ASSERT_MSG(num_local_dofs == 6 || num_local_dofs == 3, "Only quadratic or linear FE spaces are supported");
-  Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> element_matrix(num_local_dofs, num_local_dofs);
+  LF_ASSERT_MSG(num_local_dofs == 6 || num_local_dofs == 3,
+                "Only quadratic or linear FE spaces are supported");
+  Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> element_matrix(
+      num_local_dofs, num_local_dofs);
   element_matrix.setZero();
 
-  if(num_local_dofs == 3){
+  if (num_local_dofs == 3) {
     // linear FE space
     const lf::uscalfe::FeLagrangeO1Tria<SCALAR> hat_function;
     // construct basis functions from curl of reference hat functions
-    const Eigen::MatrixXd reference_grads = hat_function.GradientsReferenceShapeFunctions(Eigen::VectorXd::Zero(2)).transpose();
+    const Eigen::MatrixXd reference_grads =
+        hat_function.GradientsReferenceShapeFunctions(Eigen::VectorXd::Zero(2))
+            .transpose();
     // compute jacobian inverse gramian
-    const Eigen::MatrixXd j_inv_trans = geo_ptr->JacobianInverseGramian(Eigen::VectorXd::Zero(2));
+    const Eigen::MatrixXd j_inv_trans =
+        geo_ptr->JacobianInverseGramian(Eigen::VectorXd::Zero(2));
     // compute gradients
     Eigen::MatrixXd grads = j_inv_trans * reference_grads;
     // correct orientation
     auto edge_orientations = entity.RelativeOrientations();
     // obtain coefficient for edge elements
     Eigen::VectorXd s_coeff(3);
-    s_coeff << lf::mesh::to_sign(edge_orientations[0]), lf::mesh::to_sign(edge_orientations[1]), lf::mesh::to_sign(edge_orientations[2]);
+    s_coeff << lf::mesh::to_sign(edge_orientations[0]),
+        lf::mesh::to_sign(edge_orientations[1]),
+        lf::mesh::to_sign(edge_orientations[2]);
 
     // Compute element matrix for product of baricentric coord functions
     std::vector<Eigen::Matrix3d> elem_mat_bary(4);
@@ -81,94 +95,109 @@ Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> EdgeElementMassMatrixProvi
                         1, 2, 1,
                         1, 1, 2;
     // clang-format on
-    for(int i=0; i<4;++i){
+    for (int i = 0; i < 4; ++i) {
       elem_mat_bary[i] *= area / 12.0;
     }
-    for(int i = 0; i < 3; ++i){
-      for(int j = 0; j < 3; ++j){
-        elem_mat_bary[0](i, j) *= (grads.col((i+1)%3).transpose() * grads.col((j+1)%3));
+    for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+        elem_mat_bary[0](i, j) *=
+            (grads.col((i + 1) % 3).transpose() * grads.col((j + 1) % 3));
         elem_mat_bary[0](i, j) *= s_coeff(i) * s_coeff(j);
       }
     }
-    for(int i = 0; i < 3; ++i){
-      for(int j = 0; j < 3; ++j){
-        elem_mat_bary[1](i, j) *= (grads.col((i+1)%3).transpose() * grads.col((j)%3));
+    for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+        elem_mat_bary[1](i, j) *=
+            (grads.col((i + 1) % 3).transpose() * grads.col((j) % 3));
         elem_mat_bary[1](i, j) *= s_coeff(i) * s_coeff(j);
       }
     }
-    for(int i = 0; i < 3; ++i){
-      for(int j = 0; j < 3; ++j){
-        elem_mat_bary[2](i, j) *= (grads.col((i)%3).transpose() * grads.col((j+1)%3));
+    for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+        elem_mat_bary[2](i, j) *=
+            (grads.col((i) % 3).transpose() * grads.col((j + 1) % 3));
         elem_mat_bary[2](i, j) *= s_coeff(i) * s_coeff(j);
       }
     }
-    for(int i = 0; i < 3; ++i){
-      for(int j = 0; j < 3; ++j){
-        elem_mat_bary[3](i, j) *= (grads.col((i)%3).transpose() * grads.col((j)%3));
+    for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+        elem_mat_bary[3](i, j) *=
+            (grads.col((i) % 3).transpose() * grads.col((j) % 3));
         elem_mat_bary[3](i, j) *= s_coeff(i) * s_coeff(j);
       }
     }
     // sum up contributions
-    for(int i = 0; i < 4; ++i){
+    for (int i = 0; i < 4; ++i) {
       element_matrix += elem_mat_bary[i];
     }
-    LF_ASSERT_MSG(element_matrix.cols() == 3 && element_matrix.rows() == 3, "Wrong size of element matrix");
+    LF_ASSERT_MSG(element_matrix.cols() == 3 && element_matrix.rows() == 3,
+                  "Wrong size of element matrix");
 
-    // account for contribution from term -<Ru div(R \psi_{e_j}), e_i>, where R is the clockwise rotation by pi/2
-    // \psi_{e_j} is the edge element basis function and <.,.> denotes the scalar product
-    // We know that div(R \psi_{e_j}) = s_j * area(T), the derivation can be found in the Thesis "Extrusion-Contraction Upwind Schemes"
-    // Remember that the contribution is taken into account only if Ru div(R \psi_{e_j}) is in the upwind triangle with respect to edge e_i
-    const auto clockwise_rotation = [](const Eigen::Vector2d& xh){
+    // account for contribution from term -<Ru div(R \psi_{e_j}), e_i>, where R
+    // is the clockwise rotation by pi/2 \psi_{e_j} is the edge element basis
+    // function and <.,.> denotes the scalar product We know that div(R
+    // \psi_{e_j}) = s_j * area(T), the derivation can be found in the Thesis
+    // "Extrusion-Contraction Upwind Schemes" Remember that the contribution is
+    // taken into account only if Ru div(R \psi_{e_j}) is in the upwind triangle
+    // with respect to edge e_i
+    const auto clockwise_rotation = [](const Eigen::Vector2d& xh) {
       return (Eigen::Vector2d() << xh(1), -xh(0)).finished();
     };
-    for(int i = 0; i < 3; ++i){
+    for (int i = 0; i < 3; ++i) {
       // Fetch edge entity and endpoints - for edge e_i
-      const lf::geometry::Geometry &edge_geo_ptr_i{*(edges[i]->Geometry())};
-      const Eigen::MatrixXd edge_endpoints_i{lf::geometry::Corners(edge_geo_ptr_i)};
-      //Get direction vector of the edge - for edge e_i
-      const Eigen::Vector2d edge_vector_i = edge_endpoints_i.col(1) - edge_endpoints_i.col(0);
-      for(int j = 0; j < 3; ++j){
+      const lf::geometry::Geometry& edge_geo_ptr_i{*(edges[i]->Geometry())};
+      const Eigen::MatrixXd edge_endpoints_i{
+          lf::geometry::Corners(edge_geo_ptr_i)};
+      // Get direction vector of the edge - for edge e_i
+      const Eigen::Vector2d edge_vector_i =
+          edge_endpoints_i.col(1) - edge_endpoints_i.col(0);
+      for (int j = 0; j < 3; ++j) {
         // Fetch edge entity and endpoints - for edge e_j
-        const lf::geometry::Geometry &edge_geo_ptr_j{*(edges[j]->Geometry())};
-        const Eigen::MatrixXd edge_endpoints_j{lf::geometry::Corners(edge_geo_ptr_j)};
+        const lf::geometry::Geometry& edge_geo_ptr_j{*(edges[j]->Geometry())};
+        const Eigen::MatrixXd edge_endpoints_j{
+            lf::geometry::Corners(edge_geo_ptr_j)};
         // Get direction vector of the edge - for edge e_j
-        const Eigen::Vector2d edge_vector_j = edge_endpoints_j.col(1) - edge_endpoints_j.col(0);
+        const Eigen::Vector2d edge_vector_j =
+            edge_endpoints_j.col(1) - edge_endpoints_j.col(0);
 
-        // Update each entry of the element matrix with the previously mentioned contribution
-        // CAREFUL! Contribution has a negative sign to s_coeff(j), because we look at -Ru * div(Rw)
+        // Update each entry of the element matrix with the previously mentioned
+        // contribution CAREFUL! Contribution has a negative sign to s_coeff(j),
+        // because we look at -Ru * div(Rw)
         Eigen::Vector2d velocity_ej = v_(edge_vector_j);
-        const Eigen::Vector2d kRotatedVeloWithDivCoeff = clockwise_rotation(velocity_ej) * (-s_coeff(j) / area);
+        const Eigen::Vector2d kRotatedVeloWithDivCoeff =
+            clockwise_rotation(velocity_ej) * (-s_coeff(j) / area);
         const double contribution = kRotatedVeloWithDivCoeff.dot(edge_vector_i);
 
-        // Check if the edge element basis function is in the upwind triangle with respect to edge e_i
-        const Eigen::Matrix<double, 2, 3> outward_edge_normals = ecu_scheme::assemble::computeOutwardNormalsTria(entity);
-        if(velocity_ej.dot(outward_edge_normals.col(i)) >= 0){
+        // Check if the edge element basis function is in the upwind triangle
+        // with respect to edge e_i
+        const Eigen::Matrix<double, 2, 3> outward_edge_normals =
+            ecu_scheme::assemble::computeOutwardNormalsTria(entity);
+        if (velocity_ej.dot(outward_edge_normals.col(i)) >= 0) {
           // we are in the upwind triangle with respect to e_i
-          if(velocity_ej.dot(outward_edge_normals.col(i)) == 0){
+          if (velocity_ej.dot(outward_edge_normals.col(i)) == 0) {
             // edge element basis function is on the edge e_i
             // contribution is halved
             element_matrix(i, j) *= 0.5 * contribution;
-          }else{
+          } else {
             element_matrix(i, j) *= contribution;
           }
-        }else{
+        } else {
           // not upwind - contribution is set to 0
           element_matrix(i, j) = 0;
         }
-      } // end loop over j
-    } // end loop over i
-
-
-    return element_matrix;
-  } // end linear FE case
-  else{
-    //quadratic FE space
-    //todo
+      }  // end loop over j
+    }    // end loop over i
 
     return element_matrix;
-  } // end quadratic FE case
+  }  // end linear FE case
+  else {
+    // quadratic FE space
+    // todo
+
+    return element_matrix;
+  }  // end quadratic FE case
 }
 
-}  // namespace ecu_scheme
+}  // namespace ecu_scheme::assemble
 
 #endif  // LEHRFEMPP_PROJECTS_ECU_SCHEME_ASSEMBLE_EDGE_ELEMENT_MASS_MATRIX_PROVIDER_H_

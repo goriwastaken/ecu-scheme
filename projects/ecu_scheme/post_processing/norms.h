@@ -16,8 +16,9 @@
 namespace ecu_scheme::post_processing {
 
 template <class MF, typename SQ_F>
-std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> L2norm(const std::shared_ptr<const lf::mesh::Mesh>& mesh_p,
-                                                                    const MF& f, const SQ_F& sq_f, const lf::quad::QuadRule& quad_rule) {
+std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> L2norm(
+    const std::shared_ptr<const lf::mesh::Mesh>& mesh_p, const MF& f,
+    const SQ_F& sq_f, const lf::quad::QuadRule& quad_rule) {
   // Store intermediate squared sums of cells
   double squared_sum = 0.0;
 
@@ -30,14 +31,14 @@ std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> L2norm(const std::s
   const lf::base::size_type num_local_qpts = quad_rule.NumPoints();
 
   // Iterate over all cells
-  for(const lf::mesh::Entity* e : mesh_p->Entities(0)){
+  for (const lf::mesh::Entity* e : mesh_p->Entities(0)) {
     // Get determinant of the pullback
     Eigen::VectorXd det{e->Geometry()->IntegrationElement(local_ref_coords)};
     // Get function values
     auto values = f(*e, local_ref_coords);
     // Compute local quadrature of the squared norm
     double local_squared_sum = 0.0;
-    for(lf::base::size_type i = 0; i < num_local_qpts; ++i){
+    for (lf::base::size_type i = 0; i < num_local_qpts; ++i) {
       local_squared_sum += det(i) * local_weights(i) * sq_f(values[i]);
     }
     cell_errors(*e) = std::sqrt(local_squared_sum);
@@ -47,8 +48,9 @@ std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> L2norm(const std::s
 }
 
 template <typename MF, typename SQ_F>
-std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> H1seminorm(const std::shared_ptr<const lf::mesh::Mesh>& mesh_p,
-                                                                        const MF& f, const SQ_F& sq_f, const lf::quad::QuadRule& quad_rule) {
+std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> H1seminorm(
+    const std::shared_ptr<const lf::mesh::Mesh>& mesh_p, const MF& f,
+    const SQ_F& sq_f, const lf::quad::QuadRule& quad_rule) {
   // Store intermediate squared sums of cells
   double glob_max = 0.0;
 
@@ -57,20 +59,20 @@ std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> H1seminorm(const st
 
   // Get reference coordinates of the cells
   const Eigen::MatrixXd local_ref_coords = quad_rule.Points();
-  //const Eigen::VectorXd local_weights = quad_rule.Weights();
+  // const Eigen::VectorXd local_weights = quad_rule.Weights();
   const lf::base::size_type num_local_qpts = quad_rule.NumPoints();
 
   // Iterate over all cells
-  for(const lf::mesh::Entity* e : mesh_p->Entities(0)){
+  for (const lf::mesh::Entity* e : mesh_p->Entities(0)) {
     auto values = f(*e, local_ref_coords);
 
     double loc_max = 0.0;
-    for(lf::base::size_type i = 0; i < num_local_qpts; ++i){
+    for (lf::base::size_type i = 0; i < num_local_qpts; ++i) {
       double temp = sq_f(values.col(i));
-      if(temp > loc_max){
+      if (temp > loc_max) {
         loc_max = temp;
       }
-      if(temp > glob_max){
+      if (temp > glob_max) {
         glob_max = temp;
       }
     }
@@ -79,7 +81,6 @@ std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> H1seminorm(const st
   return std::make_pair(std::sqrt(glob_max), cell_errors);
 }
 
-
-} // namespace ecu_scheme::post_processing
+}  // namespace ecu_scheme::post_processing
 
 #endif  // LEHRFEMPP_PROJECTS_ECU_SCHEME_POST_PROCESSING_NORMS_H_

@@ -1,5 +1,5 @@
 //
-// 
+//
 //
 
 #include "basic_mesh_builder.h"
@@ -24,20 +24,19 @@ std::shared_ptr<lf::mesh::Mesh> BasicMeshBuilder::Build() {
   // create a builder based on the mesh factory
   lf::mesh::utils::TPTriagMeshBuilder builder(std::move(mesh_factory_));
 
-  builder.setBottomLeftCorner(Eigen::Vector2d{0.0,0.0})
-        .setTopRightCorner(Eigen::Vector2d{1.0,1.0})
-        .setNumXCells(num_cells_x)
-        .setNumYCells(num_cells_y);
+  builder.setBottomLeftCorner(Eigen::Vector2d{0.0, 0.0})
+      .setTopRightCorner(Eigen::Vector2d{1.0, 1.0})
+      .setNumXCells(num_cells_x)
+      .setNumYCells(num_cells_y);
 
   mesh_p = builder.Build();
 
   return mesh_p;
 }
 
-std::shared_ptr<lf::mesh::Mesh> BasicMeshBuilder::Build(double topLeftCornerX,
-                                                        double topLeftCornerY,
-                                                        double topRightCornerX,
-                                                        double topRightCornerY) {
+std::shared_ptr<lf::mesh::Mesh> BasicMeshBuilder::Build(
+    double topLeftCornerX, double topLeftCornerY, double topRightCornerX,
+    double topRightCornerY) {
   const uint num_cells_x = num_cells_x_;
   const uint num_cells_y = num_cells_y_;
 
@@ -46,14 +45,14 @@ std::shared_ptr<lf::mesh::Mesh> BasicMeshBuilder::Build(double topLeftCornerX,
   // create a builder based on the mesh factory
   lf::mesh::utils::TPTriagMeshBuilder builder(std::move(mesh_factory_));
 
-  builder.setBottomLeftCorner(Eigen::Vector2d{topLeftCornerX,topLeftCornerY})
-        .setTopRightCorner(Eigen::Vector2d{topRightCornerX,topRightCornerY})
-        .setNumXCells(num_cells_x)
-        .setNumYCells(num_cells_y);
+  builder.setBottomLeftCorner(Eigen::Vector2d{topLeftCornerX, topLeftCornerY})
+      .setTopRightCorner(Eigen::Vector2d{topRightCornerX, topRightCornerY})
+      .setNumXCells(num_cells_x)
+      .setNumYCells(num_cells_y);
 
   mesh_p = builder.Build();
 
   return mesh_p;
 }
 
-} // mesh
+}  // namespace ecu_scheme::mesh

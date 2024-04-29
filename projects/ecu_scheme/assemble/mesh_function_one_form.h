@@ -7,13 +7,15 @@
 namespace ecu_scheme::assemble {
 
 template <typename SCALAR>
-class MeshFunctionOneForm{
+class MeshFunctionOneForm {
  public:
   MeshFunctionOneForm(const Eigen::Matrix<SCALAR, Eigen::Dynamic, 1>& mu,
                       const std::shared_ptr<const lf::mesh::Mesh>& mesh_p)
       : mu_(mu), mesh_p_(mesh_p) {}
 
-  std::vector<Eigen::Matrix<SCALAR, Eigen::Dynamic, 1>> operator()(const lf::mesh::Entity& entity, const Eigen::MatrixXd& local_coords) const;
+  std::vector<Eigen::Matrix<SCALAR, Eigen::Dynamic, 1>> operator()(
+      const lf::mesh::Entity& entity,
+      const Eigen::MatrixXd& local_coords) const;
 
  private:
   Eigen::Matrix<SCALAR, Eigen::Dynamic, 1> mu_;
@@ -24,9 +26,11 @@ template <typename SCALAR>
 std::vector<Eigen::Matrix<SCALAR, Eigen::Dynamic, 1>>
 MeshFunctionOneForm<SCALAR>::operator()(
     const lf::mesh::Entity& entity, const Eigen::MatrixXd& local_coords) const {
-  LF_ASSERT_MSG(entity.RefEl() == lf::base::RefEl::kTria(), "Only implemented for triangular cells");
+  LF_ASSERT_MSG(entity.RefEl() == lf::base::RefEl::kTria(),
+                "Only implemented for triangular cells");
 
-  std::vector<Eigen::Matrix<SCALAR, Eigen::Dynamic, 1>> result(local_coords.cols());
+  std::vector<Eigen::Matrix<SCALAR, Eigen::Dynamic, 1>> result(
+      local_coords.cols());
 
   // Get geometric information about the cell
   const lf::geometry::Geometry* geo_ptr = entity.Geometry();
@@ -34,31 +38,39 @@ MeshFunctionOneForm<SCALAR>::operator()(
 
   // Get basis basis functions
   const lf::uscalfe::FeLagrangeO1Tria<SCALAR> fe_space;
-  const Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> ref_grads = fe_space.GradientsReferenceShapeFunctions(Eigen::VectorXd::Zero(2)).transpose();
-  const Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> jacobian_inv = geo_ptr->JacobianInverseGramian(Eigen::VectorXd::Zero(2));
+  const Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> ref_grads =
+      fe_space.GradientsReferenceShapeFunctions(Eigen::VectorXd::Zero(2))
+          .transpose();
+  const Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> jacobian_inv =
+      geo_ptr->JacobianInverseGramian(Eigen::VectorXd::Zero(2));
 
   // Compute gradients
-  const Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> grads = jacobian_inv * ref_grads;
+  const Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> grads =
+      jacobian_inv * ref_grads;
 
   // Obtain reference shape functions
-  const Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> lambda = fe_space.EvalReferenceShapeFunctions(local_coords);
+  const Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> lambda =
+      fe_space.EvalReferenceShapeFunctions(local_coords);
 
   // Take into account orientation
   auto edgeOrientations = entity.RelativeOrientations();
 
   // Obtain global coordinates
-  std::vector<lf::base::size_type> global_indices(fe_space.NumRefShapeFunctions());
+  std::vector<lf::base::size_type> global_indices(
+      fe_space.NumRefShapeFunctions());
   auto edges = entity.SubEntities(1);
-  for(lf::base::size_type iter = 0; iter < 3; ++iter){
+  for (lf::base::size_type iter = 0; iter < 3; ++iter) {
     global_indices[iter] = mesh_p_->Index(*edges[iter]);
   }
 
   // Compute the one form
   const int kShape = fe_space.NumRefShapeFunctions();
-  for(int i = 0; i < local_coords.cols(); ++i){
-    Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> basis_func(grads.rows(), kShape);
-    for(int j = 0; j < kShape; ++j){
-      basis_func.col(j) = lambda(j, i) * grads.col((j+1)%kShape) - lambda((j+1)%kShape, i) * grads.col(j);
+  for (int i = 0; i < local_coords.cols(); ++i) {
+    Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> basis_func(
+        grads.rows(), kShape);
+    for (int j = 0; j < kShape; ++j) {
+      basis_func.col(j) = lambda(j, i) * grads.col((j + 1) % kShape) -
+                          lambda((j + 1) % kShape, i) * grads.col(j);
       // account for orientation
       basis_func.col(j) *= lf::mesh::to_sign(edgeOrientations[j]);
     }
@@ -70,6 +82,6 @@ MeshFunctionOneForm<SCALAR>::operator()(
   return result;
 }
 
-}  // namespace ecu_scheme
+}  // namespace ecu_scheme::assemble
 
 #endif  // LEHRFEMPP_PROJECTS_ECU_SCHEME_ASSEMBLE_MESH_FUNCTION_ONE_FORM_H_

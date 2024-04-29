@@ -3,11 +3,9 @@
 # Script to run experiments of the thesis
 help(){
   echo -e "Usage: main.sh [OPTIONS] [ARGUMENTS]\n\
-  \tWithout options the method runs all the experiments described in
-  \tthe experiment section of the thesis.\n\n\
-  \t-s | --stationary\t\tRuns only the stationary experiments with lower refinement levels\n\
+  \t-s | --stationary\t\tRuns only the stationary experiments with lower refinement levels.\n\
   \t-i | --instationary\t\tRuns the instationary experiments with lower refinement levels.\n\
-  \t-a | --all\t\t\tRuns all the experiments.\n\
+  \t-a | --all\t\t\tRuns all the experiments with higher refinement levels.\n\
   \t-c | --custom\t\t\tRuns the experiments with the refinement levels and epsilon provided.\n\
   \t-h | --help\t\t\tDisplays the help message.\n\
   \t-p | --plot\t\t\tPlots the results of the experiments.\n\
@@ -15,7 +13,8 @@ help(){
 }
 # optional arguments: refinement_levels and epsilon to pass to the experiments
 ARGUMENTS=()
-OPTIONS=[-s | --stationary] [-i | --instationary] [-a | --all] [-c | --custom] [-h | --help] [-p | --plot]
+#shellcheck disable=SC2215
+OPTIONS=("-s | --stationary" "-i | --instationary" "-a | --all" "-c | --custom" "-h | --help" "-p | --plot")
 
 set -e # Suppress errors
 
@@ -84,11 +83,10 @@ while [ "$1" != "" ]; do
             run_all_experiments 5 1e-8
             ;;
         -s | --stationary )
-            run_stationary_experiments 2 1e-8
-            run_stationary_experiments 3 1.0
-            run_stationary_experiments 5 1e-8
-            run_stationary_experiments 6 1e-8
+            run_stationary_experiments 7 1.0
+            run_stationary_experiments 7 1e-8
             run_stationary_experiments 6 1.0
+            run_stationary_experiments 6 1e-8
             ;;
         -i | --instationary )
             run_instationary_experiments 3 0.0
@@ -98,18 +96,16 @@ while [ "$1" != "" ]; do
             ;;
         -h | --help )
             help
+            exit 0
             ;;
         -p | --plot )
             echo "Plotting...todo"
             # Add plot commands
             cd $LIB_DIR/projects/ecu_scheme/post_processing || exit
-            python3 plot_convergence.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_2_1e-08_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_2_1e-08_plot.eps
-            python3 plot_convergence.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_3_1_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_3_1_plot.eps
-            python3 plot_convergence.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_5_1e-08_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_5_1e-08_plot.eps
-            # plot linear case
-            python3 plot_convergence.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_linear_2_1e-08_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_linear_2_1e-08_plot.eps
-            python3 plot_convergence.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_linear_3_1_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_linear_3_1_plot.eps
-            python3 plot_convergence.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_linear_5_1e-08_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_linear_5_1e-08_plot.eps
+            python3 plot_convergence_comparison.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_comparison_quadratic_7_1e-08_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_comparison_quadratic_7_1e-8_plot.eps
+            python3 plot_convergence_comparison.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_comparison_quadratic_6_1e-08_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_comparison_quadratic_6_1e-8_plot.eps
+            python3 plot_convergence_comparison.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_comparison_6_1_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_comparison_6_1_plot.eps
+            python3 plot_convergence_comparison.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_comparison_7_1_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_conv_comparison_7_1_plot.eps
             ;;
         * )
             usage
