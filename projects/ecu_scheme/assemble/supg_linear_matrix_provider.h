@@ -14,6 +14,13 @@
 #include <memory>
 
 namespace ecu_scheme::assemble {
+
+void InflowBC(const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>>& fe_space,
+                               lf::assemble::COOMatrix<double>& A,
+                               Eigen::VectorXd& phi,
+                               std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet
+);
+
   /**
    *@brief Computes the diameter of a TRIANGULAR mesh entity
    */
@@ -193,8 +200,8 @@ namespace ecu_scheme::assemble {
     const lf::fe::ScalarReferenceFiniteElement<double>* rsf_edge_p =
         fe_space->ShapeFunctionLayout(lf::base::RefEl::kSegment());
 
-    // Create a dataset of boolean flags indicating edges on the boundary of the
-    // mesh
+//    // Create a dataset of boolean flags indicating edges on the boundary of the
+//    // mesh
     auto bd_flags{lf::mesh::utils::flagEntitiesOnBoundary(mesh_p, 1)};
 
     // Fetch flags and values for degrees of freedom located on Dirichlet
@@ -208,6 +215,7 @@ namespace ecu_scheme::assemble {
           return ess_bdc_flags_values[gdof_idx];
         },
         A, phi);
+//    InflowBC(fe_space, A, phi, g);
 
     // SOLVE LINEAR SYSTEM
     Eigen::SparseMatrix A_crs = A.makeSparse();
