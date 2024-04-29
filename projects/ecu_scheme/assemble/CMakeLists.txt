@@ -1,10 +1,8 @@
 set(SOURCES
         assemble.h
-        diffusion_matrix_provider.h
-        diffusion_matrix_provider.cc
         convection_upwind_matrix_provider.h
         convection_upwind_matrix_provider.cc
-        load_vector_provider.h supg_matrix_provider.cc supg_matrix_provider.h lumped_mass_matrix_provider.cc lumped_mass_matrix_provider.h supg_linear_matrix_provider.h supg_linear_matrix_provider.cc mesh_function_one_form.h stable_convection_prov.cc stable_convection_prov.h fifteen_point_upwind_matrix_provider.cc fifteen_point_upwind_matrix_provider.h edge_element_mass_matrix_provider.cc edge_element_mass_matrix_provider.h edge_element_grad_matrix_provider.cc edge_element_grad_matrix_provider.h)
+        supg_matrix_provider.cc supg_matrix_provider.h lumped_mass_matrix_provider.cc lumped_mass_matrix_provider.h supg_linear_matrix_provider.h supg_linear_matrix_provider.cc mesh_function_one_form.h stable_convection_prov.cc stable_convection_prov.h fifteen_point_upwind_matrix_provider.cc fifteen_point_upwind_matrix_provider.h edge_element_mass_matrix_provider.cc edge_element_mass_matrix_provider.h edge_element_grad_matrix_provider.cc edge_element_grad_matrix_provider.h)
 set(LIBRARIES
         Eigen3::Eigen
         lf.assemble
