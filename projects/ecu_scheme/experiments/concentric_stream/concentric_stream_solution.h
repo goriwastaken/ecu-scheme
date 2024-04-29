@@ -266,28 +266,28 @@ class ConcentricStreamSolution {
     EnforceBoundaryConditions(fe_space_, A, phi, dirichlet);
 
     // uncomment for debug smallest singular value of matrix
-    //    if(method_name == "15P_UPWIND"){
-    //      Eigen::MatrixXd A_svd = A.makeDense();
-    //      std::cout << A_svd.rows() << " cols: " << A_svd.cols() << std::endl;
-    //      Eigen::BDCSVD<Eigen::MatrixXd> svd(A_svd,  Eigen::ComputeFullV);
-    //      std::cout << "SVD Computation: " << std::endl;
-    ////      Eigen::MatrixXd U = svd.matrixU();
-    //      Eigen::MatrixXd V = svd.matrixV();
-    ////      Eigen::VectorXd sv = svd.singularValues();
-    ////      Eigen::MatrixXd Sigma = Eigen::MatrixXd::Zero(A_svd.rows(),
-    ///A_svd.cols()); /      const unsigned int p = sv.size(); /
-    ///Sigma.block(0,0,p,p) = sv.asDiagonal();
-    //      // U, Sigma, V tuple
-    //      const unsigned int last_col_sing_vector = V.cols() - 1;
-    //      Eigen::VectorXd smallest_singular_vector =
-    //      V.col(last_col_sing_vector);
-    //      //output results to vtk file quadratic lagrangian - singular vector
-    //      lf::fe::MeshFunctionFE mf_sol(fe_space_, smallest_singular_vector);
-    //      lf::io::VtkWriter vtk_writer(fe_space_->Mesh(), PROJECT_BUILD_DIR
-    //      "/results/concentric_stream_singular_vector.vtk", 0, 2);
-    //      vtk_writer.WritePointData("_singular_vector", mf_sol);
+    //        if(method_name == "15P_UPWIND"){
+    //          Eigen::MatrixXd A_svd = A.makeDense();
+    //          std::cout << A_svd.rows() << " cols: " << A_svd.cols() <<
+    //          std::endl; Eigen::BDCSVD<Eigen::MatrixXd> svd(A_svd,
+    //          Eigen::ComputeFullV); std::cout << "SVD Computation: " <<
+    //          std::endl;
+    //    //      Eigen::MatrixXd U = svd.matrixU();
+    //          Eigen::MatrixXd V = svd.matrixV();
+    //    //      Eigen::VectorXd sv = svd.singularValues();
+    //    //      Eigen::MatrixXd Sigma = Eigen::MatrixXd::Zero(A_svd.rows(),
+    //          // U, Sigma, V tuple
+    //          const unsigned int last_col_sing_vector = V.cols() - 1;
+    //          Eigen::VectorXd smallest_singular_vector =
+    //          V.col(last_col_sing_vector);
+    //          //output results to vtk file quadratic lagrangian - singular
+    //          vector lf::fe::MeshFunctionFE mf_sol(fe_space_,
+    //          smallest_singular_vector); lf::io::VtkWriter
+    //          vtk_writer(fe_space_->Mesh(), PROJECT_BUILD_DIR
+    //          "/results/concentric_stream_singular_vector.vtk", 0, 2);
+    //          vtk_writer.WritePointData("_singular_vector", mf_sol);
     //
-    //    }
+    //        }
 
     // SOLVE LINEAR SYSTEM
     Eigen::SparseMatrix<double> A_crs = A.makeSparse();

@@ -13,44 +13,6 @@
 
 namespace ecu_scheme::experiments {
 
-// Eigen::VectorXd step(const Eigen::VectorXd &u0_vector,
-//                      double tau,
-//                      Eigen::SparseMatrix<double> convection_matrix_sparse) {
-//   //Eigen::VectorXd result = Eigen::VectorXd::Zero(u0_vector.size());
-//
-//   // explicit midpoint rule computes solution to u'(t) = f(u(t)) with u(0) =
-//   u0
-//   // u^* = u_n + tau/2 * f(u_n)
-//   // u_{n+1} = u_n + tau * f(u^*)
-//
-//   // implement this for the pde d/dt u = -v * grad u
-//   // get element matrix
-//   LF_ASSERT_MSG(convection_matrix_sparse.rows() ==
-//   convection_matrix_sparse.cols(), "Matrix must be square");
-//   LF_ASSERT_MSG(convection_matrix_sparse.rows() == u0_vector.size(), "Matrix
-//   and vector must have the same size");
-//
-//   Eigen::SparseLU<Eigen::SparseMatrix<double>> solver;
-//   solver.compute(convection_matrix_sparse);
-//   if(solver.info() != Eigen::Success){
-//     std::cerr << "LU decomposition failed for const velo solution" <<
-//     std::endl;
-//   }
-//   // Evaluate f(u_n)
-//   Eigen::VectorXd k1 = solver.solve(u0_vector);
-//   if(solver.info() != Eigen::Success){
-//     std::cerr << "Solving failed for const velo solution" << std::endl;
-//   }
-//   // Evaluate f(u^*)
-//   Eigen::VectorXd k2 = solver.solve(u0_vector + 0.5 * tau * k1);
-////  solver.compute(lumped_mass_matrix_sparse);
-////  Eigen::VectorXd k1 = solver.solve(convection_matrix_sparse * u0_vector);
-////  Eigen::VectorXd k2 = solver.solve(convection_matrix_sparse * (u0_vector +
-///0.5 * tau * k1));
-//
-//  return u0_vector + tau * k2;
-//}
-
 void EnforceBoundaryConditions(
     const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>>& fe_space,
     lf::assemble::COOMatrix<double>& A, Eigen::VectorXd& phi,

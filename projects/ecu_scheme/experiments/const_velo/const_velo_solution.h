@@ -22,17 +22,6 @@
 namespace ecu_scheme::experiments {
 
 /**
- * @brief Step function for the explicit Runge-Kutta 2nd order midpoint rule
- * @param u0_vector initial condition vector
- * @param tau time step
- * @param lumped_mass_matrix_sparse sparse matrix of the lumped mass matrix
- * @param convection_matrix_sparse sparse matrix of the convection matrix
- * @return Solution vector at time t + tau
- */
-// Eigen::VectorXd step(const Eigen::VectorXd& u0_vector, double tau,
-// Eigen::SparseMatrix<double> convection_matrix_sparse);
-
-/**
  * @brief Enforces the Dirichlet boundary conditions at the inflow boundary
  * @tparam SCALAR template parameter indicating the scalar type
  * @param fe_space corresponding finite element space
