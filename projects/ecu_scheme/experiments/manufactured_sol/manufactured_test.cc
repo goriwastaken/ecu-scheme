@@ -16,9 +16,9 @@ int main(int argc, char* argv[]){
     return -1;
   }
   // Diffusion coefficient for the regular refinement case
-  double eps_for_refinement = 1e-8;
+  double eps_for_refinement = 1;
   // Number of refinement levels
-  unsigned int refinement_levels = 3;
+  unsigned int refinement_levels = 7;
   // Adjust the number of refinement levels and the diffusion coefficient if the user specified them
   if(argc == 3){
     refinement_levels = std::stoi(argv[1]);
@@ -31,9 +31,11 @@ int main(int argc, char* argv[]){
   std::cout << "Epsilon for refinement: " << eps_for_refinement << '\n';
 
   ecu_scheme::mesh::BasicMeshBuilder builder;
-  builder.SetNumCellsX(49);
-  builder.SetNumCellsY(49);
+  builder.SetNumCellsX(2);
+  builder.SetNumCellsY(2);
   std::shared_ptr<lf::mesh::Mesh> mesh_p = builder.Build();
+  //build mesh on subdomain [0,0.9]x[0,0.9]
+//  std::shared_ptr<lf::mesh::Mesh> mesh_p = builder.Build(0.0, 0.0, 0.9, 0.9);
 
   auto fe_space = std::make_shared<lf::uscalfe::FeSpaceLagrangeO2<double>>(mesh_p);
 
@@ -94,6 +96,11 @@ int main(int argc, char* argv[]){
   Eigen::VectorXd solution_vector = experiment.ComputeSolution(1e-8, kVelocity, kTestFunctor, kDirichletFunctor);
   // Plot of the computed solution
   ecu_scheme::post_processing::output_results<double>(fe_space, solution_vector, "manufactured_solution");
+  // Plot linear solution
+  auto fe_space_linear = std::make_shared<lf::uscalfe::FeSpaceLagrangeO1<double>>(mesh_p);
+  ecu_scheme::experiments::ManufacturedSolutionExperiment<double> experiment_linear(fe_space_linear);
+  Eigen::VectorXd solution_vector_toplot_linear = experiment_linear.ComputeSolution(1e-8, kVelocity, kTestFunctor, kDirichletFunctor);
+  ecu_scheme::post_processing::output_results<double>(fe_space_linear, solution_vector_toplot_linear, "manufactured_solution_linear");
 
   // Compute the L2 error norms with regular refinement
   std::shared_ptr<lf::refinement::MeshHierarchy> multi_mesh_p = lf::refinement::GenerateMeshHierarchyByUniformRefinemnt(mesh_p, refinement_levels);
@@ -117,6 +124,16 @@ int main(int argc, char* argv[]){
         refinement_levels, eps_for_refinement, Eigen::VectorXd::Zero(refinement_levels), multi_mesh_p, std::vector<Eigen::VectorXd>{}
   };
 
+  // wrapper for HH08 stable scheme b^{2b, vmb}
+  ecu_scheme::post_processing::ExperimentSolutionWrapper<double> solution_collection_wrapper_stable_upwind{
+      refinement_levels, eps_for_refinement, Eigen::VectorXd::Zero(refinement_levels), multi_mesh_p, std::vector<Eigen::VectorXd>{}
+  };
+
+  // wrapper for 15-point quad rule scheme
+  ecu_scheme::post_processing::ExperimentSolutionWrapper<double> solution_collection_wrapper_fifteen_point{
+      refinement_levels, eps_for_refinement, Eigen::VectorXd::Zero(refinement_levels), multi_mesh_p, std::vector<Eigen::VectorXd>{}
+  };
+
   // get number of levels
   auto L = multi_mesh.NumLevels();
   LF_ASSERT_MSG(refinement_levels + 1 == L, "Number of levels in mesh hierarchy " << multi_mesh.NumLevels() << " is not equal to the number of refinement levels");
@@ -125,13 +142,24 @@ int main(int argc, char* argv[]){
         // Compute finite element solution for every level and wrap every solution vector in a vector
         std::shared_ptr<const lf::mesh::Mesh> mesh_l{multi_mesh.getMesh(l)};
         auto fe_space_l = std::make_shared< lf::uscalfe::FeSpaceLagrangeO2<double>>(mesh_l);
-
+//
         ecu_scheme::experiments::ManufacturedSolutionExperiment<double> experiment_l(fe_space_l);
         Eigen::VectorXd solution_vector_l = experiment_l.ComputeSolution(eps_for_refinement, kVelocity, kTestFunctor, kDirichletFunctor);
         solution_collection_wrapper.final_time_solutions.push_back(solution_vector_l);
 
+        const auto kTempEps = [kEps](const Eigen::Vector2d &x){return kEps;};
+
         Eigen::VectorXd solution_vector_supg_quadratic = experiment_l.ComputeSUPGSolution(eps_for_refinement, kVelocity, kTestFunctor, kDirichletFunctor);
+//        Eigen::VectorXd solution_vector_supg_quadratic = ecu_scheme::assemble::SolveCDBVPSupgQuad<decltype(kTempEps), decltype(kVelocity), decltype(kTestFunctor), decltype(kDirichletFunctor)>(fe_space_l, kTempEps, kVelocity, kTestFunctor, kDirichletFunctor);
         solution_collection_wrapper_supg_quadratic.final_time_solutions.push_back(solution_vector_supg_quadratic);
+//
+//        // Compute solution for stable scheme from HH08 report
+        Eigen::VectorXd solution_vector_stable_upwind = experiment_l.ComputeStableSolution(eps_for_refinement, kVelocity, kTestFunctor, kDirichletFunctor);
+        solution_collection_wrapper_stable_upwind.final_time_solutions.push_back(solution_vector_stable_upwind);
+//
+//        // Compute solution for fifteen point scheme
+        Eigen::VectorXd solution_vector_fifteen_point_quad = experiment_l.ComputeFifteenPointQuadRuleSolution(eps_for_refinement, kVelocity, kTestFunctor, kDirichletFunctor);
+        solution_collection_wrapper_fifteen_point.final_time_solutions.push_back(solution_vector_fifteen_point_quad);
 
         // only debug purposes - plot FE solution in paraview
         //ecu_scheme::post_processing::output_results<double>(fe_space_l, solution_vector_l, ecu_scheme::post_processing::concat("manufactured", "_", l, "_hierarchy"));
@@ -144,29 +172,29 @@ int main(int argc, char* argv[]){
         solution_collection_wrapper_linear.final_time_solutions.push_back(solution_vector_l_linear);
 
         // Compute SUPG linear FE solution
-        const auto kTempEps = [kEps](const Eigen::Vector2d &x){return kEps;};
+
         Eigen::VectorXd solution_vector_supg = ecu_scheme::assemble::SolveCDBVPSupg<decltype(kTempEps), decltype(kVelocity), decltype(kTestFunctor), decltype(kDirichletFunctor)>(fe_space_l_linear, kTempEps, kVelocity, kTestFunctor, kDirichletFunctor);
         solution_collection_wrapper_supg.final_time_solutions.push_back(solution_vector_supg);
 
 
   }
-  // Process the errors in the quadratic FE case
-  std::cout << "Convergence of manufactured solution with quadratic FE\n";
-  ecu_scheme::post_processing::convergence_report_single<
-      double, decltype(mf_exact_solution)>(
-      solution_collection_wrapper, mf_exact_solution,
-      ecu_scheme::post_processing::concat("manufactured_solution_conv", "_",
-                                          refinement_levels, "_",
-                                          eps_for_refinement));
-  // Process the errors in the linear FE case
-  std::cout << "Convergence of manufactured solution with linear FE\n";
-  ecu_scheme::post_processing::convergence_report_single<
-      double, decltype(mf_exact_solution)>(
-      solution_collection_wrapper_linear, mf_exact_solution,
-      ecu_scheme::post_processing::concat("manufactured_solution_conv_linear",
-                                          "_", refinement_levels, "_",
-                                          eps_for_refinement),
-      true);
+//  // Process the errors in the quadratic FE case
+//  std::cout << "Convergence of manufactured solution with quadratic FE\n";
+//  ecu_scheme::post_processing::convergence_report_single<
+//      double, decltype(mf_exact_solution)>(
+//      solution_collection_wrapper, mf_exact_solution,
+//      ecu_scheme::post_processing::concat("manufactured_solution_conv", "_",
+//                                          refinement_levels, "_",
+//                                          eps_for_refinement));
+//  // Process the errors in the linear FE case
+//  std::cout << "Convergence of manufactured solution with linear FE\n";
+//  ecu_scheme::post_processing::convergence_report_single<
+//      double, decltype(mf_exact_solution)>(
+//      solution_collection_wrapper_linear, mf_exact_solution,
+//      ecu_scheme::post_processing::concat("manufactured_solution_conv_linear",
+//                                          "_", refinement_levels, "_",
+//                                          eps_for_refinement),
+//      true);
 
   // Comparison with SUPG
   std::cout << "Comparison with SUPG -- Linear FE space " << "\n";
@@ -175,18 +203,53 @@ int main(int argc, char* argv[]){
       solution_collection_wrapper_linear, solution_collection_wrapper_supg,
       mf_exact_solution,
       ecu_scheme::post_processing::concat(
-          "manufactured_solution_conv_comparison", "_", refinement_levels, "_",
+          "manufactured_solution_conv_linear_comparison", "_", refinement_levels, "_",
           eps_for_refinement),
       true);
 
-  // Comparison with SUPG - Quadratic FE space
-  std::cout << "Comparison with SUPG -- Quadratic FE space " << "\n";
-  ecu_scheme::post_processing::convergence_comparison_toSUPG<
-      double, decltype(mf_exact_solution)>(
-      solution_collection_wrapper, solution_collection_wrapper_supg_quadratic,
+  // Comparison with multiple methods - Quadratic FE space
+  std::cout << "Comparison with multiple methods -- Quadratic FE space" << "\n";
+  std::vector<std::pair<ecu_scheme::post_processing::ExperimentSolutionWrapper<double>, std::string>> bundle_manuf_solution_wrappers{
+            {solution_collection_wrapper, "Midpoint Upwind"},
+      {solution_collection_wrapper_stable_upwind, "7-Point Stable Upwind"},
+      {solution_collection_wrapper_fifteen_point, "15-Point Upwind"},
+      {solution_collection_wrapper_supg_quadratic, "SUPG"}
+  };
+  ecu_scheme::post_processing::convergence_comparison_multiple_methods<double, decltype(mf_exact_solution)>(
+      bundle_manuf_solution_wrappers,
       mf_exact_solution,
       ecu_scheme::post_processing::concat(
-          "manufactured_solution_conv_comparison_quadratic", "_",
-          refinement_levels, "_", eps_for_refinement));
+          "manufactured_solution_multiple_methods_quad", "_", refinement_levels, "_",
+          eps_for_refinement)
+  );
+
+//  // Comparison with SUPG - Quadratic FE space
+//  std::cout << "Comparison with SUPG -- Quadratic FE space " << "\n";
+//  ecu_scheme::post_processing::convergence_comparison_toSUPG<
+//      double, decltype(mf_exact_solution)>(
+//      solution_collection_wrapper, solution_collection_wrapper_supg_quadratic,
+//      mf_exact_solution,
+//      ecu_scheme::post_processing::concat(
+//          "manufactured_solution_conv_comparison_quadratic", "_",
+//          refinement_levels, "_", eps_for_refinement));
+
+//  // Comparison with Stable Upwind Scheme -- Quadratic FE space
+//  std::cout << "Comparison with Stable Upwind scheme -- Quadratic FE space " << "\n";
+//  ecu_scheme::post_processing::convergence_comparison_toSUPG<double, decltype(mf_exact_solution)>(
+//      solution_collection_wrapper, solution_collection_wrapper_stable_upwind,
+//      mf_exact_solution,
+//      ecu_scheme::post_processing::concat(
+//          "manufactured_solution_conv_comparison_stable_vs_midpoint", "_",
+//          refinement_levels, "_", eps_for_refinement));
+
+  // Comparison with 15-point quadrature rule Upwind Scheme -- Quadratic FE space
+//  std::cout << "Comparison with 15-point quadrature rule Upwind scheme -- Quadratic FE space " << "\n";
+//  ecu_scheme::post_processing::convergence_comparison_toSUPG<double, decltype(mf_exact_solution)>(
+//      solution_collection_wrapper, solution_collection_wrapper_fifteen_point,
+//      mf_exact_solution,
+//      ecu_scheme::post_processing::concat(
+//          "manufactured_solution_conv_comparison_15point_vs_midpoint", "_",
+//          refinement_levels, "_", eps_for_refinement));
+
   return 0;
 }
