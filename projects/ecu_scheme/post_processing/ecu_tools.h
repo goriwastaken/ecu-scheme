@@ -123,9 +123,11 @@ namespace ecu_scheme::post_processing {
                                  const CURVE& gamma,
                                  const MF& mf,
                                  unsigned int num_points,
-                                 const std::string& file_name){
+                                 const std::string& file_name,
+                                 std::pair<double, double> interval = {0.0, 1.0}
+                                 ){
     // Uniform sample along gamma
-    Eigen::VectorXd tau = Eigen::VectorXd::LinSpaced(num_points, 0.0, 1.0);
+    Eigen::VectorXd tau = Eigen::VectorXd::LinSpaced(num_points, interval.first, interval.second);
     std::vector<Eigen::Vector2d> sample_points(num_points);
     for(int i = 0; i < num_points; ++i){
       sample_points[i] = gamma(tau(i));
@@ -137,7 +139,7 @@ namespace ecu_scheme::post_processing {
     std::filesystem::create_directory(main_dir); //if necessary
     // Write the result to a file
     std::ofstream file;
-    file.open(main_dir + "/" + file_name);
+    file.open(main_dir + "/" + file_name + ".txt");
     for(int i = 0; i < num_points; ++i){
       file << tau(i) << ", " << sample_points[i](0) << ", " << sample_points[i](1) << ", " << result[i] << std::endl;
     }

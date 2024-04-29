@@ -3,6 +3,7 @@
 #define THESIS_POST_PROCESSING_POST_PROCESSING_H_
 
 #include "results_processing.h"
+#include "ecu_tools.h"
 
 namespace ecu_scheme{
 

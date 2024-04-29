@@ -7,6 +7,7 @@
 #include <lf/io/io.h>
 #include <lf/refinement/refinement.h>
 #include "norms.h"
+#include "ecu_tools.h"
 
 #include <string>
 #include <fstream>
@@ -137,8 +138,6 @@ void convergence_report_single(const ExperimentSolutionWrapper<SCALAR>& solution
     return x.squaredNorm();
   };
 
-  // define quadrature rule for norms
-  lf::quad::QuadRule qr = lf::quad::make_QuadRule(lf::base::RefEl::kTria(), 4);
 
   // solution_collection_wrapper contains the mesh hierarchy used and hence each mesh corresponding to a refinement level
   lf::refinement::MeshHierarchy& multi_mesh{*solution_collection_wrapper.mesh_hierarchy_p};
@@ -154,13 +153,7 @@ void convergence_report_single(const ExperimentSolutionWrapper<SCALAR>& solution
     // get mesh for refinement level l
     std::shared_ptr<const lf::mesh::Mesh> mesh_l{multi_mesh.getMesh(l)};
     // compute meshwidth
-    double kHMax = 0.0;
-    for(const lf::mesh::Entity* e : mesh_l->Entities(1)){
-      double kH = lf::geometry::Volume(*(e->Geometry()));
-      if(kH > kHMax){
-        kHMax = kH;
-      }
-    }
+    const double kHMax = ecu_scheme::post_processing::ComputeMeshWidthTria(mesh_l);
     // get finite element space for refinement level l
     std::shared_ptr< lf::uscalfe::UniformScalarFESpace<SCALAR>> fe_space;
     if(isLinear){
@@ -193,7 +186,7 @@ void convergence_report_single(const ExperimentSolutionWrapper<SCALAR>& solution
   }
   L2norm_csv_file.close();
 
-  // Plot the computed L2error
+  // Plot the computed L2error rate
   double eoc_value = eoc(Ndof_array, errors_array);
   std::cout << "EOC value: " << eoc_value << "\n";
 
@@ -214,7 +207,7 @@ void convergence_comparison_toSUPG(const ExperimentSolutionWrapper<SCALAR>& solu
   // include metadata about the experiment such as number of refinement levels and the diffusion coefficient used
   L2norm_csv_file << "Number of refinement levels: " << solution_collection_wrapper_one.refinement_levels << "\n";
   L2norm_csv_file << "Diffusion coefficient: " << solution_collection_wrapper_one.eps << "\n";
-  L2norm_csv_file << "No. of dofs,Meshwidth,L2 error Upwind,L2 error SUPG" << "\n";
+  L2norm_csv_file << "No. of dofs,Meshwidth,Midpoint Upwind,SUPG" << "\n";
 
   // solution_collection_wrapper contains the mesh hierarchy used and hence each mesh corresponding to a refinement level
   lf::refinement::MeshHierarchy& multi_mesh{*solution_collection_wrapper_one.mesh_hierarchy_p};
@@ -223,17 +216,14 @@ void convergence_comparison_toSUPG(const ExperimentSolutionWrapper<SCALAR>& solu
   // get number of levels
   auto L = multi_mesh.NumLevels();
 
+  Eigen::VectorXd Ndof_array(L);
+  Eigen::VectorXd errors_array(L);
+
   for(int l=0; l < L; ++l){
     // get mesh for refinement level l
     std::shared_ptr<const lf::mesh::Mesh> mesh_l{multi_mesh.getMesh(l)};
     // compute meshwidth
-    double kHMax = 0.0;
-    for(const lf::mesh::Entity* e : mesh_l->Entities(1)){
-      double kH = lf::geometry::Volume(*(e->Geometry()));
-      if(kH > kHMax){
-        kHMax = kH;
-      }
-    }
+    const double kHMax = ecu_scheme::post_processing::ComputeMeshWidthTria(mesh_l);
     // get finite element space for refinement level l
     std::shared_ptr< lf::uscalfe::UniformScalarFESpace<SCALAR>> fe_space;
     if(isLinear){
@@ -252,12 +242,99 @@ void convergence_comparison_toSUPG(const ExperimentSolutionWrapper<SCALAR>& solu
     auto mf_fe_sol_two = lf::fe::MeshFunctionFE(fe_space, solution_vec_two);
 
     // Compute the L2 error
-    double L2_error_one = std::sqrt(lf::fe::IntegrateMeshFunction(*(fe_space->Mesh()), lf::mesh::utils::squaredNorm(mf_fe_sol_one - mf_exact_solution), 10));
-    double L2_error_two = std::sqrt(lf::fe::IntegrateMeshFunction(*(fe_space->Mesh()), lf::mesh::utils::squaredNorm(mf_fe_sol_two - mf_exact_solution), 10));
+    double L2_error_one = std::sqrt(lf::fe::IntegrateMeshFunction(*(fe_space->Mesh()), lf::mesh::utils::squaredNorm(mf_fe_sol_one - mf_exact_solution), 4));
+    double L2_error_two = std::sqrt(lf::fe::IntegrateMeshFunction(*(fe_space->Mesh()), lf::mesh::utils::squaredNorm(mf_fe_sol_two - mf_exact_solution), 4));
+
+    Ndof_array(l) = fe_space->LocGlobMap().NumDofs();
+    errors_array(l) = L2_error_one;
     // Add results to L2norm_csv_file file
     L2norm_csv_file << fe_space->LocGlobMap().NumDofs() << "," << kHMax << "," << L2_error_one << "," << L2_error_two << "\n";
     std::cout << std::left << std::setw(10) << fe_space->LocGlobMap().NumDofs() << std::left <<std::setw(16) << L2_error_one << std::left <<std::setw(16) << L2_error_two << std::endl; //debug purpose
   }
+
+  // Plot the computed L2error rate
+  double eoc_value = eoc(Ndof_array, errors_array);
+  std::cout << "EOC value: " << eoc_value << "\n";
+}
+
+/**
+ * @brief Compare the convergence of multiple methods
+ * @tparam SCALAR type of the solution vector
+ * @tparam MF type of exact solution mesh function
+ * @param solution_wrappers_with_name vector of pairs containing the corresponding solution wrapper datastructure together with the name of the method used in the experimnt (used to label columns of the results)
+ * @param exact_solution exact solution mesh function
+ * @param experiment_name name to identify the experiment corresponding to the solutions
+ * @param isLinear flag for determining if we look at a linear FE space or quadratic FE space - default is quadratic
+ */
+template <typename SCALAR, typename MF>
+void convergence_comparison_multiple_methods(std::vector<std::pair<ExperimentSolutionWrapper<SCALAR>, std::string>> solution_wrappers_with_name,
+                                             MF& exact_solution, std::string experiment_name,
+                                             bool isLinear = false){
+  // generate location for output
+  std::string main_dir = PROJECT_BUILD_DIR "/results";
+  std::filesystem::create_directory(main_dir); //if necessary
+
+  // create a csv file to store the results for plotting
+  std::ofstream L2norm_csv_file;
+  L2norm_csv_file.open(concat(main_dir, "/", experiment_name, "_L2error.csv"));
+  // Obtain number of methods to be reported
+  const int num_methods = solution_wrappers_with_name.size();
+  // include metadata about the experiment such as number of refinement levels and the diffusion coefficient used
+  // one can use first wrapper to get this metadata, underlying meshes, refinement levels, and diffusion coefficients are the same for each one
+  L2norm_csv_file << "Number of refinement levels: " << solution_wrappers_with_name.at(0).first.refinement_levels << "\n";
+  L2norm_csv_file << "Diffusion coefficient: " << solution_wrappers_with_name.at(0).first.eps << "\n";
+  // Label columns of final csv
+  std::string label_for_columns = "No. of dofs,Meshwidth";
+  for(int i = 0; i < num_methods; ++i){
+    label_for_columns += "," + solution_wrappers_with_name.at(i).second;
+  }
+  L2norm_csv_file << label_for_columns << "\n";
+
+  // Obtain mesh hierarchy used, same for each method so take the first
+  lf::refinement::MeshHierarchy& multi_mesh{*solution_wrappers_with_name.at(0).first.mesh_hierarchy_p};
+  std::cout << "Results processing mesh hierarchy info: \n";
+  multi_mesh.PrintInfo(std::cout);
+  // get number of levels
+  auto L = multi_mesh.NumLevels();
+
+  Eigen::VectorXd Ndof_array(L);
+  Eigen::VectorXd errors_array(L);
+
+  for(int l = 0; l < L; ++l){
+    // get mesh for refinement level l
+    std::shared_ptr<const lf::mesh::Mesh> mesh_l{multi_mesh.getMesh(l)};
+    // compute meshwidth
+    const double kHMax = ecu_scheme::post_processing::ComputeMeshWidthTria(mesh_l);
+    // get finite element space for refinement level l
+    std::shared_ptr< lf::uscalfe::UniformScalarFESpace<SCALAR>> fe_space;
+    if(isLinear){
+      // Linear FE space
+      fe_space = std::make_shared< lf::uscalfe::FeSpaceLagrangeO1<SCALAR>>(mesh_l);
+    }else{
+      // Quadratic FE space
+      fe_space = std::make_shared< lf::uscalfe::FeSpaceLagrangeO2<SCALAR>>(mesh_l);
+    }
+    // Add results to L2norm_csv_file file
+    L2norm_csv_file << fe_space->LocGlobMap().NumDofs() << "," << kHMax;
+    for(int i = 0; i < num_methods; ++i){
+      // get solution vector computed at refinement l
+      Eigen::VectorXd solution_vec = solution_wrappers_with_name.at(i).first.final_time_solutions.at(l);
+      // Take finite element solution and wrap it into a mesh function
+      auto mf_fe_sol = lf::fe::MeshFunctionFE(fe_space, solution_vec);
+      // Compute the L2 error
+      double L2_error = std::sqrt(lf::fe::IntegrateMeshFunction(*(fe_space->Mesh()), lf::mesh::utils::squaredNorm(mf_fe_sol - exact_solution), 10));
+      L2norm_csv_file << "," << L2_error;
+      if(i==0){
+        Ndof_array(l) = fe_space->LocGlobMap().NumDofs();
+        errors_array(l) = L2_error;
+      }
+//      std::cout << std::left << "method " << i << " " << std::setw(10) << fe_space->LocGlobMap().NumDofs() << std::left <<std::setw(16) << L2_error << std::endl; //debug purpose
+    }
+    L2norm_csv_file << "\n";
+  }
+  // Plot the computed L2error rate
+  double eoc_value = eoc(Ndof_array, errors_array);
+  std::cout << "EOC value: " << eoc_value << "\n";
 }
 
 } // post_processing
