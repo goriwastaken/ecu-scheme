@@ -105,10 +105,6 @@ Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> ConvectionUpwindMatrixProv
   Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> element_matrix(num_local_dofs, num_local_dofs);
 
   // Compute normals of vertices of the triangular cell
-//  Eigen::Matrix<double, 3, 3> X;
-//  X.block<3,1>(0,0) = Eigen::Vector3d::Ones();
-//  X.block<3,2>(0,1) = corners.transpose();
-//  Eigen::Matrix<double, 2, 3> vertex_normals = -X.inverse().block<2,3>(1,0);
   Eigen::Matrix3d X;
   X.col(0) = Eigen::Vector3d::Ones();
   X.rightCols(2) = corners.transpose();
@@ -187,27 +183,6 @@ Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> ConvectionUpwindMatrixProv
       }
       return bary;
     };
-    // debug
-    auto bary_new = [area, corners, is_clockwise](const Eigen::Vector2d& xh) -> Eigen::Matrix<double, 1, 3>{
-      Eigen::Matrix<double, 1, 3> bary;
-      Eigen::Vector2d v0 = corners.col(1) - corners.col(0);
-      Eigen::Vector2d v1 = corners.col(2) - corners.col(0);
-      Eigen::Vector2d v2 = xh - corners.col(0);
-      double d00 = v0.dot(v0);
-      double d01 = v0.dot(v1);
-      double d11 = v1.dot(v1);
-      double d20 = v2.dot(v0);
-      double d21 = v2.dot(v1);
-      double denom = d00 * d11 - d01 * d01;
-      bary(0,1) = (d11 * d20 - d01 * d21) / denom;
-      bary(0,2) = (d00 * d21 - d01 * d20) / denom;
-      bary(0,0) = 1.0 - bary(0,1) - bary(0,2);
-//      if(is_clockwise){
-//        return -bary;
-//      }
-      return bary;
-    };
-    //end debug
 
     // Matrix of gradients of barycentric coordinate functions based on global coordinates of nodes
     auto bary_functions_grad = [area, corners, is_clockwise](const Eigen::Vector2d& xh) -> Eigen::Matrix<double, 2, 3>{
@@ -225,17 +200,9 @@ Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> ConvectionUpwindMatrixProv
       return bary_grad;
     };
 
-    // Matrix of local shape functions based on global coordinates of nodes in quadratic Lagrangian FE space
-    auto localShapeFunctions = [bary_functions](const Eigen::Vector2d xh) -> Eigen::Matrix<double, 1, 6>{
-      Eigen::Matrix<double, 1, 6> shapeFunctions;
-      Eigen::Matrix<double, 1, 3> temp = bary_functions(xh);
-      shapeFunctions << temp(0,0) * (2.0 * temp(0,0) - 1.0), temp(0,1) * (2.0 * temp(0,1) - 1.0), temp(0,2) * (2.0 * temp(0,2) - 1.0),
-          4.0 * temp(0,0) * temp(0,1), 4.0 * temp(0,1) * temp(0,2), 4.0 * temp(0,0) * temp(0,2);
-      return shapeFunctions;
-    };
 
     // Matrix of gradients of local shape functions based on global coordinates of nodes in quadratic Lagrangian FE space
-    auto gradientsLocalShapeFunctions = [bary_functions, bary_functions_grad, bary_new]
+    auto gradientsLocalShapeFunctions = [bary_functions, bary_functions_grad]
         (const Eigen::Vector2d xh) -> Eigen::Matrix<double, 2, 6>{
       Eigen::Matrix<double, 2, 6> gradients;
       // barycentric coordinate functions
@@ -271,18 +238,25 @@ Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> ConvectionUpwindMatrixProv
         // first 3 nodes are vertices of triangle
         if(vl.dot(vertex_normals.col((l+2)%3)) >= 0 && vl.dot(vertex_normals.col((l+1)%3)) >= 0){
           // a^l is upwind
-          element_matrix.row(l) = local_masses[l] * contribution;
+          element_matrix.row(l) = local_masses[l] * contribution ;
+          LF_ASSERT_MSG(element_matrix.row(l).norm() == 0 , "Vertex masses should be 0 in this case");
         }else{
             // a^l is not upwind
             element_matrix.row(l) = Eigen::Vector<SCALAR, 6>::Zero();
         }
       }else{
         // last 3 nodes are edge midpoints of triangle
-        const Eigen::Matrix<double, 2, 3> outward_normals = computeOutwardNormalsTriaAlt(entity);
+        const Eigen::Matrix<double, 2, 3> outward_normals = computeOutwardNormalsTria(entity);
         // Midpoint m^l is upwind iff product of v(m^l) with corresponding outward normals is positive
         if(vl.dot(outward_normals.col(l%3)) >= 0){
           // m^l is upwind
-          element_matrix.row(l) = local_masses[l] * contribution * area;
+            if(vl.dot(outward_normals.col(l%3)) == 0){
+              element_matrix.row(l) = 0.5 * local_masses[l] * contribution ;
+            }
+            else{
+              element_matrix.row(l) = local_masses[l] * contribution ;
+            }
+
         }else{
           // m^l is not upwind
           element_matrix.row(l) = Eigen::Vector<SCALAR, 6>::Zero();

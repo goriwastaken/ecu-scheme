@@ -35,7 +35,7 @@ lf::mesh::utils::CodimMeshDataSet<double> initializeMassesQuadratic(const std::s
     const lf::geometry::Geometry *geo_ptr = entity->Geometry();
     double area = lf::geometry::Volume(*geo_ptr);
     for (const lf::mesh::Entity *corner : entity->SubEntities(2)) {
-      masses(*corner) += area * (1.0/3.0);
+      masses(*corner) += 0.0;
     }
   }
   return masses;
@@ -87,24 +87,5 @@ Eigen::Matrix<double, 2, 3> computeOutwardNormalsTria(const lf::mesh::Entity &en
   return normals;
 }
 
-Eigen::Matrix<double, 2, 3> computeOutwardNormalsTriaAlt(const lf::mesh::Entity &entity){
-  Eigen::Matrix<double, 2, 3> normals;
-  int idx = 0;
-  for(const lf::mesh::Entity* edge : entity.SubEntities(1)){
-    LF_ASSERT_MSG(idx < 3, "Triangle has more than 3 edges");
-    const lf::geometry::Geometry *geo_ptr = edge->Geometry();
-    const Eigen::MatrixXd corners = lf::geometry::Corners(*geo_ptr);
-    Eigen::Vector2d direction = corners.col(1) - corners.col(0);
-    direction /= direction.norm();
-    normals.col(idx) = Eigen::Vector2d(-direction(1), direction(0));
-    if(normals.col(idx).dot(direction) < 0){
-      normals.col(idx) *= -1;
-    }
-
-    idx++;
-  }
-
-  return normals;
-}
 
 } // assemble
