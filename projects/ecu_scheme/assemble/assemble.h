@@ -5,7 +5,6 @@
 #include <edge_element_grad_matrix_provider.h>
 #include <edge_element_mass_matrix_provider.h>
 #include <fifteen_point_upwind_matrix_provider.h>
-#include <lumped_mass_matrix_provider.h>
 #include <mesh_function_one_form.h>
 #include <stable_convection_prov.h>
 #include <supg_linear_matrix_provider.h>
