@@ -199,10 +199,22 @@ int main(int argc, char *argv[]) {
     //
     ecu_scheme::experiments::ManufacturedSolutionExperiment<double>
         experiment_l(fe_space_l);
-    Eigen::VectorXd solution_vector_l = experiment_l.ComputeSolution(
-        eps_for_refinement, kVelocity, kTestFunctor, kDirichletFunctor);
-    solution_collection_wrapper.final_time_solutions.push_back(
-        solution_vector_l);
+
+    if(eps_for_refinement > 1.0 - 1e-5){
+      // Midpoint and Fifteen-point Schemes run only in the case of \epsilon = 1, even if they are still unstable
+      // Compute solution for midpoint Upwind scheme
+      Eigen::VectorXd solution_vector_l = experiment_l.ComputeSolution(
+          eps_for_refinement, kVelocity, kTestFunctor, kDirichletFunctor);
+      solution_collection_wrapper.final_time_solutions.push_back(
+          solution_vector_l);
+      //        // Compute solution for fifteen point scheme
+      Eigen::VectorXd solution_vector_fifteen_point_quad =
+          experiment_l.ComputeFifteenPointQuadRuleSolution(
+              eps_for_refinement, kVelocity, kTestFunctor, kDirichletFunctor);
+      solution_collection_wrapper_fifteen_point.final_time_solutions.push_back(
+          solution_vector_fifteen_point_quad);
+    }
+
 
     const auto kTempEps = [kEps](const Eigen::Vector2d &x) { return kEps; };
 
@@ -224,12 +236,6 @@ int main(int argc, char *argv[]) {
     solution_collection_wrapper_stable_upwind.final_time_solutions.push_back(
         solution_vector_stable_upwind);
     //
-    //        // Compute solution for fifteen point scheme
-    Eigen::VectorXd solution_vector_fifteen_point_quad =
-        experiment_l.ComputeFifteenPointQuadRuleSolution(
-            eps_for_refinement, kVelocity, kTestFunctor, kDirichletFunctor);
-    solution_collection_wrapper_fifteen_point.final_time_solutions.push_back(
-        solution_vector_fifteen_point_quad);
 
     // only debug purposes - plot FE solution in paraview
     // ecu_scheme::post_processing::output_results<double>(fe_space_l,
@@ -285,7 +291,7 @@ int main(int argc, char *argv[]) {
       solution_collection_wrapper_linear, solution_collection_wrapper_supg,
       mf_exact_solution,
       ecu_scheme::post_processing::concat(
-          "manufactured_solution_conv_linear_comparison", "_",
+          "manufactured_solution_linear_comparison", "_",
           refinement_levels, "_", eps_for_refinement),
       true);
 
@@ -300,11 +306,17 @@ int main(int argc, char *argv[]) {
           {solution_collection_wrapper_stable_upwind, "7-Point Stable Upwind"},
           {solution_collection_wrapper_fifteen_point, "15-Point Upwind"},
           {solution_collection_wrapper_supg_quadratic, "SUPG"}};
+  if(eps_for_refinement < 1.0){
+    // make sure that we ignore Midpoint and 15-point Schemes in the case they don't properly run, for eps << 1
+    bundle_manuf_solution_wrappers = {{solution_collection_wrapper_stable_upwind, "7-Point Stable Upwind"},
+                                      {solution_collection_wrapper_supg_quadratic, "SUPG"}};
+  }
+
   ecu_scheme::post_processing::convergence_comparison_multiple_methods<
       double, decltype(mf_exact_solution)>(
       bundle_manuf_solution_wrappers, mf_exact_solution,
       ecu_scheme::post_processing::concat(
-          "manufactured_solution_multiple_methods_quad", "_", refinement_levels,
+          "manufactured_solution_quad_comparison", "_", refinement_levels,
           "_", eps_for_refinement));
 
   //  // Comparison with SUPG - Quadratic FE space

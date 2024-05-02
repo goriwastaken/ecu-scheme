@@ -126,7 +126,7 @@ class ManufacturedSolutionExperiment {
           return ess_bdc_flags_values[gdof_idx];
         },
         A, phi);
-    //      EnforceBoundaryConditions(fe_space_, A, phi, dirichlet);
+    //      EnforceInflowBDCOneform(fe_space_, A, phi, dirichlet);
 
     // SOLVE LINEAR SYSTEM
     Eigen::SparseMatrix<double> A_crs = A.makeSparse();
@@ -205,7 +205,7 @@ class ManufacturedSolutionExperiment {
           return ess_bdc_flags_values[gdof_idx];
         },
         A, phi);
-    //      EnforceBoundaryConditions(fe_space_, A, phi, dirichlet);
+    //      EnforceInflowBDCOneform(fe_space_, A, phi, dirichlet);
 
     // SOLVE LINEAR SYSTEM
     Eigen::SparseMatrix<double> A_crs = A.makeSparse();
@@ -282,7 +282,7 @@ class ManufacturedSolutionExperiment {
           return ess_bdc_flags_values[gdof_idx];
         },
         A, phi);
-    //      EnforceBoundaryConditions(fe_space_, A, phi, dirichlet);
+    //      EnforceInflowBDCOneform(fe_space_, A, phi, dirichlet);
 
     // SOLVE LINEAR SYSTEM
     Eigen::SparseMatrix<double> A_crs = A.makeSparse();

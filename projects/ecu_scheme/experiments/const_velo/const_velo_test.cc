@@ -22,31 +22,16 @@ int main(int argc, char* argv[]) {
   double eps_for_refinement = 0;
   // Number of refinement levels
   unsigned int refinement_levels = 7;
-  // Time step size for linear FE space and quadratic FE space
-  const double step_size_linear = 0.1;
-  double step_size_quad = 0.01;
+
   // Adjust the number of refinement levels and the diffusion coefficient if the
   // user specified them
   if (argc == 3) {
     refinement_levels = std::stoi(argv[1]);
-    eps_for_refinement = std::stod(argv[2]);
-  } else if (argc == 4) {
-    refinement_levels = std::stoi(argv[1]);
-    eps_for_refinement = std::stod(argv[2]);
-    step_size_quad = std::stod(argv[3]);
+//    eps_for_refinement = std::stod(argv[2]);
   }
   std::cout << "Refinement levels: " << refinement_levels << '\n';
   std::cout << "Epsilon for refinement: " << eps_for_refinement << '\n';
-  std::cout << "Step size for quadratic FE space: " << step_size_quad << '\n';
 
-  // setup is [0,2]x[0,2] with periodic boundary conditions and time interval I=
-  // [0,0.5] initial condition A_0 = 1/pi * cos(pi*y) + 1/(2pi) * cos(2pi*x)
-  // velocity field u = (4,4)
-  // forcing term f = 0
-  // use Heun time-stepping with uniform time step delta_t = 0.1*h for bilinear
-  // Lagrangian FE and delta_t = 0.01*h for biquadratic Lagrangian FE compare
-  // solution at final time t=0.5 with initial condition report L2 and H1 error
-  // norms
 
   ecu_scheme::mesh::BasicMeshBuilder builder;
   builder.SetNumCellsX(2);
@@ -58,26 +43,6 @@ int main(int argc, char* argv[]) {
   auto fe_space_linear =
       std::make_shared<lf::uscalfe::FeSpaceLagrangeO1<double>>(mesh_p);
 
-  // initial condition for the experiment
-  //  const auto kAInitCondition = [](const Eigen::Vector2d &x){
-  //    return 1.0/M_PI * std::cos(M_PI*x(1)) + 1.0/(2.0*M_PI) *
-  //    std::cos(2.0*M_PI*x(0));
-  //  };
-  //  // constant velocity field
-  //  const auto kVelocity = [](const Eigen::Vector2d &x){
-  //    return (Eigen::Vector2d() << 4.0, 4.0).finished();
-  //  };
-  //  // forcing term f
-  //  const auto kTestFunctor = [](const Eigen::Vector2d &x){
-  //    return 0.0;
-  //  };
-  //  const auto kPeriodicBC = [kAInitCondition](const Eigen::Vector2d& x){
-  //    if(x(0) < 1e-5 || x(0) > (2.0 - 1e-5) || x(1) < 1e-5 || x(1) > (2.0 -
-  //    1e-5)){
-  //      return kAInitCondition(x);
-  //    }
-  //    return 0.0;
-  //  };
 
   // new setup stationary constant velocity problem
   const auto kVelocity = [](const Eigen::Vector2d& x) {
@@ -120,26 +85,7 @@ int main(int argc, char* argv[]) {
 
   // Eigen::VectorXd solution_vector = Eigen::VectorXd::Zero(1);
 
-  // Experiment for the quadratic FE space case
-  const double max_time_quad = 0.5;
-  //  ecu_scheme::experiments::ConstVeloSolution<double>
-  //  experiment(fe_space_quad); std::vector<Eigen::VectorXd> solution_vector =
-  //  experiment.ComputeSolution(kAInitCondition, kVelocity, kPeriodicBC,
-  //  max_time_quad, step_size_quad);
 
-  // Get the solution after the first timestep
-  //  Eigen::VectorXd solution_vector_first_timestep = solution_vector[0];
-  // Get the solution at the final time
-  //  Eigen::VectorXd solution_vector_final_timestep =
-  //  solution_vector[solution_vector.size() - 1];
-
-  //  lf::mesh::utils::MeshFunctionGlobal
-  //  mf_sol_first_timestep{solution_vector_first_timestep};
-  //  lf::mesh::utils::MeshFunctionGlobal
-  //  mf_sol_final_timestep{solution_vector_final_timestep};
-
-  // ecu_scheme::post_processing::output_results<double>(fe_space_quad,
-  // solution_vector_final_timestep, "const_velo_solution_quad");
   //  Projection of exact and numerical solution on the curve {x \in \Omega, y =
   //  1}
   //  auto horizontalCurve = [](double t) -> Eigen::Vector2d{
@@ -185,13 +131,7 @@ int main(int argc, char* argv[]) {
     auto mesh_l = multi_mesh.getMesh(l);
     auto fe_space_l =
         std::make_shared<lf::uscalfe::FeSpaceLagrangeO2<double>>(mesh_l);
-    // Compute maximal mesh width for each level and add it to the Wrapper
-    //    for(const lf::mesh::Entity *e : mesh_l->Entities(1)){
-    //      const double h_temp = lf::geometry::Volume(*e->Geometry());
-    //      if(h_temp > solution_collection_wrapper.max_meshwidth_per_level(l)){
-    //        solution_collection_wrapper.max_meshwidth_per_level(l) = h_temp;
-    //      }
-    //    }
+
     // Compute the solution for the current level
     ecu_scheme::experiments::ConstVeloSolution<double> experiment(fe_space_l);
     //    Eigen::VectorXd solution_vector_quad =
@@ -236,7 +176,7 @@ int main(int argc, char* argv[]) {
   ecu_scheme::post_processing::convergence_comparison_multiple_methods<
       double, decltype(mf_exact_solution)>(
       bundle_solution_wrappers, mf_exact_solution,
-      ecu_scheme::post_processing::concat("const_velo_multiple_methods_quad",
+      ecu_scheme::post_processing::concat("const_velo_quad_comparison",
                                           "_", refinement_levels, "_",
                                           eps_for_refinement));
   return 0;

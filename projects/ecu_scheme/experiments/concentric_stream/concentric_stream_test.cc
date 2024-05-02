@@ -25,10 +25,10 @@ int main(int argc, char* argv[]) {
   if (argc == 3) {
     refinement_levels = std::stoi(argv[1]);
     eps_for_refinement = 0.0;
-    if (eps_for_refinement > 0.0) {
-      std::cerr << "This experiment concerns the pure transport problem"
-                << std::endl;
-    }
+//    if (eps_for_refinement > 0.0) {
+//      std::cerr << "This experiment concerns the pure transport problem"
+//                << std::endl;
+//    }
   }
   std::cout << "Refinement levels: " << refinement_levels << '\n';
   std::cout << "Epsilon for refinement: " << eps_for_refinement << '\n';
@@ -55,21 +55,7 @@ int main(int argc, char* argv[]) {
   const auto kPhiRotational = [](const double& xi) {
     return std::sin(M_PI * xi) * std::sin(M_PI * xi);
   };
-  // todo debug
-  //  const auto kPhiRotational = [](const double &xi){
-  //    return std::sin(0.5*M_PI * xi)*std::sin(0.5*M_PI*xi);
-  //  };
 
-  // new dirichlet functor
-  //  const auto kDirichletFunctor = [kPhiRotational](const Eigen::Vector2d &x){
-  //    if(x(0) == 0){
-  //      return kPhiRotational(x(1));
-  //    }else if(x(1) == 0) {
-  //      return kPhiRotational(x(0));
-  //    }
-  //    return 0.0;
-  //  };
-  // todo debug
   const auto kDirichletFunctor = [kPhiRotational](const Eigen::Vector2d& x) {
     auto xnorm = x.norm();
     if (xnorm > 1.0) {
@@ -89,27 +75,7 @@ int main(int argc, char* argv[]) {
     }
     return kPhiRotational(norm);
   };
-  // todo debug
-  //  const auto kTestFunctor = [](Eigen::Vector2d x) -> double{
-  //    const double xn = x.norm();
-  //    if(xn < 1.0){
-  //      return x(1)*M_PI*0.5*std::cos(0.5*M_PI*x(0))*std::sin(0.5*M_PI*x(0));
-  //    }
-  //    return -M_PI*x(0)*x(1)*std::cos(0.5*M_PI*(x(1)*x(1)
-  //    + 1.0))*std::sin(0.5*M_PI*(x(1)*x(1) + 1.0));
-  //  };
-  //
-  //  const auto kDirichletFunctor = [](Eigen::Vector2d x) -> double{
-  //    const double xn = x.norm();
-  //    if(xn < 1.0){
-  //      return 0.5*M_PI*std::cos(0.5*M_PI*x(0));
-  //    }
-  //    return 0.5*M_PI*std::cos(0.5*M_PI*(x(1)*x(1) + 1.0));
-  //  };
-  //  const auto kExact = [kDirichletFunctor](Eigen::Vector2d x) -> double{
-  //    return kDirichletFunctor(x);
-  //  };
-  // end debug
+
 
   // Wrap exact solution into meshfunction
   lf::mesh::utils::MeshFunctionGlobal mf_u_exact{kExact};
@@ -198,10 +164,7 @@ int main(int argc, char* argv[]) {
         std::make_shared<lf::uscalfe::FeSpaceLagrangeO2<double>>(mesh_l);
     ecu_scheme::experiments::ConcentricStreamSolution<double> experiment_l(
         fe_space_l);
-    // todo debug
-    //    Eigen::VectorXd solution_vector_l = experiment_l.ComputeSolution(
-    //    kEps, kVelocity, kDirichletFunctor);
-    //    solution_collection_wrapper_quad.final_time_solutions.push_back(solution_vector_l);
+
     // midpoint upwind scheme
     //    Eigen::VectorXd solution_vector_l =
     //    experiment_l.ComputeSolutionMultipleMethods(kEps, kVelocity,
@@ -214,10 +177,10 @@ int main(int argc, char* argv[]) {
     solution_collection_wrapper_quad_stable.final_time_solutions.push_back(
         solution_vector_l_stable_upwind);
     // 15 point upwind scheme
-    //    Eigen::VectorXd solution_vector_l_fifteen_pt_upwind =
-    //    experiment_l.ComputeSolutionMultipleMethods(kEps, kVelocity,
-    //    kDirichletFunctor, kTestFunctor, "15P_UPWIND");
-    //    solution_collection_wrapper_quad_fifteen_upwind.final_time_solutions.push_back(solution_vector_l_fifteen_pt_upwind);
+        Eigen::VectorXd solution_vector_l_fifteen_pt_upwind =
+        experiment_l.ComputeSolutionMultipleMethods(kEps, kVelocity,
+        kDirichletFunctor, kTestFunctor, "15P_UPWIND");
+        solution_collection_wrapper_quad_fifteen_upwind.final_time_solutions.push_back(solution_vector_l_fifteen_pt_upwind);
 
     // SUPG method - quadratic FE space
     const auto kTempEps = [kEps](const Eigen::Vector2d& x) { return kEps; };
@@ -225,7 +188,7 @@ int main(int argc, char* argv[]) {
         ecu_scheme::assemble::SolveCDBVPSupgQuad<
             decltype(kTempEps), decltype(kVelocity), decltype(kTestFunctor),
             decltype(kDirichletFunctor)>(fe_space_l, kTempEps, kVelocity,
-                                         kTestFunctor, kDirichletFunctor);
+                                         kTestFunctor, kDirichletFunctor, true);
     solution_collection_wrapper_supg_quad.final_time_solutions.push_back(
         solution_vector_supg_quad);
 
@@ -271,7 +234,7 @@ int main(int argc, char* argv[]) {
   //          refinement_levels, "_", eps_for_refinement)
   //  );
 
-  // todo compare with other methods
+
   std::cout << "Comparison with other methods - Quadratic FE space"
             << "\n";
   std::vector<
@@ -286,7 +249,7 @@ int main(int argc, char* argv[]) {
       double, decltype(mf_u_exact)>(
       bundle_solution_wrappers, mf_u_exact,
       ecu_scheme::post_processing::concat(
-          "concentric_stream_solution_multiple_methods_quad", "_",
+          "concentric_stream_quad_comparison", "_",
           refinement_levels, "_", eps_for_refinement));
   return 0;
 }

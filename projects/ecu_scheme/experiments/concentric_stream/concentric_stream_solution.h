@@ -36,7 +36,7 @@ void EnforceBoundaryConditions(
 
 /**
  * @brief Flags all nodes on the inflow boundary - basically a different
- * implementation to do the same thing as EnforceBoundaryConditions
+ * implementation to do the same thing as EnforceInflowBDCOneform
  * @param mesh_p underlying mesh
  * @param velocity velocity field
  * @return Data set of flags for nodes on the inflow boundary
@@ -137,7 +137,7 @@ class ConcentricStreamSolution {
         },
         A, phi);
 
-    //    EnforceBoundaryConditions(fe_space_, A, phi, dirichlet);
+    //    EnforceInflowBDCOneform(fe_space_, A, phi, dirichlet);
 
     // SOLVE LINEAR SYSTEM
     Eigen::SparseMatrix<double> A_crs = A.makeSparse();
