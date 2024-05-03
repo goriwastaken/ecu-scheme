@@ -19,11 +19,10 @@ namespace ecu_scheme {
 namespace assemble {
 
 /**
- * @brief Collection of utility functions for assembly, finding boundary entities, and computing geometrical properties.
+ * @brief Collection of utility functions for assembly, finding boundary
+ * entities, and computing geometrical properties.
  */
-namespace utils{
-
-}  
+namespace utils {}
 
 }  // namespace assemble
 }  // namespace ecu_scheme

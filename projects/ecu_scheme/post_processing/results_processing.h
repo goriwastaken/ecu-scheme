@@ -157,8 +157,14 @@ void convergence_report_oneform(
     // get mesh for refinement level l
     std::shared_ptr<const lf::mesh::Mesh> mesh_l{multi_mesh.getMesh(l)};
 
-    // generate DOFHandler corresponding to edge element basis functions to report number of DOFs
-    const lf::assemble::DofHandler &dofh_edge = isLinear ? lf::assemble::UniformFEDofHandler(mesh_l, {{lf::base::RefEl::kSegment(), 1}}) : lf::assemble::UniformFEDofHandler(mesh_l, {{lf::base::RefEl::kSegment(), 2}, {lf::base::RefEl::kTria(), 2}});
+    // generate DOFHandler corresponding to edge element basis functions to
+    // report number of DOFs
+    const lf::assemble::DofHandler& dofh_edge =
+        isLinear ? lf::assemble::UniformFEDofHandler(
+                       mesh_l, {{lf::base::RefEl::kSegment(), 1}})
+                 : lf::assemble::UniformFEDofHandler(
+                       mesh_l, {{lf::base::RefEl::kSegment(), 2},
+                                {lf::base::RefEl::kTria(), 2}});
     // compute meshwidth
     const double kHMax =
         ecu_scheme::post_processing::ComputeMeshWidthTria(mesh_l);
@@ -177,18 +183,21 @@ void convergence_report_oneform(
     Eigen::VectorXd solution_vec =
         solution_collection_wrapper.final_time_solutions.at(l);
 
-    // Take finite element solution and wrap it into specialized mesh function for 1-forms
-    ecu_scheme::assemble::MeshFunctionOneForm<double> mf_fe_one_form(solution_vec, mesh_l);
-    // Compute difference with exact solution (care that the lf::uscalfe::operator-() is used
+    // Take finite element solution and wrap it into specialized mesh function
+    // for 1-forms
+    ecu_scheme::assemble::MeshFunctionOneForm<double> mf_fe_one_form(
+        solution_vec, mesh_l);
+    // Compute difference with exact solution (care that the
+    // lf::uscalfe::operator-() is used
     auto mf_diff = mf_fe_one_form - mf_exact_solution;
 
     // Prepare computation of L2-error, generate a quadrature rule
-    lf::quad::QuadRule quad_rule = lf::quad::make_QuadRule(lf::base::RefEl::kTria(), 10);
+    lf::quad::QuadRule quad_rule =
+        lf::quad::make_QuadRule(lf::base::RefEl::kTria(), 10);
     // Compute L2 error
-    const std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> L2_error_bundle = ecu_scheme::post_processing::L2norm(
-        mesh_l, mf_diff, square_vector, quad_rule
-        );
-
+    const std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>>
+        L2_error_bundle = ecu_scheme::post_processing::L2norm(
+            mesh_l, mf_diff, square_vector, quad_rule);
 
     Ndof_array(l) = dofh_edge.NumDofs();
     errors_array(l) = std::get<0>(L2_error_bundle);
@@ -202,8 +211,8 @@ void convergence_report_oneform(
     L2norm_csv_file << dofh_edge.NumDofs() << "," << kHMax << ","
                     << std::get<0>(L2_error_bundle) << "\n";
     std::cout << std::left << std::setw(10) << fe_space->LocGlobMap().NumDofs()
-              << std::left << std::setw(16) << dofh_edge.NumDofs()
-              << std::left << std::setw(16) << std::get<0>(L2_error_bundle)
+              << std::left << std::setw(16) << dofh_edge.NumDofs() << std::left
+              << std::setw(16) << std::get<0>(L2_error_bundle)
               << std::endl;  // debug purpose
   }
   L2norm_csv_file.close();

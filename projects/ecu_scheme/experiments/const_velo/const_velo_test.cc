@@ -27,11 +27,10 @@ int main(int argc, char* argv[]) {
   // user specified them
   if (argc == 3) {
     refinement_levels = std::stoi(argv[1]);
-//    eps_for_refinement = std::stod(argv[2]);
+    //    eps_for_refinement = std::stod(argv[2]);
   }
   std::cout << "Refinement levels: " << refinement_levels << '\n';
   std::cout << "Epsilon for refinement: " << eps_for_refinement << '\n';
-
 
   ecu_scheme::mesh::BasicMeshBuilder builder;
   builder.SetNumCellsX(2);
@@ -42,7 +41,6 @@ int main(int argc, char* argv[]) {
       std::make_shared<lf::uscalfe::FeSpaceLagrangeO2<double>>(mesh_p);
   auto fe_space_linear =
       std::make_shared<lf::uscalfe::FeSpaceLagrangeO1<double>>(mesh_p);
-
 
   // new setup stationary constant velocity problem
   const auto kVelocity = [](const Eigen::Vector2d& x) {
@@ -84,7 +82,6 @@ int main(int argc, char* argv[]) {
   lf::mesh::utils::MeshFunctionGlobal mf_exact_solution{kExactSolution};
 
   // Eigen::VectorXd solution_vector = Eigen::VectorXd::Zero(1);
-
 
   //  Projection of exact and numerical solution on the curve {x \in \Omega, y =
   //  1}
@@ -176,8 +173,8 @@ int main(int argc, char* argv[]) {
   ecu_scheme::post_processing::convergence_comparison_multiple_methods<
       double, decltype(mf_exact_solution)>(
       bundle_solution_wrappers, mf_exact_solution,
-      ecu_scheme::post_processing::concat("const_velo_quad_comparison",
-                                          "_", refinement_levels, "_",
+      ecu_scheme::post_processing::concat("const_velo_quad_comparison", "_",
+                                          refinement_levels, "_",
                                           eps_for_refinement));
   return 0;
 }

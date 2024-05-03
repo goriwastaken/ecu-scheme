@@ -25,10 +25,10 @@ int main(int argc, char* argv[]) {
   if (argc == 3) {
     refinement_levels = std::stoi(argv[1]);
     eps_for_refinement = 0.0;
-//    if (eps_for_refinement > 0.0) {
-//      std::cerr << "This experiment concerns the pure transport problem"
-//                << std::endl;
-//    }
+    //    if (eps_for_refinement > 0.0) {
+    //      std::cerr << "This experiment concerns the pure transport problem"
+    //                << std::endl;
+    //    }
   }
   std::cout << "Refinement levels: " << refinement_levels << '\n';
   std::cout << "Epsilon for refinement: " << eps_for_refinement << '\n';
@@ -75,7 +75,6 @@ int main(int argc, char* argv[]) {
     }
     return kPhiRotational(norm);
   };
-
 
   // Wrap exact solution into meshfunction
   lf::mesh::utils::MeshFunctionGlobal mf_u_exact{kExact};
@@ -177,10 +176,11 @@ int main(int argc, char* argv[]) {
     solution_collection_wrapper_quad_stable.final_time_solutions.push_back(
         solution_vector_l_stable_upwind);
     // 15 point upwind scheme
-        Eigen::VectorXd solution_vector_l_fifteen_pt_upwind =
-        experiment_l.ComputeSolutionMultipleMethods(kEps, kVelocity,
-        kDirichletFunctor, kTestFunctor, "15P_UPWIND");
-        solution_collection_wrapper_quad_fifteen_upwind.final_time_solutions.push_back(solution_vector_l_fifteen_pt_upwind);
+    Eigen::VectorXd solution_vector_l_fifteen_pt_upwind =
+        experiment_l.ComputeSolutionMultipleMethods(
+            kEps, kVelocity, kDirichletFunctor, kTestFunctor, "15P_UPWIND");
+    solution_collection_wrapper_quad_fifteen_upwind.final_time_solutions
+        .push_back(solution_vector_l_fifteen_pt_upwind);
 
     // SUPG method - quadratic FE space
     const auto kTempEps = [kEps](const Eigen::Vector2d& x) { return kEps; };
@@ -234,7 +234,6 @@ int main(int argc, char* argv[]) {
   //          refinement_levels, "_", eps_for_refinement)
   //  );
 
-
   std::cout << "Comparison with other methods - Quadratic FE space"
             << "\n";
   std::vector<
@@ -248,8 +247,8 @@ int main(int argc, char* argv[]) {
   ecu_scheme::post_processing::convergence_comparison_multiple_methods<
       double, decltype(mf_u_exact)>(
       bundle_solution_wrappers, mf_u_exact,
-      ecu_scheme::post_processing::concat(
-          "concentric_stream_quad_comparison", "_",
-          refinement_levels, "_", eps_for_refinement));
+      ecu_scheme::post_processing::concat("concentric_stream_quad_comparison",
+                                          "_", refinement_levels, "_",
+                                          eps_for_refinement));
   return 0;
 }

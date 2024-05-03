@@ -25,9 +25,9 @@ void EnforceBoundaryConditions(
     std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet);
 
 void EnforceBoundaryConditionsOnRotInflow(
-    const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>>& fe_space,
-    lf::assemble::COOMatrix<double>& A, Eigen::VectorXd& phi,
-    std::function<double(const Eigen::Matrix<double, 2, 1, 0>&)> dirichlet);
+    const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>> &fe_space,
+    lf::assemble::COOMatrix<double> &A, Eigen::VectorXd &phi,
+    std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet);
 
 /**
  * @brief Assemble the SUPG element matrix for the convection-diffusion boundary
@@ -210,7 +210,8 @@ template <typename DIFFUSION_COEFF, typename CONVECTION_COEFF,
           typename FUNCTOR_F, typename FUNCTOR_G>
 Eigen::VectorXd SolveCDBVPSupgQuad(
     const std::shared_ptr<lf::uscalfe::FeSpaceLagrangeO2<double>> &fe_space,
-    DIFFUSION_COEFF eps, CONVECTION_COEFF v, FUNCTOR_F f, FUNCTOR_G g, bool flagInflow = false) {
+    DIFFUSION_COEFF eps, CONVECTION_COEFF v, FUNCTOR_F f, FUNCTOR_G g,
+    bool flagInflow = false) {
   // Wrap functions into MeshFunctions
   lf::mesh::utils::MeshFunctionGlobal mf_eps{eps};
   lf::mesh::utils::MeshFunctionGlobal mf_v{v};
@@ -252,12 +253,11 @@ Eigen::VectorXd SolveCDBVPSupgQuad(
   //        must correspond to points"); return {inflow_nodes(dofh_node),
   //        g_coeffs[dof_idx]};
   //      }, A, phi);
-  if(!flagInflow){
+  if (!flagInflow) {
     EnforceBoundaryConditions(fe_space, A, phi, g);
-  }else{
+  } else {
     EnforceBoundaryConditionsOnRotInflow(fe_space, A, phi, g);
   }
-
 
   // IMPOSE DIRICHLET ON BOUNDARY
   //  auto bd_flags{lf::mesh::utils::flagEntitiesOnBoundary(mesh_p, 1)};

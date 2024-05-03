@@ -29,9 +29,9 @@ int main(int argc, char* argv[]) {
   // user specified them
   if (argc == 2) {
     refinement_levels = std::stoi(argv[1]);
-  }else if(argc == 3){
+  } else if (argc == 3) {
     refinement_levels = std::stoi(argv[1]);
-    eps_for_refinement = 0; //pure transport problem
+    eps_for_refinement = 0;  // pure transport problem
   }
   std::cout << "Refinement levels: " << refinement_levels << '\n';
   std::cout << "Epsilon for refinement: " << eps_for_refinement << '\n';
@@ -44,8 +44,6 @@ int main(int argc, char* argv[]) {
   builder.SetNumCellsX(49);
   builder.SetNumCellsY(49);
   std::shared_ptr<lf::mesh::Mesh> mesh_p = builder.Build(0.0, 0.0, 1.0, 1.0);
-
-
 
   // Define rotational velocity field
   const auto kVelocityField = [](const Eigen::Vector2d& xh) {
@@ -129,43 +127,43 @@ int main(int argc, char* argv[]) {
   }
 
   // Realize convergence result for uniform refinement
-  ecu_scheme::post_processing::convergence_report_oneform<double, decltype(mf_exact_sol)>(
+  ecu_scheme::post_processing::convergence_report_oneform<
+      double, decltype(mf_exact_sol)>(
       solution_collection_wrapper_linear, mf_exact_sol,
       ecu_scheme::post_processing::concat(
-          "rot_hump_linear","_",refinement_levels,"_",eps_for_refinement
-          ), true
-      );
+          "rot_hump_linear", "_", refinement_levels, "_", eps_for_refinement),
+      true);
 
-  //debug L2 error computation
-//  for (int l = 0; l < L; ++l) {
-//    auto mesh_l = multi_mesh.getMesh(l);
-//    auto fe_space_l_linear =
-//        std::make_shared<lf::uscalfe::FeSpaceLagrangeO1<double>>(mesh_l);
-//
-//    Eigen::VectorXd final_time_sol_vector =
-//        solution_collection_wrapper_linear.final_time_solutions.at(l);
-//    ecu_scheme::assemble::MeshFunctionOneForm<double> mf_one_form(
-//        final_time_sol_vector, mesh_l);
-//
-//
-//    //    auto mf_diff = lf::uscalfe::operator-(mf_one_form, mf_exact_sol);
-//    auto mf_diff = mf_one_form - mf_exact_sol;
-//
-//    // prepare extra info for L2norm function
-//    auto square_vector =
-//        [](Eigen::Matrix<double, Eigen::Dynamic, 1> a) -> double {
-//      return a.squaredNorm();
-//    };
-//    lf::quad::QuadRule quad_rule =
-//        lf::quad::make_QuadRule(lf::base::RefEl::kTria(), 10);
-//
-//    // get L2_error
-//    const std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>>
-//        L2_error_bundle = ecu_scheme::post_processing::L2norm(
-//            mesh_l, mf_diff, square_vector, quad_rule);
-//    std::cout << "Ndofs: " << fe_space_l_linear->LocGlobMap().NumDofs()
-//              << " L2-error: " << std::get<0>(L2_error_bundle) << "\n";
-//  }
+  // debug L2 error computation
+  //  for (int l = 0; l < L; ++l) {
+  //    auto mesh_l = multi_mesh.getMesh(l);
+  //    auto fe_space_l_linear =
+  //        std::make_shared<lf::uscalfe::FeSpaceLagrangeO1<double>>(mesh_l);
+  //
+  //    Eigen::VectorXd final_time_sol_vector =
+  //        solution_collection_wrapper_linear.final_time_solutions.at(l);
+  //    ecu_scheme::assemble::MeshFunctionOneForm<double> mf_one_form(
+  //        final_time_sol_vector, mesh_l);
+  //
+  //
+  //    //    auto mf_diff = lf::uscalfe::operator-(mf_one_form, mf_exact_sol);
+  //    auto mf_diff = mf_one_form - mf_exact_sol;
+  //
+  //    // prepare extra info for L2norm function
+  //    auto square_vector =
+  //        [](Eigen::Matrix<double, Eigen::Dynamic, 1> a) -> double {
+  //      return a.squaredNorm();
+  //    };
+  //    lf::quad::QuadRule quad_rule =
+  //        lf::quad::make_QuadRule(lf::base::RefEl::kTria(), 10);
+  //
+  //    // get L2_error
+  //    const std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>>
+  //        L2_error_bundle = ecu_scheme::post_processing::L2norm(
+  //            mesh_l, mf_diff, square_vector, quad_rule);
+  //    std::cout << "Ndofs: " << fe_space_l_linear->LocGlobMap().NumDofs()
+  //              << " L2-error: " << std::get<0>(L2_error_bundle) << "\n";
+  //  }
 
   return 0;
 }
