@@ -85,7 +85,7 @@ run_oneform_experiments(){
   local refinement_levels="$1"
   local epsilon="$2"
 
-  echo -e "\nExecute constant velocity experiment (section )\n"
+  echo -e "\nExecute constant velocity experiment (section 5.2)\n"
   cd $BASE_DIR/experiments/advection_one_form_experiments/rotating_hump || exit
   ./projects.ecu_scheme.experiments.rotating_hump "$refinement_levels" "$epsilon"
   cd - > /dev/null || return
@@ -95,7 +95,7 @@ run_oneform_experiments(){
 run_all_experiments() {
     echo "Running all experiments"
     run_scalar_experiments "$1" "$2"
-    run_oneform_experiments "$1" 0.0
+    run_oneform_experiments 4 0.0
     # Add calls to other experiment functions
 }
 
@@ -121,7 +121,7 @@ while [ "$1" != "" ]; do
             run_scalar_experiments 6 1e-8
             ;;
         -o | --oneform )
-            run_oneform_experiments 5 0.0
+            run_oneform_experiments 3 0.0
             ;;
         -c | --custom )
             run_all_experiments "$2" "$3"
@@ -138,6 +138,8 @@ while [ "$1" != "" ]; do
             python3 plot_convergence_comparison.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_quad_comparison_6_1e-08_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/manufactured_solution_quad_comparison_6_1e-8_plot.eps
             python3 plot_convergence_comparison.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/concentric_stream_quad_comparison_7_0_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/concentric_stream_quad_comparison_7_0_plot.eps
             python3 plot_convergence_comparison.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/const_velo_quad_comparison_7_0_L2error.csv /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/const_velo_quad_comparison_7_0_plot.eps
+            # Plot command for 1-forms experiment
+            python3 ./plot_convergence_comparison.py /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/rot_hump_linear_3_0_L2error.csv  /home/gori/Documents/Thesis/thesis-lehrfempp-repo/lehrfempp/cmake-build-release/results/rot_hump_linear_3_0_plot.eps
             ;;
         * )
             usage

@@ -110,7 +110,7 @@ void output_results(
 }
 
 template <typename SCALAR, typename MF>
-void convergence_report_single(
+void convergence_report_oneform(
     const ExperimentSolutionWrapper<SCALAR>& solution_collection_wrapper,
     MF& mf_exact_solution, std::string experiment_name, bool isLinear = false) {
   // generate location for output
@@ -130,7 +130,7 @@ void convergence_report_single(
                   << solution_collection_wrapper.refinement_levels << "\n";
   L2norm_csv_file << "Diffusion coefficient: "
                   << solution_collection_wrapper.eps << "\n";
-  L2norm_csv_file << "No. of dofs,Meshwidth,L2 error"
+  L2norm_csv_file << "No. of dofs,Meshwidth,Extrusion-Contraction Upwind"
                   << "\n";
 
   // define square functions for norms
@@ -146,8 +146,7 @@ void convergence_report_single(
   // mesh corresponding to a refinement level
   lf::refinement::MeshHierarchy& multi_mesh{
       *solution_collection_wrapper.mesh_hierarchy_p};
-  std::cout << "Results processing mesh hierarchy info: \n";
-  multi_mesh.PrintInfo(std::cout);
+
   // get number of levels
   auto L = multi_mesh.NumLevels();
 
@@ -157,6 +156,9 @@ void convergence_report_single(
   for (int l = 0; l < L; ++l) {
     // get mesh for refinement level l
     std::shared_ptr<const lf::mesh::Mesh> mesh_l{multi_mesh.getMesh(l)};
+
+    // generate DOFHandler corresponding to edge element basis functions to report number of DOFs
+    const lf::assemble::DofHandler &dofh_edge = isLinear ? lf::assemble::UniformFEDofHandler(mesh_l, {{lf::base::RefEl::kSegment(), 1}}) : lf::assemble::UniformFEDofHandler(mesh_l, {{lf::base::RefEl::kSegment(), 2}, {lf::base::RefEl::kTria(), 2}});
     // compute meshwidth
     const double kHMax =
         ecu_scheme::post_processing::ComputeMeshWidthTria(mesh_l);
@@ -175,19 +177,21 @@ void convergence_report_single(
     Eigen::VectorXd solution_vec =
         solution_collection_wrapper.final_time_solutions.at(l);
 
-    // Take finite element solution and wrap it into a mesh function
-    auto mf_fe_sol = lf::fe::MeshFunctionFE(fe_space, solution_vec);
+    // Take finite element solution and wrap it into specialized mesh function for 1-forms
+    ecu_scheme::assemble::MeshFunctionOneForm<double> mf_fe_one_form(solution_vec, mesh_l);
+    // Compute difference with exact solution (care that the lf::uscalfe::operator-() is used
+    auto mf_diff = mf_fe_one_form - mf_exact_solution;
 
-    // Compute the L2 error
-    double L2_error = std::sqrt(lf::fe::IntegrateMeshFunction(
-        *(fe_space->Mesh()),
-        lf::mesh::utils::squaredNorm(mf_fe_sol - mf_exact_solution), 10));
-    // double L2_error =
-    // std::sqrt(lf::fe::IntegrateMeshFunction(*(fe_space->Mesh()),
-    // lf::mesh::utils::squaredNorm(mf_fe_sol - mf_exact_solution), [](const
-    // lf::mesh::Entity& e){return lf::quad::make_QuadRule(e.RefEl(),4);}));
-    Ndof_array(l) = fe_space->LocGlobMap().NumDofs();
-    errors_array(l) = L2_error;
+    // Prepare computation of L2-error, generate a quadrature rule
+    lf::quad::QuadRule quad_rule = lf::quad::make_QuadRule(lf::base::RefEl::kTria(), 10);
+    // Compute L2 error
+    const std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> L2_error_bundle = ecu_scheme::post_processing::L2norm(
+        mesh_l, mf_diff, square_vector, quad_rule
+        );
+
+
+    Ndof_array(l) = dofh_edge.NumDofs();
+    errors_array(l) = std::get<0>(L2_error_bundle);
 
     // debug only - plot each mesh with matlab
     // lf::io::writeMatlab(*(fe_space->Mesh()), concat(main_dir, "/",
@@ -195,10 +199,11 @@ void convergence_report_single(
     //  how to plot using lehrfem plot_
 
     // Add results to L2norm_csv_file file
-    L2norm_csv_file << fe_space->LocGlobMap().NumDofs() << "," << kHMax << ","
-                    << L2_error << "\n";
+    L2norm_csv_file << dofh_edge.NumDofs() << "," << kHMax << ","
+                    << std::get<0>(L2_error_bundle) << "\n";
     std::cout << std::left << std::setw(10) << fe_space->LocGlobMap().NumDofs()
-              << std::left << std::setw(16) << L2_error
+              << std::left << std::setw(16) << dofh_edge.NumDofs()
+              << std::left << std::setw(16) << std::get<0>(L2_error_bundle)
               << std::endl;  // debug purpose
   }
   L2norm_csv_file.close();

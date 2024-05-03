@@ -159,7 +159,7 @@ int main(int argc, char* argv[]) {
   }
 
   // Realize convergence results for uniform refinement
-  //  ecu_scheme::post_processing::convergence_report_single<double>(solution_collection_wrapper,
+  //  ecu_scheme::post_processing::convergence_report_oneform<double>(solution_collection_wrapper,
   //  mf_exact_solution,
   //                                                                 ecu_scheme::post_processing::concat("const_velo_quad","_",refinement_levels,"_",eps_for_refinement));
   std::cout << "Comparison with other methods - Quadratic FE space"

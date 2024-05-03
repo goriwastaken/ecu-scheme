@@ -16,7 +16,16 @@ namespace ecu_scheme {
  * @brief Collection of matrix and vector element providers
  */
 
-namespace assemble {}  // namespace assemble
+namespace assemble {
+
+/**
+ * @brief Collection of utility functions for assembly, finding boundary entities, and computing geometrical properties.
+ */
+namespace utils{
+
+}  
+
+}  // namespace assemble
 }  // namespace ecu_scheme
 
 #endif  // THESIS_ASSEMBLE_ASSEMBLE_H_

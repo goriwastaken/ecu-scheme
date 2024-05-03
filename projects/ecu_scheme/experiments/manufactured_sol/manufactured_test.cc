@@ -267,7 +267,7 @@ int main(int argc, char *argv[]) {
   }
   //  // Process the errors in the quadratic FE case
   //  std::cout << "Convergence of manufactured solution with quadratic FE\n";
-  //  ecu_scheme::post_processing::convergence_report_single<
+  //  ecu_scheme::post_processing::convergence_report_oneform<
   //      double, decltype(mf_exact_solution)>(
   //      solution_collection_wrapper, mf_exact_solution,
   //      ecu_scheme::post_processing::concat("manufactured_solution_conv", "_",
@@ -275,7 +275,7 @@ int main(int argc, char *argv[]) {
   //                                          eps_for_refinement));
   //  // Process the errors in the linear FE case
   //  std::cout << "Convergence of manufactured solution with linear FE\n";
-  //  ecu_scheme::post_processing::convergence_report_single<
+  //  ecu_scheme::post_processing::convergence_report_oneform<
   //      double, decltype(mf_exact_solution)>(
   //      solution_collection_wrapper_linear, mf_exact_solution,
   //      ecu_scheme::post_processing::concat("manufactured_solution_conv_linear",
