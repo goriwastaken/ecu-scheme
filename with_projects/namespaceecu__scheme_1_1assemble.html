@@ -88,6 +88,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -98,6 +99,12 @@ $(function() {
 <p>Collection of matrix and vector element providers.  
 <a href="namespaceecu__scheme_1_1assemble.html#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespaceecu__scheme_1_1assemble_1_1utils"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1assemble_1_1utils.html">utils</a></td></tr>
+<tr class="memdesc:namespaceecu__scheme_1_1assemble_1_1utils"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collection of utility functions for assembly, finding boundary entities, and computing geometrical properties. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html">ConvectionUpwindMatrixProvider</a></td></tr>
@@ -171,12 +178,14 @@ Functions</h2></td></tr>
 <tr class="separator:a7e01021742524f60907f50de1e796cfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af68969d5ed67b39b30457c354c14cfed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1assemble.html#af68969d5ed67b39b30457c354c14cfed">EnforceBoundaryConditions</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1uscalfe_1_1_uniform_scalar_f_e_space.html">lf::uscalfe::UniformScalarFESpace</a>&lt; double &gt;&gt; &amp;fe_space, <a class="el" href="classlf_1_1assemble_1_1_c_o_o_matrix.html">lf::assemble::COOMatrix</a>&lt; double &gt; &amp;A, Eigen::VectorXd &amp;phi, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; dirichlet)</td></tr>
 <tr class="separator:af68969d5ed67b39b30457c354c14cfed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36841cf9a4fd7eb360da57b608c656a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1assemble.html#a36841cf9a4fd7eb360da57b608c656a8">EnforceBoundaryConditionsOnRotInflow</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1uscalfe_1_1_uniform_scalar_f_e_space.html">lf::uscalfe::UniformScalarFESpace</a>&lt; double &gt;&gt; &amp;fe_space, <a class="el" href="classlf_1_1assemble_1_1_c_o_o_matrix.html">lf::assemble::COOMatrix</a>&lt; double &gt; &amp;A, Eigen::VectorXd &amp;phi, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; dirichlet)</td></tr>
+<tr class="separator:a36841cf9a4fd7eb360da57b608c656a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a802ac56745bc13325b696941623e5672"><td class="memTemplParams" colspan="2">template&lt;typename VELOCITY &gt; </td></tr>
 <tr class="memitem:a802ac56745bc13325b696941623e5672"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; bool &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1assemble.html#a802ac56745bc13325b696941623e5672">flagNodesOnInflowBoundary</a> (const std::shared_ptr&lt; const <a class="el" href="classlf_1_1mesh_1_1_mesh.html">lf::mesh::Mesh</a> &gt; &amp;mesh_p, VELOCITY velo)</td></tr>
 <tr class="separator:a802ac56745bc13325b696941623e5672"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5ff27184043d620e8865c3592c0d7c9"><td class="memTemplParams" colspan="2">template&lt;typename DIFFUSION_COEFF , typename CONVECTION_COEFF , typename FUNCTOR_F , typename FUNCTOR_G &gt; </td></tr>
-<tr class="memitem:ac5ff27184043d620e8865c3592c0d7c9"><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1assemble.html#ac5ff27184043d620e8865c3592c0d7c9">SolveCDBVPSupgQuad</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1uscalfe_1_1_fe_space_lagrange_o2.html">lf::uscalfe::FeSpaceLagrangeO2</a>&lt; double &gt;&gt; &amp;fe_space, DIFFUSION_COEFF eps, CONVECTION_COEFF v, FUNCTOR_F f, FUNCTOR_G g)</td></tr>
-<tr class="separator:ac5ff27184043d620e8865c3592c0d7c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08d9ece057d1328572507382ca6f0c9e"><td class="memTemplParams" colspan="2">template&lt;typename DIFFUSION_COEFF , typename CONVECTION_COEFF , typename FUNCTOR_F , typename FUNCTOR_G &gt; </td></tr>
+<tr class="memitem:a08d9ece057d1328572507382ca6f0c9e"><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1assemble.html#a08d9ece057d1328572507382ca6f0c9e">SolveCDBVPSupgQuad</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1uscalfe_1_1_fe_space_lagrange_o2.html">lf::uscalfe::FeSpaceLagrangeO2</a>&lt; double &gt;&gt; &amp;fe_space, DIFFUSION_COEFF eps, CONVECTION_COEFF v, FUNCTOR_F f, FUNCTOR_G g, bool flagInflow=false)</td></tr>
+<tr class="separator:a08d9ece057d1328572507382ca6f0c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Collection of matrix and vector element providers. </p>
@@ -349,7 +358,53 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, <a class="el" href="classlf_1_1geometry_1_1_geometry.html#aef96b35acf0c2e57d67e206947c79123">lf::geometry::Geometry::Geometry()</a>, <a class="el" href="fe__tools_8h_source.html#l00301">lf::fe::InitEssentialConditionFromFunction()</a>, <a class="el" href="ref__el_8h_source.html#l00141">lf::base::RefEl::kPoint()</a>, and <a class="el" href="ref__el_8h_source.html#l00150">lf::base::RefEl::kSegment()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="supg__matrix__provider_8h_source.html#l00206">SolveCDBVPSupgQuad()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="supg__matrix__provider_8h_source.html#l00211">SolveCDBVPSupgQuad()</a>.</p>
+
+</div>
+</div>
+<a id="a36841cf9a4fd7eb360da57b608c656a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36841cf9a4fd7eb360da57b608c656a8">&#9670;&nbsp;</a></span>EnforceBoundaryConditionsOnRotInflow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ecu_scheme::assemble::EnforceBoundaryConditionsOnRotInflow </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classlf_1_1uscalfe_1_1_uniform_scalar_f_e_space.html">lf::uscalfe::UniformScalarFESpace</a>&lt; double &gt;&gt; &amp;&#160;</td>
+          <td class="paramname"><em>fe_space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classlf_1_1assemble_1_1_c_o_o_matrix.html">lf::assemble::COOMatrix</a>&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::VectorXd &amp;&#160;</td>
+          <td class="paramname"><em>phi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>dirichlet</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="supg__matrix__provider_8cc_source.html#l00055">55</a> of file <a class="el" href="supg__matrix__provider_8cc_source.html">supg_matrix_provider.cc</a>.</p>
+
+<p class="reference">References <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, <a class="el" href="classlf_1_1geometry_1_1_geometry.html#aef96b35acf0c2e57d67e206947c79123">lf::geometry::Geometry::Geometry()</a>, <a class="el" href="fe__tools_8h_source.html#l00301">lf::fe::InitEssentialConditionFromFunction()</a>, <a class="el" href="ref__el_8h_source.html#l00141">lf::base::RefEl::kPoint()</a>, and <a class="el" href="ref__el_8h_source.html#l00150">lf::base::RefEl::kSegment()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="supg__matrix__provider_8h_source.html#l00211">SolveCDBVPSupgQuad()</a>.</p>
 
 </div>
 </div>
@@ -382,7 +437,7 @@ template&lt;typename VELOCITY &gt; </div>
 </div><div class="memdoc">
 <p>Mark mesh nodes located on the (closed) inflow boundary </p>
 
-<p class="definition">Definition at line <a class="el" href="supg__matrix__provider_8h_source.html#l00148">148</a> of file <a class="el" href="supg__matrix__provider_8h_source.html">supg_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="supg__matrix__provider_8h_source.html#l00153">153</a> of file <a class="el" href="supg__matrix__provider_8h_source.html">supg_matrix_provider.h</a>.</p>
 
 <p class="reference">References <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, <a class="el" href="special__entity__sets_8cc_source.html#l00040">lf::mesh::utils::flagEntitiesOnBoundary()</a>, and <a class="el" href="ref__el_8h_source.html#l00158">lf::base::RefEl::kTria()</a>.</p>
 
@@ -801,8 +856,8 @@ template&lt;typename DIFFUSION_COEFF , typename CONVECTION_COEFF , typename FUNC
 
 </div>
 </div>
-<a id="ac5ff27184043d620e8865c3592c0d7c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5ff27184043d620e8865c3592c0d7c9">&#9670;&nbsp;</a></span>SolveCDBVPSupgQuad()</h2>
+<a id="a08d9ece057d1328572507382ca6f0c9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08d9ece057d1328572507382ca6f0c9e">&#9670;&nbsp;</a></span>SolveCDBVPSupgQuad()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -837,7 +892,13 @@ template&lt;typename DIFFUSION_COEFF , typename CONVECTION_COEFF , typename FUNC
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">FUNCTOR_G&#160;</td>
-          <td class="paramname"><em>g</em>&#160;</td>
+          <td class="paramname"><em>g</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>flagInflow</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -847,9 +908,9 @@ template&lt;typename DIFFUSION_COEFF , typename CONVECTION_COEFF , typename FUNC
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="supg__matrix__provider_8h_source.html#l00206">206</a> of file <a class="el" href="supg__matrix__provider_8h_source.html">supg_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="supg__matrix__provider_8h_source.html#l00211">211</a> of file <a class="el" href="supg__matrix__provider_8h_source.html">supg_matrix_provider.h</a>.</p>
 
-<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="assembler_8h_source.html#l00297">lf::assemble::AssembleVectorLocally()</a>, <a class="el" href="supg__matrix__provider_8cc_source.html#l00010">EnforceBoundaryConditions()</a>, and <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>.</p>
+<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="assembler_8h_source.html#l00297">lf::assemble::AssembleVectorLocally()</a>, <a class="el" href="supg__matrix__provider_8cc_source.html#l00010">EnforceBoundaryConditions()</a>, <a class="el" href="supg__matrix__provider_8cc_source.html#l00055">EnforceBoundaryConditionsOnRotInflow()</a>, and <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>.</p>
 
 </div>
 </div>

@@ -109,14 +109,68 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a6c4b6a06dbc19dd664392505957b14cc"><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; double, 2, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1experiments.html#a6c4b6a06dbc19dd664392505957b14cc">computeOutwardNormals</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;entity)</td></tr>
+<tr class="separator:a6c4b6a06dbc19dd664392505957b14cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ef9d3bfe3c0e26be2a6f6b5fa8fda45"><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; double, 2, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1experiments.html#a0ef9d3bfe3c0e26be2a6f6b5fa8fda45">computeTangentialComponents</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;entity)</td></tr>
+<tr class="separator:a0ef9d3bfe3c0e26be2a6f6b5fa8fda45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaae9c53c8662728695271e90f3f80f81"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1experiments.html#aaae9c53c8662728695271e90f3f80f81">EnforceInflowBDCOneform</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1uscalfe_1_1_uniform_scalar_f_e_space.html">lf::uscalfe::UniformScalarFESpace</a>&lt; double &gt;&gt; &amp;fe_space, <a class="el" href="classlf_1_1assemble_1_1_c_o_o_matrix.html">lf::assemble::COOMatrix</a>&lt; double &gt; &amp;A, Eigen::VectorXd &amp;phi, std::function&lt; Eigen::Matrix&lt; double, 2, 1 &gt;(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; dirichlet)</td></tr>
+<tr class="separator:aaae9c53c8662728695271e90f3f80f81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae3cc08bc2bb744cff83db6a78328111"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1experiments.html#aae3cc08bc2bb744cff83db6a78328111">EnforceBoundaryConditions</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1uscalfe_1_1_uniform_scalar_f_e_space.html">lf::uscalfe::UniformScalarFESpace</a>&lt; double &gt;&gt; &amp;fe_space, <a class="el" href="classlf_1_1assemble_1_1_c_o_o_matrix.html">lf::assemble::COOMatrix</a>&lt; double &gt; &amp;A, Eigen::VectorXd &amp;phi, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; dirichlet)</td></tr>
 <tr class="memdesc:aae3cc08bc2bb744cff83db6a78328111"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enforces the Dirichlet boundary conditions at the inflow boundary.  <a href="namespaceecu__scheme_1_1experiments.html#aae3cc08bc2bb744cff83db6a78328111">More...</a><br /></td></tr>
 <tr class="separator:aae3cc08bc2bb744cff83db6a78328111"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e29f8e343fe56ed05aafe13e559e728"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceecu__scheme_1_1experiments.html#a4e29f8e343fe56ed05aafe13e559e728">flagNodesOnInflowBoundary</a> (const std::shared_ptr&lt; const <a class="el" href="classlf_1_1mesh_1_1_mesh.html">lf::mesh::Mesh</a> &gt; &amp;mesh_p, std::function&lt; Eigen::Matrix&lt; double, 2, 1, 0 &gt;(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; velocity)</td></tr>
-<tr class="memdesc:a4e29f8e343fe56ed05aafe13e559e728"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flags all nodes on the inflow boundary - basically a different implementation to do the same thing as EnforceBoundaryConditions.  <a href="namespaceecu__scheme_1_1experiments.html#a4e29f8e343fe56ed05aafe13e559e728">More...</a><br /></td></tr>
+<tr class="memdesc:a4e29f8e343fe56ed05aafe13e559e728"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flags all nodes on the inflow boundary - basically a different implementation to do the same thing as EnforceInflowBDCOneform.  <a href="namespaceecu__scheme_1_1experiments.html#a4e29f8e343fe56ed05aafe13e559e728">More...</a><br /></td></tr>
 <tr class="separator:a4e29f8e343fe56ed05aafe13e559e728"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a6c4b6a06dbc19dd664392505957b14cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c4b6a06dbc19dd664392505957b14cc">&#9670;&nbsp;</a></span>computeOutwardNormals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::Matrix&lt; double, 2, 3 &gt; ecu_scheme::experiments::computeOutwardNormals </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;&#160;</td>
+          <td class="paramname"><em>entity</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8cc_source.html#l00006">6</a> of file <a class="el" href="rotating__hump__sol_8cc_source.html">rotating_hump_sol.cc</a>.</p>
+
+<p class="reference">References <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, and <a class="el" href="classlf_1_1mesh_1_1_entity.html#a0ba7b5cc76e31be825417130bf8d4025">lf::mesh::Entity::Geometry()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="rotating__hump__sol_8cc_source.html#l00033">computeTangentialComponents()</a>.</p>
+
+</div>
+</div>
+<a id="a0ef9d3bfe3c0e26be2a6f6b5fa8fda45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ef9d3bfe3c0e26be2a6f6b5fa8fda45">&#9670;&nbsp;</a></span>computeTangentialComponents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::Matrix&lt; double, 2, 3 &gt; ecu_scheme::experiments::computeTangentialComponents </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;&#160;</td>
+          <td class="paramname"><em>entity</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8cc_source.html#l00033">33</a> of file <a class="el" href="rotating__hump__sol_8cc_source.html">rotating_hump_sol.cc</a>.</p>
+
+<p class="reference">References <a class="el" href="rotating__hump__sol_8cc_source.html#l00006">computeOutwardNormals()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="rotating__hump__sol_8cc_source.html#l00042">EnforceInflowBDCOneform()</a>.</p>
+
+</div>
+</div>
 <a id="aae3cc08bc2bb744cff83db6a78328111"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aae3cc08bc2bb744cff83db6a78328111">&#9670;&nbsp;</a></span>EnforceBoundaryConditions()</h2>
 
@@ -172,11 +226,57 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8cc_source.html#l00006">6</a> of file <a class="el" href="rotating__hump__sol_8cc_source.html">rotating_hump_sol.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8cc_source.html#l00119">119</a> of file <a class="el" href="rotating__hump__sol_8cc_source.html">rotating_hump_sol.cc</a>.</p>
 
 <p class="reference">References <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, <a class="el" href="classlf_1_1geometry_1_1_geometry.html#aef96b35acf0c2e57d67e206947c79123">lf::geometry::Geometry::Geometry()</a>, <a class="el" href="fe__tools_8h_source.html#l00301">lf::fe::InitEssentialConditionFromFunction()</a>, <a class="el" href="ref__el_8h_source.html#l00141">lf::base::RefEl::kPoint()</a>, and <a class="el" href="ref__el_8h_source.html#l00150">lf::base::RefEl::kSegment()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="manufactured__solution_8h_source.html#l00302">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::ComputeFifteenPointQuadRuleSolution()</a>, <a class="el" href="const__velo__solution_8h_source.html#l00052">ecu_scheme::experiments::ConstVeloSolution&lt; SCALAR &gt;::ComputeSolution()</a>, <a class="el" href="rotating__hump__sol_8h_source.html#l00048">ecu_scheme::experiments::RotatingHumpSolution&lt; SCALAR &gt;::ComputeSolution()</a>, and <a class="el" href="concentric__stream__solution_8h_source.html#l00164">ecu_scheme::experiments::ConcentricStreamSolution&lt; SCALAR &gt;::ComputeSolutionMultipleMethods()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="manufactured__solution_8h_source.html#l00302">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::ComputeFifteenPointQuadRuleSolution()</a>, <a class="el" href="const__velo__solution_8h_source.html#l00052">ecu_scheme::experiments::ConstVeloSolution&lt; SCALAR &gt;::ComputeSolution()</a>, and <a class="el" href="concentric__stream__solution_8h_source.html#l00164">ecu_scheme::experiments::ConcentricStreamSolution&lt; SCALAR &gt;::ComputeSolutionMultipleMethods()</a>.</p>
+
+</div>
+</div>
+<a id="aaae9c53c8662728695271e90f3f80f81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaae9c53c8662728695271e90f3f80f81">&#9670;&nbsp;</a></span>EnforceInflowBDCOneform()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ecu_scheme::experiments::EnforceInflowBDCOneform </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classlf_1_1uscalfe_1_1_uniform_scalar_f_e_space.html">lf::uscalfe::UniformScalarFESpace</a>&lt; double &gt;&gt; &amp;&#160;</td>
+          <td class="paramname"><em>fe_space</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classlf_1_1assemble_1_1_c_o_o_matrix.html">lf::assemble::COOMatrix</a>&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::VectorXd &amp;&#160;</td>
+          <td class="paramname"><em>phi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; Eigen::Matrix&lt; double, 2, 1 &gt;(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>dirichlet</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8cc_source.html#l00042">42</a> of file <a class="el" href="rotating__hump__sol_8cc_source.html">rotating_hump_sol.cc</a>.</p>
+
+<p class="reference">References <a class="el" href="rotating__hump__sol_8cc_source.html#l00033">computeTangentialComponents()</a>, <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, <a class="el" href="classlf_1_1geometry_1_1_geometry.html#aef96b35acf0c2e57d67e206947c79123">lf::geometry::Geometry::Geometry()</a>, <a class="el" href="classlf_1_1assemble_1_1_dof_handler.html#aa3b3cbb7cb2c5e4389ea0909c7edbcdf">lf::assemble::DofHandler::GlobalDofIndices()</a>, <a class="el" href="ref__el_8h_source.html#l00150">lf::base::RefEl::kSegment()</a>, <a class="el" href="classlf_1_1assemble_1_1_dof_handler.html#abb2653388e7c8ee14bd835c1bd854a89">lf::assemble::DofHandler::NumDofs()</a>, and <a class="el" href="classlf_1_1mesh_1_1_entity.html#a0aa402adff485a48c654a89fa877de0a">lf::mesh::Entity::SubEntities()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="rotating__hump__sol_8h_source.html#l00058">ecu_scheme::experiments::RotatingHumpSolution&lt; SCALAR &gt;::ComputeSolution()</a>.</p>
 
 </div>
 </div>
@@ -206,7 +306,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flags all nodes on the inflow boundary - basically a different implementation to do the same thing as EnforceBoundaryConditions. </p>
+<p>Flags all nodes on the inflow boundary - basically a different implementation to do the same thing as EnforceInflowBDCOneform. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mesh_p</td><td>underlying mesh </td></tr>

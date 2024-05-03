@@ -144,51 +144,51 @@ $(function() {
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      },</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      A, phi);</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">// void EnforceBoundaryConditions(const</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">// std::shared_ptr&lt;lf::uscalfe::UniformScalarFESpace&lt;double&gt;&gt; &amp;fe_space,</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">//                               lf::assemble::COOMatrix&lt;double&gt; &amp;A,</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">//                               Eigen::VectorXd &amp;phi,</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">//                               std::function&lt;double(const</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">//                               Eigen::Matrix&lt;double, 2, 1, 0&gt; &amp;)&gt; dirichlet</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">//) {</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">//  lf::mesh::utils::MeshFunctionGlobal&lt;decltype(dirichlet)&gt;</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">//  mf_g_dirichlet{dirichlet}; lf::mesh::utils::AllCodimMeshDataSet&lt;bool&gt;</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">//  bd_flags(fe_space-&gt;Mesh(), false);</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">//  // Loop over all edges</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">//  for (const auto&amp; edge : fe_space-&gt;Mesh()-&gt;Entities(1)) {</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">//    LF_ASSERT_MSG(edge-&gt;RefEl() == lf::base::RefEl::kSegment(),</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">//                  &quot;Entity should be an edge&quot;);</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">//    const lf::geometry::Geometry* geo_ptr = edge-&gt;Geometry();</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">//    const Eigen::MatrixXd corners = lf::geometry::Corners(*geo_ptr);</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">//    // Check if the edge lies on $\Gamma_{\mathrm{in}}$  (geometric test)</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">//    if ((corners(0, 0) + corners(0, 1)) / 2. &gt; 1. - 1e-5 ||</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">//        (corners(1, 0) + corners(1, 1)) / 2. &lt; 1e-5) {</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">//      // Add the edge to the flagged entities</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">//      bd_flags(*edge) = true;</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">//    }</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">//  }</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">//  // Loop over all Points</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">//  for (const auto&amp; point : fe_space-&gt;Mesh()-&gt;Entities(2)) {</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">//    LF_ASSERT_MSG(point-&gt;RefEl() == lf::base::RefEl::kPoint(),</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">//                  &quot;Entity should be an edge&quot;);</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">//    const lf::geometry::Geometry* geo_ptr = point-&gt;Geometry();</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">//    const Eigen::VectorXd coords = lf::geometry::Corners(*geo_ptr);</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">//    // Check if the node lies on  $\Gamma_{\mathrm{in}}$ (geometric test)</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">//    if (coords(0) &gt; 1. - 1e-5 || coords(1) &lt; 1e-5) {</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">//      // Add the edge to the flagged entities</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">//      bd_flags(*point) = true;</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">//    }</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">//  }</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">//  auto flag_values{lf::fe::InitEssentialConditionFromFunction(</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">//      *fe_space, bd_flags, mf_g_dirichlet)};</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">//  lf::assemble::FixFlaggedSolutionCompAlt&lt;double&gt;(</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">//      [&amp;flag_values](lf::assemble::glb_idx_t dof_idx) {</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">//        return flag_values[dof_idx];</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">//      },</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">//      A, phi);</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">//}</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="namespaceecu__scheme_1_1assemble.html#a36841cf9a4fd7eb360da57b608c656a8">   55</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceecu__scheme_1_1assemble.html#a36841cf9a4fd7eb360da57b608c656a8">EnforceBoundaryConditionsOnRotInflow</a>(</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> std::shared_ptr&lt;<a class="code" href="classlf_1_1uscalfe_1_1_uniform_scalar_f_e_space.html">lf::uscalfe::UniformScalarFESpace&lt;double&gt;</a>&gt;&amp; fe_space,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="classlf_1_1assemble_1_1_c_o_o_matrix.html">lf::assemble::COOMatrix&lt;double&gt;</a>&amp; A, Eigen::VectorXd&amp; phi,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    std::function&lt;<span class="keywordtype">double</span>(<span class="keyword">const</span> Eigen::Matrix&lt;double, 2, 1, 0&gt;&amp;)&gt; dirichlet) {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <a class="code" href="classlf_1_1mesh_1_1utils_1_1_mesh_function_global.html">lf::mesh::utils::MeshFunctionGlobal</a>&lt;decltype(dirichlet)&gt; mf_g_dirichlet{</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      dirichlet};</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <a class="code" href="classlf_1_1mesh_1_1utils_1_1_all_codim_mesh_data_set.html">lf::mesh::utils::AllCodimMeshDataSet&lt;bool&gt;</a> bd_flags(fe_space-&gt;Mesh(), <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="comment">// set a fixed epsilon value for the geometric test involving double</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="comment">// comparison</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">double</span> kTol = 1e-8;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="comment">// Loop over all edges</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; edge : fe_space-&gt;Mesh()-&gt;Entities(1)) {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    LF_ASSERT_MSG(edge-&gt;RefEl() == <a class="code" href="classlf_1_1base_1_1_ref_el.html#a415d06db9dee088b67e47b94bdf53db7">lf::base::RefEl::kSegment</a>(),</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                  <span class="stringliteral">&quot;Entity should be an edge&quot;</span>);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> <a class="code" href="classlf_1_1geometry_1_1_geometry.html">lf::geometry::Geometry</a>* geo_ptr = edge-&gt;<a class="code" href="classlf_1_1geometry_1_1_geometry.html#aef96b35acf0c2e57d67e206947c79123">Geometry</a>();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">const</span> Eigen::MatrixXd corners = <a class="code" href="namespacelf_1_1geometry.html#a0b9a831a5d58f9e19e9fa3524b343288">lf::geometry::Corners</a>(*geo_ptr);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// Check if the edge lies on $\Gamma_{\mathrm{in}}$  (geometric test)</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> ((corners(0, 0) + corners(0, 1)) / 2. &gt; 1. - kTol ||</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        (corners(1, 0) + corners(1, 1)) / 2. &lt; kTol) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="comment">// Add the edge to the flagged entities</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      bd_flags(*edge) = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  }</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  <span class="comment">// Loop over all Points</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; point : fe_space-&gt;Mesh()-&gt;Entities(2)) {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    LF_ASSERT_MSG(point-&gt;RefEl() == <a class="code" href="classlf_1_1base_1_1_ref_el.html#ab4167c45a6c22d9b8dd49218d4aedc51">lf::base::RefEl::kPoint</a>(),</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                  <span class="stringliteral">&quot;Entity should be an edge&quot;</span>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">const</span> <a class="code" href="classlf_1_1geometry_1_1_geometry.html">lf::geometry::Geometry</a>* geo_ptr = point-&gt;<a class="code" href="classlf_1_1geometry_1_1_geometry.html#aef96b35acf0c2e57d67e206947c79123">Geometry</a>();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">const</span> Eigen::VectorXd coords = <a class="code" href="namespacelf_1_1geometry.html#a0b9a831a5d58f9e19e9fa3524b343288">lf::geometry::Corners</a>(*geo_ptr);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// Check if the node lies on  $\Gamma_{\mathrm{in}}$ (geometric test)</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">if</span> (coords(0) &gt; 1. - kTol || coords(1) &lt; kTol) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      <span class="comment">// Add the edge to the flagged entities</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      bd_flags(*point) = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keyword">auto</span> flag_values{<a class="code" href="namespacelf_1_1fe.html#a43b4c64348e97f495cd415c989e13f67">lf::fe::InitEssentialConditionFromFunction</a>(</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      *fe_space, bd_flags, mf_g_dirichlet)};</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  lf::assemble::FixFlaggedSolutionCompAlt&lt;double&gt;(</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      [&amp;flag_values](<a class="code" href="namespacelf_1_1assemble.html#a3932125e7eaea6a3d6a7c965de349f44">lf::assemble::glb_idx_t</a> dof_idx) {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keywordflow">return</span> flag_values[dof_idx];</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      },</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      A, phi);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}  <span class="comment">// namespace ecu_scheme::assemble</span></div>
 <div class="ttc" id="aclasslf_1_1assemble_1_1_c_o_o_matrix_html"><div class="ttname"><a href="classlf_1_1assemble_1_1_c_o_o_matrix.html">lf::assemble::COOMatrix</a></div><div class="ttdoc">A temporary data structure for matrix in COO format.</div><div class="ttdef"><b>Definition:</b> <a href="coomatrix_8h_source.html#l00052">coomatrix.h:52</a></div></div>
@@ -200,6 +200,7 @@ $(function() {
 <div class="ttc" id="aclasslf_1_1mesh_1_1utils_1_1_mesh_function_global_html"><div class="ttname"><a href="classlf_1_1mesh_1_1utils_1_1_mesh_function_global.html">lf::mesh::utils::MeshFunctionGlobal</a></div><div class="ttdoc">MeshFunction wrapper for a simple function of physical coordinates.</div><div class="ttdef"><b>Definition:</b> <a href="mesh__function__global_8h_source.html#l00055">mesh_function_global.h:55</a></div></div>
 <div class="ttc" id="aclasslf_1_1uscalfe_1_1_uniform_scalar_f_e_space_html"><div class="ttname"><a href="classlf_1_1uscalfe_1_1_uniform_scalar_f_e_space.html">lf::uscalfe::UniformScalarFESpace</a></div><div class="ttdoc">Space of scalar valued finite element functions on a hybrid 2D mesh</div><div class="ttdef"><b>Definition:</b> <a href="uniform__scalar__fe__space_8h_source.html#l00050">uniform_scalar_fe_space.h:50</a></div></div>
 <div class="ttc" id="anamespaceecu__scheme_1_1assemble_html"><div class="ttname"><a href="namespaceecu__scheme_1_1assemble.html">ecu_scheme::assemble</a></div><div class="ttdoc">Collection of matrix and vector element providers.</div><div class="ttdef"><b>Definition:</b> <a href="projects_2ecu__scheme_2assemble_2assemble_8h_source.html#l00019">assemble.h:19</a></div></div>
+<div class="ttc" id="anamespaceecu__scheme_1_1assemble_html_a36841cf9a4fd7eb360da57b608c656a8"><div class="ttname"><a href="namespaceecu__scheme_1_1assemble.html#a36841cf9a4fd7eb360da57b608c656a8">ecu_scheme::assemble::EnforceBoundaryConditionsOnRotInflow</a></div><div class="ttdeci">void EnforceBoundaryConditionsOnRotInflow(const std::shared_ptr&lt; lf::uscalfe::UniformScalarFESpace&lt; double &gt;&gt; &amp;fe_space, lf::assemble::COOMatrix&lt; double &gt; &amp;A, Eigen::VectorXd &amp;phi, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; dirichlet)</div><div class="ttdef"><b>Definition:</b> <a href="supg__matrix__provider_8cc_source.html#l00055">supg_matrix_provider.cc:55</a></div></div>
 <div class="ttc" id="anamespaceecu__scheme_1_1assemble_html_af68969d5ed67b39b30457c354c14cfed"><div class="ttname"><a href="namespaceecu__scheme_1_1assemble.html#af68969d5ed67b39b30457c354c14cfed">ecu_scheme::assemble::EnforceBoundaryConditions</a></div><div class="ttdeci">void EnforceBoundaryConditions(const std::shared_ptr&lt; lf::uscalfe::UniformScalarFESpace&lt; double &gt;&gt; &amp;fe_space, lf::assemble::COOMatrix&lt; double &gt; &amp;A, Eigen::VectorXd &amp;phi, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; dirichlet)</div><div class="ttdef"><b>Definition:</b> <a href="supg__matrix__provider_8cc_source.html#l00010">supg_matrix_provider.cc:10</a></div></div>
 <div class="ttc" id="anamespacelf_1_1assemble_html_a3932125e7eaea6a3d6a7c965de349f44"><div class="ttname"><a href="namespacelf_1_1assemble.html#a3932125e7eaea6a3d6a7c965de349f44">lf::assemble::glb_idx_t</a></div><div class="ttdeci">lf::base::glb_idx_t glb_idx_t</div><div class="ttdef"><b>Definition:</b> <a href="assembly__types_8h_source.html#l00030">assembly_types.h:30</a></div></div>
 <div class="ttc" id="anamespacelf_1_1fe_html_a43b4c64348e97f495cd415c989e13f67"><div class="ttname"><a href="namespacelf_1_1fe.html#a43b4c64348e97f495cd415c989e13f67">lf::fe::InitEssentialConditionFromFunction</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; bool, SCALAR &gt; &gt; InitEssentialConditionFromFunction(const lf::fe::ScalarFESpace&lt; SCALAR &gt; &amp;fes, EDGESELECTOR &amp;&amp;esscondflag, FUNCTION &amp;&amp;g)</div><div class="ttdoc">Initialization of flags/values for dofs of a Scalar finite element space whose values are imposed by ...</div><div class="ttdef"><b>Definition:</b> <a href="fe__tools_8h_source.html#l00301">fe_tools.h:301</a></div></div>
