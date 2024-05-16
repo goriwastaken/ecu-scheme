@@ -23,7 +23,8 @@ namespace ecu_scheme::experiments {
 //     std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet);
 
 /**
- * @brief Class for generating the Manufactured Solution experiment setup and computing its solution
+ * @brief Class for generating the Manufactured Solution experiment setup and
+ * computing its solution
  * @tparam SCALAR scalar type of underlying FE space
  */
 template <typename SCALAR>
