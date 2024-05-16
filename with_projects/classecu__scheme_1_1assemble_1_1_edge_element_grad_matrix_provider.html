@@ -96,7 +96,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Class providing the edge element gradient matrix for a given FE space and velocity field.  
+<p>Class providing the edge element gradient matrix for a given FE space and velocity field \(\vec{\beta}\). The element matrix provider evaluates part of the bilinear form for 1-forms from section 3.1, namely:  
  <a href="classecu__scheme_1_1assemble_1_1_edge_element_grad_matrix_provider.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="edge__element__grad__matrix__provider_8h_source.html">/home/runner/work/ecu-scheme/ecu-scheme/projects/ecu_scheme/assemble/edge_element_grad_matrix_provider.h</a>&gt;</code></p>
@@ -104,10 +104,13 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a73ee4d828c61dc52d3616e61bfe42478"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_edge_element_grad_matrix_provider.html#a73ee4d828c61dc52d3616e61bfe42478">EdgeElementGradMatrixProvider</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1fe_1_1_scalar_f_e_space.html">lf::fe::ScalarFESpace</a>&lt; SCALAR &gt;&gt; &amp;fe_space, FUNCTOR v)</td></tr>
+<tr class="memdesc:a73ee4d828c61dc52d3616e61bfe42478"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the edge element gradient matrix provider.  <a href="classecu__scheme_1_1assemble_1_1_edge_element_grad_matrix_provider.html#a73ee4d828c61dc52d3616e61bfe42478">More...</a><br /></td></tr>
 <tr class="separator:a73ee4d828c61dc52d3616e61bfe42478"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05a1a29befbd6b912c079535972c7593"><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; SCALAR, Eigen::Dynamic, Eigen::Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_edge_element_grad_matrix_provider.html#a05a1a29befbd6b912c079535972c7593">Eval</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;entity) const</td></tr>
+<tr class="memdesc:a05a1a29befbd6b912c079535972c7593"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates the edge element gradient matrix for a given entity.  <a href="classecu__scheme_1_1assemble_1_1_edge_element_grad_matrix_provider.html#a05a1a29befbd6b912c079535972c7593">More...</a><br /></td></tr>
 <tr class="separator:a05a1a29befbd6b912c079535972c7593"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a709d2099aa1b0a321763cb3011c0d049"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_edge_element_grad_matrix_provider.html#a709d2099aa1b0a321763cb3011c0d049">isActive</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;) const</td></tr>
+<tr class="memdesc:a709d2099aa1b0a321763cb3011c0d049"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default implementation: all cells are active.  <a href="classecu__scheme_1_1assemble_1_1_edge_element_grad_matrix_provider.html#a709d2099aa1b0a321763cb3011c0d049">More...</a><br /></td></tr>
 <tr class="separator:a709d2099aa1b0a321763cb3011c0d049"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -121,26 +124,22 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename SCALAR, typename FUNCTOR&gt;<br />
 class ecu_scheme::assemble::EdgeElementGradMatrixProvider&lt; SCALAR, FUNCTOR &gt;</h3>
 
-<p>Class providing the edge element gradient matrix for a given FE space and velocity field. </p>
-<ul>
-<li>The element matrix provider evaluates the bilinear form <p class="formulaDsp">
-\[ (u, \mathbf{v}) \mapsto \int\limits_K \mathbf{grad}(u) \, \mathbf{v} \ dx \]
-</p>
-</li>
-</ul>
-<p>Basis functions are edge element basis functions, for \(\mathbf{v}\) and the barycentric basis functions for \(u\)</p>
+<p>Class providing the edge element gradient matrix for a given FE space and velocity field \(\vec{\beta}\). The element matrix provider evaluates part of the bilinear form for 1-forms from section 3.1, namely: </p>
 <p class="formulaDsp">
-\[ \mathbf{b}_i = s_i (\lambda_i \mathbf{grad}_{\Gamma}(\lambda_{i+1}) - \lambda_{i+1} \mathbf{grad}_{\Gamma}(\lambda_{i})) \]
+\[ (\omega_h, \eta_h) \mapsto \int_T \mathrm{d}^0 \mathcal{I}_{\vec{\beta}, 1}^0(\mathrm{i}_{\vec{\beta}} \omega_h) \wedge \star \eta_h \]
+</p>
+<p>where the basis functions for \(\omega_h, \ \eta_h \) are the edge element basis functions defined as: </p><p class="formulaDsp">
+\[ \mathbf{\psi}_i = s_i (\lambda_i \mathbf{grad}_{\Gamma}(\lambda_{i+1}) - \lambda_{i+1} \mathbf{grad}_{\Gamma}(\lambda_{i})) \]
 </p>
  <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">SCALAR</td><td></td></tr>
-    <tr><td class="paramname">FUNCTOR</td><td></td></tr>
+    <tr><td class="paramname">SCALAR</td><td>the scalar type of the FE space </td></tr>
+    <tr><td class="paramname">FUNCTOR</td><td>the type of the velocity field \(\vec{\beta}\) </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00033">33</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00030">30</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a73ee4d828c61dc52d3616e61bfe42478"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a73ee4d828c61dc52d3616e61bfe42478">&#9670;&nbsp;</a></span>EdgeElementGradMatrixProvider()</h2>
@@ -170,7 +169,16 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00050">50</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
+<p>Constructor for the edge element gradient matrix provider. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fe_space</td><td>the FE space </td></tr>
+    <tr><td class="paramname">v</td><td>the velocity field \(\vec{\beta}\) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00058">58</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -193,7 +201,16 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00056">56</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
+<p>Evaluates the edge element gradient matrix for a given entity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entity</td><td>reference to the entity </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Edge element gradient matrix </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00064">64</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
 
 <p class="reference">References <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#a0ba7b5cc76e31be825417130bf8d4025">lf::mesh::Entity::Geometry()</a>, <a class="el" href="lagr__fe_8h_source.html#l00117">lf::uscalfe::FeLagrangeO1Tria&lt; SCALAR &gt;::GradientsReferenceShapeFunctions()</a>, <a class="el" href="classlf_1_1geometry_1_1_geometry.html#a7cb2b572966d7492522acb1b127cbbd0">lf::geometry::Geometry::JacobianInverseGramian()</a>, <a class="el" href="ref__el_8h_source.html#l00158">lf::base::RefEl::kTria()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#acff29c2e4f65daaef0152b07559b3f52">lf::mesh::Entity::RefEl()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#a1a7009a490619329b470bae0ef39bc08">lf::mesh::Entity::RelativeOrientations()</a>, <a class="el" href="entity_8cc_source.html#l00007">lf::mesh::to_sign()</a>, and <a class="el" href="geometry__interface_8cc_source.html#l00011">lf::geometry::Volume()</a>.</p>
 
@@ -225,7 +242,9 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00042">42</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
+<p>Default implementation: all cells are active. </p>
+
+<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00050">50</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -252,7 +271,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00046">46</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00054">54</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -278,7 +297,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00045">45</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="edge__element__grad__matrix__provider_8h_source.html#l00053">53</a> of file <a class="el" href="edge__element__grad__matrix__provider_8h_source.html">edge_element_grad_matrix_provider.h</a>.</p>
 
 </div>
 </div>

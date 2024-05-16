@@ -96,15 +96,21 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Class providing the element matrix for the 15-point upwind scheme The element matrix provider evaluates the convective bilinear form for the 15-point upwind scheme \( b_h^{full}(u_h,v_h) \) presented in section 2.1.1 of the thesis.  
+ <a href="classecu__scheme_1_1assemble_1_1_fifteen_point_upwind_matrix_provider.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">/home/runner/work/ecu-scheme/ecu-scheme/projects/ecu_scheme/assemble/fifteen_point_upwind_matrix_provider.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a93aa76192307e933b477bbb1c774919d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_fifteen_point_upwind_matrix_provider.html#a93aa76192307e933b477bbb1c774919d">FifteenPointUpwindMatrixProvider</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1fe_1_1_scalar_f_e_space.html">lf::fe::ScalarFESpace</a>&lt; SCALAR &gt;&gt; &amp;fe_space, FUNCTOR v, <a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; double &gt; masses_vertices, <a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; double &gt; masses_edge_midpoints, <a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; double &gt; masses_edges, <a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; double &gt; masses_cells)</td></tr>
+<tr class="memdesc:a93aa76192307e933b477bbb1c774919d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the Element Matrix Provider for the 15-point upwind scheme.  <a href="classecu__scheme_1_1assemble_1_1_fifteen_point_upwind_matrix_provider.html#a93aa76192307e933b477bbb1c774919d">More...</a><br /></td></tr>
 <tr class="separator:a93aa76192307e933b477bbb1c774919d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae36c9cc574a792012addb3a3cdfd48b1"><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; SCALAR, 6, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_fifteen_point_upwind_matrix_provider.html#ae36c9cc574a792012addb3a3cdfd48b1">Eval</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;entity)</td></tr>
+<tr class="memdesc:ae36c9cc574a792012addb3a3cdfd48b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates the element matrix for a given entity.  <a href="classecu__scheme_1_1assemble_1_1_fifteen_point_upwind_matrix_provider.html#ae36c9cc574a792012addb3a3cdfd48b1">More...</a><br /></td></tr>
 <tr class="separator:ae36c9cc574a792012addb3a3cdfd48b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78bb715df6f42a636012cd3d5cd9fa3b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_fifteen_point_upwind_matrix_provider.html#a78bb715df6f42a636012cd3d5cd9fa3b">isActive</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;) const</td></tr>
+<tr class="memdesc:a78bb715df6f42a636012cd3d5cd9fa3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default implementation: all cells are active.  <a href="classecu__scheme_1_1assemble_1_1_fifteen_point_upwind_matrix_provider.html#a78bb715df6f42a636012cd3d5cd9fa3b">More...</a><br /></td></tr>
 <tr class="separator:a78bb715df6f42a636012cd3d5cd9fa3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -126,8 +132,16 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename SCALAR, typename FUNCTOR&gt;<br />
 class ecu_scheme::assemble::FifteenPointUpwindMatrixProvider&lt; SCALAR, FUNCTOR &gt;</h3>
 
+<p>Class providing the element matrix for the 15-point upwind scheme The element matrix provider evaluates the convective bilinear form for the 15-point upwind scheme \( b_h^{full}(u_h,v_h) \) presented in section 2.1.1 of the thesis. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">SCALAR</td><td>scalar type of the FE space </td></tr>
+    <tr><td class="paramname">FUNCTOR</td><td>velocity field functor type </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00037">37</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00076">76</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a93aa76192307e933b477bbb1c774919d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a93aa76192307e933b477bbb1c774919d">&#9670;&nbsp;</a></span>FifteenPointUpwindMatrixProvider()</h2>
@@ -181,7 +195,20 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00060">60</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
+<p>Constructor for the Element Matrix Provider for the 15-point upwind scheme. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fe_space</td><td>reference to the FE space </td></tr>
+    <tr><td class="paramname">v</td><td>velocity field </td></tr>
+    <tr><td class="paramname">masses_vertices</td><td>Data structure containing the masses m(p) for all vertices of the mesh </td></tr>
+    <tr><td class="paramname">masses_edge_midpoints</td><td>Data structure containing the masses m(p) for all midpoints of edges of the mesh </td></tr>
+    <tr><td class="paramname">masses_edges</td><td>Data structure containing the masses m(p) for all quadrature points lying on edges of the mesh </td></tr>
+    <tr><td class="paramname">masses_cells</td><td>Data structure containing the masses m(p) for all quadrature points lying inside triangle cells of the mesh </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00119">119</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -204,7 +231,16 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00076">76</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
+<p>Evaluates the element matrix for a given entity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entity</td><td>underlying entity </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Element matrix for the 15-point upwind scheme </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00135">135</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
 
 <p class="reference">References <a class="el" href="convection__upwind__matrix__provider_8cc_source.html#l00075">ecu_scheme::assemble::computeOutwardNormalsTria()</a>, <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#a0ba7b5cc76e31be825417130bf8d4025">lf::mesh::Entity::Geometry()</a>, <a class="el" href="classlf_1_1geometry_1_1_geometry.html#a34b0bc0a54ff1de82e2a5cbc52c506a5">lf::geometry::Geometry::Global()</a>, <a class="el" href="fifteen__point__upwind__matrix__provider_8cc_source.html#l00008">ecu_scheme::assemble::prepareFifteenPointQuadRule()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#a0aa402adff485a48c654a89fa877de0a">lf::mesh::Entity::SubEntities()</a>, and <a class="el" href="geometry__interface_8cc_source.html#l00011">lf::geometry::Volume()</a>.</p>
 
@@ -236,7 +272,9 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00048">48</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
+<p>Default implementation: all cells are active. </p>
+
+<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00107">107</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -263,7 +301,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00052">52</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00111">111</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -289,7 +327,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00056">56</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00115">115</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -315,7 +353,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00054">54</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00113">113</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -341,7 +379,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00055">55</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00114">114</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -367,7 +405,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00053">53</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00112">112</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -393,7 +431,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00051">51</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html#l00110">110</a> of file <a class="el" href="fifteen__point__upwind__matrix__provider_8h_source.html">fifteen_point_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>

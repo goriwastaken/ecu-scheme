@@ -96,7 +96,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Class for computing the manufactured solution for the ECU scheme.  
+<p>Class for generating the Manufactured Solution experiment setup and computing its solution.  
  <a href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="manufactured__solution_8h_source.html">/home/runner/work/ecu-scheme/ecu-scheme/projects/ecu_scheme/experiments/manufactured_sol/manufactured_solution.h</a>&gt;</code></p>
@@ -118,15 +118,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aacb043742ff12b5539fc67db86d950dd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#aacb043742ff12b5539fc67db86d950dd">ManufacturedSolutionExperiment</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1uscalfe_1_1_uniform_scalar_f_e_space.html">lf::uscalfe::UniformScalarFESpace</a>&lt; SCALAR &gt;&gt; &amp;fe_space)</td></tr>
 <tr class="separator:aacb043742ff12b5539fc67db86d950dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd65daf5de26a5be9337ee34eee71ea3"><td class="memItemLeft" align="right" valign="top">Eigen::Vector&lt; double, Eigen::Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#abd65daf5de26a5be9337ee34eee71ea3">ComputeSolution</a> (double eps, std::function&lt; Eigen::Matrix&lt; double, 2, 1, 0 &gt;(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; velocity, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; test, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; dirichlet) const</td></tr>
-<tr class="memdesc:abd65daf5de26a5be9337ee34eee71ea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the manufactured solution for the ECU scheme.  <a href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#abd65daf5de26a5be9337ee34eee71ea3">More...</a><br /></td></tr>
+<tr class="memdesc:abd65daf5de26a5be9337ee34eee71ea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the manufactured solution for the midpoint upwind scheme.  <a href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#abd65daf5de26a5be9337ee34eee71ea3">More...</a><br /></td></tr>
 <tr class="separator:abd65daf5de26a5be9337ee34eee71ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac51984b5cee6e726d1b5a9c1fcdbaadc"><td class="memItemLeft" align="right" valign="top">Eigen::Vector&lt; double, Eigen::Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#ac51984b5cee6e726d1b5a9c1fcdbaadc">ComputeSUPGSolution</a> (double eps, std::function&lt; Eigen::Matrix&lt; double, 2, 1, 0 &gt;(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; velocity, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; test, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; dirichlet) const</td></tr>
-<tr class="memdesc:ac51984b5cee6e726d1b5a9c1fcdbaadc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the Convection-Diffusion BVP with nonhomogeneous Dirichlet boundary conditions using the SUPG method and quadratic FE space.  <a href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#ac51984b5cee6e726d1b5a9c1fcdbaadc">More...</a><br /></td></tr>
+<tr class="memdesc:ac51984b5cee6e726d1b5a9c1fcdbaadc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solves the Convection-Diffusion BVP with non-homogeneous Dirichlet boundary conditions using the SUPG method and quadratic FE space.  <a href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#ac51984b5cee6e726d1b5a9c1fcdbaadc">More...</a><br /></td></tr>
 <tr class="separator:ac51984b5cee6e726d1b5a9c1fcdbaadc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf985b7c16f5ab4af2945200df3aac65"><td class="memItemLeft" align="right" valign="top">Eigen::Vector&lt; double, Eigen::Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#adf985b7c16f5ab4af2945200df3aac65">ComputeStableSolution</a> (double eps, std::function&lt; Eigen::Matrix&lt; double, 2, 1, 0 &gt;(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; velocity, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; test, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; dirichlet) const</td></tr>
-<tr class="memdesc:adf985b7c16f5ab4af2945200df3aac65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implemented only for quadratic FE space.  <a href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#adf985b7c16f5ab4af2945200df3aac65">More...</a><br /></td></tr>
+<tr class="memdesc:adf985b7c16f5ab4af2945200df3aac65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the solution with the 7-point (stable) upwind scheme. This method is implemented for quadratic Lagrangian FE only.  <a href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#adf985b7c16f5ab4af2945200df3aac65">More...</a><br /></td></tr>
 <tr class="separator:adf985b7c16f5ab4af2945200df3aac65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c7a44d40bcfc4ee3caf032fbfa62dd9"><td class="memItemLeft" align="right" valign="top">Eigen::Vector&lt; double, Eigen::Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#a8c7a44d40bcfc4ee3caf032fbfa62dd9">ComputeFifteenPointQuadRuleSolution</a> (double eps, std::function&lt; Eigen::Matrix&lt; double, 2, 1, 0 &gt;(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; velocity, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; test, std::function&lt; double(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; dirichlet) const</td></tr>
+<tr class="memdesc:a8c7a44d40bcfc4ee3caf032fbfa62dd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the solution with the 15-point upwind scheme. Implemented for quadratic Lagrangian FE space.  <a href="classecu__scheme_1_1experiments_1_1_manufactured_solution_experiment.html#a8c7a44d40bcfc4ee3caf032fbfa62dd9">More...</a><br /></td></tr>
 <tr class="separator:a8c7a44d40bcfc4ee3caf032fbfa62dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -138,9 +139,15 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename SCALAR&gt;<br />
 class ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;</h3>
 
-<p>Class for computing the manufactured solution for the ECU scheme. </p>
+<p>Class for generating the Manufactured Solution experiment setup and computing its solution. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">SCALAR</td><td>scalar type of underlying FE space </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00029">29</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00031">31</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af398ca8f62fcfff36eff57d07bf3c9a5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af398ca8f62fcfff36eff57d07bf3c9a5">&#9670;&nbsp;</a></span>ManufacturedSolutionExperiment() <span class="overload">[1/4]</span></h2>
@@ -278,7 +285,7 @@ template&lt;typename SCALAR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00046">46</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00048">48</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
 
 </div>
 </div>
@@ -331,9 +338,21 @@ template&lt;typename SCALAR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00302">302</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
+<p>Compute the solution with the 15-point upwind scheme. Implemented for quadratic Lagrangian FE space. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">eps</td><td>diffusion coefficient epsilon </td></tr>
+    <tr><td class="paramname">velocity</td><td>velocity field functor </td></tr>
+    <tr><td class="paramname">test</td><td>source function </td></tr>
+    <tr><td class="paramname">dirichlet</td><td>Dirichlet boundary condition function </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Solution vector </dd></dl>
 
-<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="assembler_8h_source.html#l00297">lf::assemble::AssembleVectorLocally()</a>, <a class="el" href="rotating__hump__sol_8cc_source.html#l00119">ecu_scheme::experiments::EnforceBoundaryConditions()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00375">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::fe_space_</a>, <a class="el" href="fifteen__point__upwind__matrix__provider_8cc_source.html#l00089">ecu_scheme::assemble::initMassesCellsFifteenQuadRule()</a>, <a class="el" href="fifteen__point__upwind__matrix__provider_8cc_source.html#l00061">ecu_scheme::assemble::initMassesEdgeMidpointsFifteenQuadRule()</a>, <a class="el" href="fifteen__point__upwind__matrix__provider_8cc_source.html#l00075">ecu_scheme::assemble::initMassesEdgeOffFifteenQuadRule()</a>, <a class="el" href="fifteen__point__upwind__matrix__provider_8cc_source.html#l00046">ecu_scheme::assemble::initMassesVerticesFifteenQuadRule()</a>, and <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00317">317</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
+
+<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="assembler_8h_source.html#l00297">lf::assemble::AssembleVectorLocally()</a>, <a class="el" href="bdc__utils_8cc_source.html#l00006">ecu_scheme::assemble::EnforceBoundaryConditions()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00391">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::fe_space_</a>, <a class="el" href="fifteen__point__upwind__matrix__provider_8cc_source.html#l00089">ecu_scheme::assemble::initMassesCellsFifteenQuadRule()</a>, <a class="el" href="fifteen__point__upwind__matrix__provider_8cc_source.html#l00061">ecu_scheme::assemble::initMassesEdgeMidpointsFifteenQuadRule()</a>, <a class="el" href="fifteen__point__upwind__matrix__provider_8cc_source.html#l00075">ecu_scheme::assemble::initMassesEdgeOffFifteenQuadRule()</a>, <a class="el" href="fifteen__point__upwind__matrix__provider_8cc_source.html#l00046">ecu_scheme::assemble::initMassesVerticesFifteenQuadRule()</a>, and <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>.</p>
 
 </div>
 </div>
@@ -385,21 +404,21 @@ template&lt;typename SCALAR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Computes the manufactured solution for the ECU scheme. </p>
+<p>Computes the manufactured solution for the midpoint upwind scheme. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">eps</td><td>Epsilon diffusion coefficient </td></tr>
     <tr><td class="paramname">velocity</td><td>functor for the velocity field </td></tr>
     <tr><td class="paramname">test</td><td>test function f </td></tr>
-    <tr><td class="paramname">dirichlet</td><td>dirichlet function g </td></tr>
+    <tr><td class="paramname">dirichlet</td><td>Dirichlet function g </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Solution vector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00059">59</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00061">61</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
 
-<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="assembler_8h_source.html#l00297">lf::assemble::AssembleVectorLocally()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00375">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::fe_space_</a>, <a class="el" href="special__entity__sets_8cc_source.html#l00040">lf::mesh::utils::flagEntitiesOnBoundary()</a>, <a class="el" href="fe__tools_8h_source.html#l00301">lf::fe::InitEssentialConditionFromFunction()</a>, <a class="el" href="convection__upwind__matrix__provider_8cc_source.html#l00017">ecu_scheme::assemble::initializeMasses()</a>, <a class="el" href="convection__upwind__matrix__provider_8cc_source.html#l00037">ecu_scheme::assemble::initializeMassesQuadratic()</a>, <a class="el" href="convection__upwind__matrix__provider_8cc_source.html#l00057">ecu_scheme::assemble::initializeMassesQuadraticEdges()</a>, and <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>.</p>
+<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="assembler_8h_source.html#l00297">lf::assemble::AssembleVectorLocally()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00391">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::fe_space_</a>, <a class="el" href="special__entity__sets_8cc_source.html#l00040">lf::mesh::utils::flagEntitiesOnBoundary()</a>, <a class="el" href="fe__tools_8h_source.html#l00301">lf::fe::InitEssentialConditionFromFunction()</a>, <a class="el" href="convection__upwind__matrix__provider_8cc_source.html#l00017">ecu_scheme::assemble::initializeMasses()</a>, <a class="el" href="convection__upwind__matrix__provider_8cc_source.html#l00037">ecu_scheme::assemble::initializeMassesQuadratic()</a>, <a class="el" href="convection__upwind__matrix__provider_8cc_source.html#l00057">ecu_scheme::assemble::initializeMassesQuadraticEdges()</a>, and <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>.</p>
 
 </div>
 </div>
@@ -451,21 +470,21 @@ template&lt;typename SCALAR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented only for quadratic FE space. </p>
+<p>Compute the solution with the 7-point (stable) upwind scheme. This method is implemented for quadratic Lagrangian FE only. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">eps</td><td></td></tr>
-    <tr><td class="paramname">velocity</td><td></td></tr>
-    <tr><td class="paramname">test</td><td></td></tr>
-    <tr><td class="paramname">dirichlet</td><td></td></tr>
+    <tr><td class="paramname">eps</td><td>diffusion coefficient epsilogn </td></tr>
+    <tr><td class="paramname">velocity</td><td>velocity field functor </td></tr>
+    <tr><td class="paramname">test</td><td>source function </td></tr>
+    <tr><td class="paramname">dirichlet</td><td>Dirichlet boundary condition function </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Solution vector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00233">233</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00238">238</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
 
-<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="assembler_8h_source.html#l00297">lf::assemble::AssembleVectorLocally()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00375">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::fe_space_</a>, <a class="el" href="special__entity__sets_8cc_source.html#l00040">lf::mesh::utils::flagEntitiesOnBoundary()</a>, <a class="el" href="fe__tools_8h_source.html#l00301">lf::fe::InitEssentialConditionFromFunction()</a>, <a class="el" href="stable__convection__prov_8cc_source.html#l00031">ecu_scheme::assemble::initMassesCells()</a>, <a class="el" href="stable__convection__prov_8cc_source.html#l00018">ecu_scheme::assemble::initMassesEdges()</a>, <a class="el" href="stable__convection__prov_8cc_source.html#l00005">ecu_scheme::assemble::initMassesVert()</a>, and <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>.</p>
+<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="assembler_8h_source.html#l00297">lf::assemble::AssembleVectorLocally()</a>, <a class="el" href="bdc__utils_8cc_source.html#l00006">ecu_scheme::assemble::EnforceBoundaryConditions()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00391">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::fe_space_</a>, <a class="el" href="stable__convection__prov_8cc_source.html#l00031">ecu_scheme::assemble::initMassesCells()</a>, <a class="el" href="stable__convection__prov_8cc_source.html#l00018">ecu_scheme::assemble::initMassesEdges()</a>, <a class="el" href="stable__convection__prov_8cc_source.html#l00005">ecu_scheme::assemble::initMassesVert()</a>, and <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>.</p>
 
 </div>
 </div>
@@ -517,7 +536,7 @@ template&lt;typename SCALAR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Solves the Convection-Diffusion BVP with nonhomogeneous Dirichlet boundary conditions using the SUPG method and quadratic FE space. </p>
+<p>Solves the Convection-Diffusion BVP with non-homogeneous Dirichlet boundary conditions using the SUPG method and quadratic FE space. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">eps</td><td>Epsilon diffusion coefficient </td></tr>
@@ -529,9 +548,9 @@ template&lt;typename SCALAR &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Eigen solution vector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00155">155</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00157">157</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
 
-<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="assembler_8h_source.html#l00297">lf::assemble::AssembleVectorLocally()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00375">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::fe_space_</a>, <a class="el" href="special__entity__sets_8cc_source.html#l00040">lf::mesh::utils::flagEntitiesOnBoundary()</a>, <a class="el" href="fe__tools_8h_source.html#l00301">lf::fe::InitEssentialConditionFromFunction()</a>, and <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>.</p>
+<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="assembler_8h_source.html#l00297">lf::assemble::AssembleVectorLocally()</a>, <a class="el" href="bdc__utils_8cc_source.html#l00006">ecu_scheme::assemble::EnforceBoundaryConditions()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00391">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::fe_space_</a>, and <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>.</p>
 
 </div>
 </div>
@@ -614,9 +633,9 @@ template&lt;typename SCALAR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00375">375</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="manufactured__solution_8h_source.html#l00391">391</a> of file <a class="el" href="manufactured__solution_8h_source.html">manufactured_solution.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="manufactured__solution_8h_source.html#l00302">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::ComputeFifteenPointQuadRuleSolution()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00059">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::ComputeSolution()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00233">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::ComputeStableSolution()</a>, and <a class="el" href="manufactured__solution_8h_source.html#l00155">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::ComputeSUPGSolution()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="manufactured__solution_8h_source.html#l00317">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::ComputeFifteenPointQuadRuleSolution()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00061">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::ComputeSolution()</a>, <a class="el" href="manufactured__solution_8h_source.html#l00238">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::ComputeStableSolution()</a>, and <a class="el" href="manufactured__solution_8h_source.html#l00157">ecu_scheme::experiments::ManufacturedSolutionExperiment&lt; SCALAR &gt;::ComputeSUPGSolution()</a>.</p>
 
 </div>
 </div>

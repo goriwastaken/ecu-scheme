@@ -96,18 +96,21 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Class for the computation of the element matrix corresponding to the convective term The element matrix provider evaluates the convective bilinear form for the midpoint upwind scheme:  
+ <a href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="convection__upwind__matrix__provider_8h_source.html">/home/runner/work/ecu-scheme/ecu-scheme/projects/ecu_scheme/assemble/convection_upwind_matrix_provider.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a33b2b41f860195e66c383361eef712f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#a33b2b41f860195e66c383361eef712f7">ConvectionUpwindMatrixProvider</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1fe_1_1_scalar_f_e_space.html">lf::fe::ScalarFESpace</a>&lt; SCALAR &gt;&gt; &amp;fe_space, FUNCTOR v, <a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; double &gt; masses)</td></tr>
-<tr class="memdesc:a33b2b41f860195e66c383361eef712f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html">ConvectionUpwindMatrixProvider</a> class for the linear finite element space.  <a href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#a33b2b41f860195e66c383361eef712f7">More...</a><br /></td></tr>
+<tr class="memdesc:a33b2b41f860195e66c383361eef712f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html" title="Class for the computation of the element matrix corresponding to the convective term The element matr...">ConvectionUpwindMatrixProvider</a> class for the linear finite element space.  <a href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#a33b2b41f860195e66c383361eef712f7">More...</a><br /></td></tr>
 <tr class="separator:a33b2b41f860195e66c383361eef712f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a923848ce5d8b549cfaeee300ac215b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#a8a923848ce5d8b549cfaeee300ac215b">ConvectionUpwindMatrixProvider</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1fe_1_1_scalar_f_e_space.html">lf::fe::ScalarFESpace</a>&lt; SCALAR &gt;&gt; &amp;fe_space, FUNCTOR v, <a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; double &gt; masses_vertices, <a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; double &gt; masses_edges)</td></tr>
-<tr class="memdesc:a8a923848ce5d8b549cfaeee300ac215b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html">ConvectionUpwindMatrixProvider</a> class for the quadratic finite element space.  <a href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#a8a923848ce5d8b549cfaeee300ac215b">More...</a><br /></td></tr>
+<tr class="memdesc:a8a923848ce5d8b549cfaeee300ac215b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html" title="Class for the computation of the element matrix corresponding to the convective term The element matr...">ConvectionUpwindMatrixProvider</a> class for the quadratic finite element space.  <a href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#a8a923848ce5d8b549cfaeee300ac215b">More...</a><br /></td></tr>
 <tr class="separator:a8a923848ce5d8b549cfaeee300ac215b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0eb3067147d61184cc104c6a359970b8"><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; SCALAR, Eigen::Dynamic, Eigen::Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#a0eb3067147d61184cc104c6a359970b8">Eval</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;entity)</td></tr>
-<tr class="memdesc:a0eb3067147d61184cc104c6a359970b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">main routine for the computation of element matrices of variable size depending on the finite element space  <a href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#a0eb3067147d61184cc104c6a359970b8">More...</a><br /></td></tr>
+<tr class="memdesc:a0eb3067147d61184cc104c6a359970b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main routine for the computation of element matrices of variable size depending on the finite element space.  <a href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#a0eb3067147d61184cc104c6a359970b8">More...</a><br /></td></tr>
 <tr class="separator:a0eb3067147d61184cc104c6a359970b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6ff40e24ed7eef2a4acc6ccfcc76356"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#ae6ff40e24ed7eef2a4acc6ccfcc76356">isActive</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;) const</td></tr>
 <tr class="memdesc:ae6ff40e24ed7eef2a4acc6ccfcc76356"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default implementation: all cells are active.  <a href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html#ae6ff40e24ed7eef2a4acc6ccfcc76356">More...</a><br /></td></tr>
@@ -128,8 +131,19 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename SCALAR, typename FUNCTOR&gt;<br />
 class ecu_scheme::assemble::ConvectionUpwindMatrixProvider&lt; SCALAR, FUNCTOR &gt;</h3>
 
+<p>Class for the computation of the element matrix corresponding to the convective term The element matrix provider evaluates the convective bilinear form for the midpoint upwind scheme: </p>
+<p class="formulaDsp">
+\[ b_h^m(u_h, v_h){\big|}_{T} = \frac{|T|}{3} \sum_{\vec{m}_i \in \mathcal{E}(T)}{\vec{\beta}(\vec{m}_i) \cdot (\grad u_h){\big|}_{T_{m^i}^{upw}}(\vec{m}_i)} \ v_h(\vec{m}_i) \]
+</p>
+ <dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">SCALAR</td><td>scalar type of the velocity field </td></tr>
+    <tr><td class="paramname">FUNCTOR</td><td>type of the velocity field </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00058">58</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00064">64</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a33b2b41f860195e66c383361eef712f7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a33b2b41f860195e66c383361eef712f7">&#9670;&nbsp;</a></span>ConvectionUpwindMatrixProvider() <span class="overload">[1/2]</span></h2>
@@ -165,7 +179,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Constructor for the <a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html">ConvectionUpwindMatrixProvider</a> class for the linear finite element space. </p>
+<p>Constructor for the <a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html" title="Class for the computation of the element matrix corresponding to the convective term The element matr...">ConvectionUpwindMatrixProvider</a> class for the linear finite element space. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fe_space</td><td>reference to the finite element space </td></tr>
@@ -174,7 +188,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00109">109</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00117">117</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -218,18 +232,18 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Constructor for the <a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html">ConvectionUpwindMatrixProvider</a> class for the quadratic finite element space. </p>
+<p>Constructor for the <a class="el" href="classecu__scheme_1_1assemble_1_1_convection_upwind_matrix_provider.html" title="Class for the computation of the element matrix corresponding to the convective term The element matr...">ConvectionUpwindMatrixProvider</a> class for the quadratic finite element space. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fe_space</td><td></td></tr>
-    <tr><td class="paramname">v</td><td></td></tr>
-    <tr><td class="paramname">masses_vertices</td><td></td></tr>
-    <tr><td class="paramname">masses_edges</td><td></td></tr>
+    <tr><td class="paramname">fe_space</td><td>reference to the finite element space </td></tr>
+    <tr><td class="paramname">v</td><td>functor for the velocity field </td></tr>
+    <tr><td class="paramname">masses_vertices</td><td>Data structure containing the masses m(p) for all vertices of the mesh </td></tr>
+    <tr><td class="paramname">masses_edges</td><td>Data structure containing the masses m(p) for all edge midpoints of the mesh </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00115">115</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00123">123</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -252,7 +266,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>main routine for the computation of element matrices of variable size depending on the finite element space </p>
+<p>Main routine for the computation of element matrices of variable size depending on the finite element space. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">entity</td><td>reference to the TRIANGULAR cell for which the element matrix is to be computed </td></tr>
@@ -261,7 +275,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>an nxn matrix where n is the number of shape functions of the cell </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00126">126</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00134">134</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
 
 <p class="reference">References <a class="el" href="convection__upwind__matrix__provider_8cc_source.html#l00075">ecu_scheme::assemble::computeOutwardNormalsTria()</a>, <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#a0ba7b5cc76e31be825417130bf8d4025">lf::mesh::Entity::Geometry()</a>, <a class="el" href="ref__el_8h_source.html#l00158">lf::base::RefEl::kTria()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#acff29c2e4f65daaef0152b07559b3f52">lf::mesh::Entity::RefEl()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#a0aa402adff485a48c654a89fa877de0a">lf::mesh::Entity::SubEntities()</a>, and <a class="el" href="geometry__interface_8cc_source.html#l00011">lf::geometry::Volume()</a>.</p>
 
@@ -295,7 +309,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 
 <p>Default implementation: all cells are active. </p>
 
-<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00094">94</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00102">102</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -322,7 +336,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00101">101</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00109">109</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -348,7 +362,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00105">105</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00113">113</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -374,7 +388,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00103">103</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00111">111</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -400,7 +414,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00099">99</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="convection__upwind__matrix__provider_8h_source.html#l00107">107</a> of file <a class="el" href="convection__upwind__matrix__provider_8h_source.html">convection_upwind_matrix_provider.h</a>.</p>
 
 </div>
 </div>

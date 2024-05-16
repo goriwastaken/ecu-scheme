@@ -96,7 +96,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>only for quadratic FE spaces  
+<p>Class providing the element matrix for the 7-point upwind scheme The element matrix provider evaluates the convective bilinear form for the 7-point upwind scheme \( b_h^{vmb}(u_h,v_h) \) presented in section 2.1.1 of the thesis.  
  <a href="classecu__scheme_1_1assemble_1_1_stable_convection_upwind_matrix_provider.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="stable__convection__prov_8h_source.html">/home/runner/work/ecu-scheme/ecu-scheme/projects/ecu_scheme/assemble/stable_convection_prov.h</a>&gt;</code></p>
@@ -104,10 +104,13 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a299e8180b0acb5817d172d30956e3ba2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_stable_convection_upwind_matrix_provider.html#a299e8180b0acb5817d172d30956e3ba2">StableConvectionUpwindMatrixProvider</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1fe_1_1_scalar_f_e_space.html">lf::fe::ScalarFESpace</a>&lt; SCALAR &gt;&gt; &amp;fe_space, FUNCTOR v, <a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; double &gt; masses_vertices, <a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; double &gt; masses_edges, <a class="el" href="classlf_1_1mesh_1_1utils_1_1_codim_mesh_data_set.html">lf::mesh::utils::CodimMeshDataSet</a>&lt; double &gt; masses_cells)</td></tr>
+<tr class="memdesc:a299e8180b0acb5817d172d30956e3ba2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the 7-point scheme element matrix provider.  <a href="classecu__scheme_1_1assemble_1_1_stable_convection_upwind_matrix_provider.html#a299e8180b0acb5817d172d30956e3ba2">More...</a><br /></td></tr>
 <tr class="separator:a299e8180b0acb5817d172d30956e3ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a828871641ba17e0f1b5d75ec85d979c5"><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; SCALAR, 6, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_stable_convection_upwind_matrix_provider.html#a828871641ba17e0f1b5d75ec85d979c5">Eval</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;entity)</td></tr>
+<tr class="memdesc:a828871641ba17e0f1b5d75ec85d979c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates the element matrix for a given entity.  <a href="classecu__scheme_1_1assemble_1_1_stable_convection_upwind_matrix_provider.html#a828871641ba17e0f1b5d75ec85d979c5">More...</a><br /></td></tr>
 <tr class="separator:a828871641ba17e0f1b5d75ec85d979c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5285d06278931241f711e281df382461"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_stable_convection_upwind_matrix_provider.html#a5285d06278931241f711e281df382461">isActive</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;) const</td></tr>
+<tr class="memdesc:a5285d06278931241f711e281df382461"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default implementation: all cells are active.  <a href="classecu__scheme_1_1assemble_1_1_stable_convection_upwind_matrix_provider.html#a5285d06278931241f711e281df382461">More...</a><br /></td></tr>
 <tr class="separator:a5285d06278931241f711e281df382461"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -127,16 +130,16 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename SCALAR, typename FUNCTOR&gt;<br />
 class ecu_scheme::assemble::StableConvectionUpwindMatrixProvider&lt; SCALAR, FUNCTOR &gt;</h3>
 
-<p>only for quadratic FE spaces </p>
+<p>Class providing the element matrix for the 7-point upwind scheme The element matrix provider evaluates the convective bilinear form for the 7-point upwind scheme \( b_h^{vmb}(u_h,v_h) \) presented in section 2.1.1 of the thesis. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">SCALAR</td><td></td></tr>
-    <tr><td class="paramname">FUNCTOR</td><td></td></tr>
+    <tr><td class="paramname">SCALAR</td><td>the scalar type of the FE space </td></tr>
+    <tr><td class="paramname">FUNCTOR</td><td>the type of the velocity field \(\vec{\beta}\) </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00029">29</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00052">52</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a299e8180b0acb5817d172d30956e3ba2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a299e8180b0acb5817d172d30956e3ba2">&#9670;&nbsp;</a></span>StableConvectionUpwindMatrixProvider()</h2>
@@ -184,7 +187,19 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00050">50</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
+<p>Constructor for the 7-point scheme element matrix provider. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fe_space</td><td>underlying FE space </td></tr>
+    <tr><td class="paramname">v</td><td>velocity field \(\vec{\beta}\) </td></tr>
+    <tr><td class="paramname">masses_vertices</td><td>Data structure containing the masses m(p) for all vertices of the mesh </td></tr>
+    <tr><td class="paramname">masses_edges</td><td>Data structure containing the masses m(p) for all midpoints of edges of the mesh </td></tr>
+    <tr><td class="paramname">masses_cells</td><td>Data structure containing the masses m(p) for all cells of the mesh </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00090">90</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
 
 </div>
 </div>
@@ -207,7 +222,16 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00064">64</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
+<p>Evaluates the element matrix for a given entity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entity</td><td>underlying entity </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Element matrix </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00104">104</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
 
 <p class="reference">References <a class="el" href="convection__upwind__matrix__provider_8cc_source.html#l00075">ecu_scheme::assemble::computeOutwardNormalsTria()</a>, <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#a0ba7b5cc76e31be825417130bf8d4025">lf::mesh::Entity::Geometry()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#a0aa402adff485a48c654a89fa877de0a">lf::mesh::Entity::SubEntities()</a>, and <a class="el" href="geometry__interface_8cc_source.html#l00011">lf::geometry::Volume()</a>.</p>
 
@@ -239,7 +263,9 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00039">39</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
+<p>Default implementation: all cells are active. </p>
+
+<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00079">79</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
 
 </div>
 </div>
@@ -266,7 +292,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00043">43</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00083">83</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
 
 </div>
 </div>
@@ -292,7 +318,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00046">46</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00086">86</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
 
 </div>
 </div>
@@ -318,7 +344,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00045">45</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00085">85</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
 
 </div>
 </div>
@@ -344,7 +370,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00044">44</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00084">84</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
 
 </div>
 </div>
@@ -370,7 +396,7 @@ template&lt;typename SCALAR , typename FUNCTOR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00042">42</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="stable__convection__prov_8h_source.html#l00082">82</a> of file <a class="el" href="stable__convection__prov_8h_source.html">stable_convection_prov.h</a>.</p>
 
 </div>
 </div>

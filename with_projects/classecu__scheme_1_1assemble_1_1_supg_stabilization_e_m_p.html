@@ -104,6 +104,7 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a57cd6925e8c0f6195cd1d005d62d1f9c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_supg_stabilization_e_m_p.html#a57cd6925e8c0f6195cd1d005d62d1f9c">SupgStabilizationEMP</a> (FUNCTOR_EPS eps, FUNCTOR_V v, FUNCTOR_F f)</td></tr>
+<tr class="memdesc:a57cd6925e8c0f6195cd1d005d62d1f9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the stabilization term.  <a href="classecu__scheme_1_1assemble_1_1_supg_stabilization_e_m_p.html#a57cd6925e8c0f6195cd1d005d62d1f9c">More...</a><br /></td></tr>
 <tr class="separator:a57cd6925e8c0f6195cd1d005d62d1f9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace85948d537e3685358a3dd9ba26e2e9"><td class="memItemLeft" align="right" valign="top">Eigen::Matrix3d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1assemble_1_1_supg_stabilization_e_m_p.html#ace85948d537e3685358a3dd9ba26e2e9">Eval</a> (const <a class="el" href="classlf_1_1mesh_1_1_entity.html">lf::mesh::Entity</a> &amp;entity)</td></tr>
 <tr class="memdesc:ace85948d537e3685358a3dd9ba26e2e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">main routine, computes the element matrix on a TRIANGULAR entity  <a href="classecu__scheme_1_1assemble_1_1_supg_stabilization_e_m_p.html#ace85948d537e3685358a3dd9ba26e2e9">More...</a><br /></td></tr>
@@ -127,7 +128,7 @@ class ecu_scheme::assemble::SupgStabilizationEMP&lt; FUNCTOR_EPS, FUNCTOR_V, FUN
 
 <p>Computes the local matrices for the stabilization term in the SUPG method based on linear finite elements and the trapezoidal rule . </p>
 
-<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00093">93</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00088">88</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a57cd6925e8c0f6195cd1d005d62d1f9c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a57cd6925e8c0f6195cd1d005d62d1f9c">&#9670;&nbsp;</a></span>SupgStabilizationEMP()</h2>
@@ -170,6 +171,8 @@ template&lt;typename FUNCTOR_EPS , typename FUNCTOR_V , typename FUNCTOR_F &gt; 
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Constructor for the stabilization term. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">eps</td><td>diffusion coefficient </td></tr>
@@ -179,7 +182,7 @@ template&lt;typename FUNCTOR_EPS , typename FUNCTOR_V , typename FUNCTOR_F &gt; 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00101">101</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00096">96</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -204,7 +207,7 @@ template&lt;typename FUNCTOR_EPS , typename FUNCTOR_V , typename FUNCTOR_F &gt; 
 
 <p>main routine, computes the element matrix on a TRIANGULAR entity </p>
 
-<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00119">119</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00114">114</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
 
 <p class="reference">References <a class="el" href="geometry__interface_8h_source.html#l00261">lf::geometry::Corners()</a>, <a class="el" href="supg__linear__matrix__provider_8cc_source.html#l00032">ecu_scheme::assemble::Delta()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#a0ba7b5cc76e31be825417130bf8d4025">lf::mesh::Entity::Geometry()</a>, <a class="el" href="ref__el_8h_source.html#l00158">lf::base::RefEl::kTria()</a>, <a class="el" href="classlf_1_1mesh_1_1_entity.html#acff29c2e4f65daaef0152b07559b3f52">lf::mesh::Entity::RefEl()</a>, and <a class="el" href="geometry__interface_8cc_source.html#l00011">lf::geometry::Volume()</a>.</p>
 
@@ -238,7 +241,7 @@ template&lt;typename FUNCTOR_EPS , typename FUNCTOR_V , typename FUNCTOR_F &gt; 
 
 <p>Default implementation: all cells are active. </p>
 
-<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00110">110</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00105">105</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -265,7 +268,7 @@ template&lt;typename FUNCTOR_EPS , typename FUNCTOR_V , typename FUNCTOR_F &gt; 
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00113">113</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00108">108</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -291,7 +294,7 @@ template&lt;typename FUNCTOR_EPS , typename FUNCTOR_V , typename FUNCTOR_F &gt; 
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00115">115</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00110">110</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
 
 </div>
 </div>
@@ -317,7 +320,7 @@ template&lt;typename FUNCTOR_EPS , typename FUNCTOR_V , typename FUNCTOR_F &gt; 
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00114">114</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="supg__linear__matrix__provider_8h_source.html#l00109">109</a> of file <a class="el" href="supg__linear__matrix__provider_8h_source.html">supg_linear_matrix_provider.h</a>.</p>
 
 </div>
 </div>

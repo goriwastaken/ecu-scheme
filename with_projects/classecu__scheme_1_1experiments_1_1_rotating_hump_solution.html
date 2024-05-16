@@ -96,6 +96,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Class for generating the Rotating Hump experiment setup and computing the solution.  
+ <a href="classecu__scheme_1_1experiments_1_1_rotating_hump_solution.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="rotating__hump__sol_8h_source.html">/home/runner/work/ecu-scheme/ecu-scheme/projects/ecu_scheme/experiments/advection_one_form_experiments/rotating_hump/rotating_hump_sol.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -115,6 +118,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae5de5e046ae46422f4d7d3e0e80cd479"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1experiments_1_1_rotating_hump_solution.html#ae5de5e046ae46422f4d7d3e0e80cd479">RotatingHumpSolution</a> (const std::shared_ptr&lt; <a class="el" href="classlf_1_1uscalfe_1_1_uniform_scalar_f_e_space.html">lf::uscalfe::UniformScalarFESpace</a>&lt; SCALAR &gt;&gt; &amp;fe_space)</td></tr>
 <tr class="separator:ae5de5e046ae46422f4d7d3e0e80cd479"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbfafe27fa7767b267dcb2c87a7573ba"><td class="memItemLeft" align="right" valign="top">Eigen::Vector&lt; double, Eigen::Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classecu__scheme_1_1experiments_1_1_rotating_hump_solution.html#acbfafe27fa7767b267dcb2c87a7573ba">ComputeSolution</a> (std::function&lt; Eigen::Matrix&lt; double, 2, 1, 0 &gt;(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; velocity, std::function&lt; Eigen::Matrix&lt; double, 2, 1, 0 &gt;(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; boundary_condition, std::function&lt; Eigen::Matrix&lt; double, 2, 1, 0 &gt;(const Eigen::Matrix&lt; double, 2, 1, 0 &gt; &amp;)&gt; forcing_term) const</td></tr>
+<tr class="memdesc:acbfafe27fa7767b267dcb2c87a7573ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the solution of the Rotating Hump experiment.  <a href="classecu__scheme_1_1experiments_1_1_rotating_hump_solution.html#acbfafe27fa7767b267dcb2c87a7573ba">More...</a><br /></td></tr>
 <tr class="separator:acbfafe27fa7767b267dcb2c87a7573ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -126,8 +130,15 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename SCALAR&gt;<br />
 class ecu_scheme::experiments::RotatingHumpSolution&lt; SCALAR &gt;</h3>
 
+<p>Class for generating the Rotating Hump experiment setup and computing the solution. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">SCALAR</td><td>the scalar type of an underlying Lagrangian finite element space </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8h_source.html#l00043">43</a> of file <a class="el" href="rotating__hump__sol_8h_source.html">rotating_hump_sol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8h_source.html#l00055">55</a> of file <a class="el" href="rotating__hump__sol_8h_source.html">rotating_hump_sol.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad4d34bf5b34ab16d8089183dca075a3b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad4d34bf5b34ab16d8089183dca075a3b">&#9670;&nbsp;</a></span>RotatingHumpSolution() <span class="overload">[1/4]</span></h2>
@@ -265,7 +276,7 @@ template&lt;typename SCALAR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8h_source.html#l00053">53</a> of file <a class="el" href="rotating__hump__sol_8h_source.html">rotating_hump_sol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8h_source.html#l00065">65</a> of file <a class="el" href="rotating__hump__sol_8h_source.html">rotating_hump_sol.h</a>.</p>
 
 </div>
 </div>
@@ -312,9 +323,20 @@ template&lt;typename SCALAR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8h_source.html#l00058">58</a> of file <a class="el" href="rotating__hump__sol_8h_source.html">rotating_hump_sol.h</a>.</p>
+<p>Computes the solution of the Rotating Hump experiment. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">velocity</td><td>vector valued velocity field </td></tr>
+    <tr><td class="paramname">boundary_condition</td><td>vector valued Dirichlet boundary condition </td></tr>
+    <tr><td class="paramname">forcing_term</td><td>vector valued source term </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>solution vector </dd></dl>
 
-<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="rotating__hump__sol_8cc_source.html#l00042">ecu_scheme::experiments::EnforceInflowBDCOneform()</a>, <a class="el" href="rotating__hump__sol_8h_source.html#l00160">ecu_scheme::experiments::RotatingHumpSolution&lt; SCALAR &gt;::fe_space_</a>, <a class="el" href="ref__el_8h_source.html#l00150">lf::base::RefEl::kSegment()</a>, <a class="el" href="ref__el_8h_source.html#l00158">lf::base::RefEl::kTria()</a>, <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>, and <a class="el" href="classlf_1_1assemble_1_1_dof_handler.html#abb2653388e7c8ee14bd835c1bd854a89">lf::assemble::DofHandler::NumDofs()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8h_source.html#l00077">77</a> of file <a class="el" href="rotating__hump__sol_8h_source.html">rotating_hump_sol.h</a>.</p>
+
+<p class="reference">References <a class="el" href="assembler_8h_source.html#l00113">lf::assemble::AssembleMatrixLocally()</a>, <a class="el" href="rotating__hump__sol_8cc_source.html#l00042">ecu_scheme::experiments::EnforceInflowBDCOneform()</a>, <a class="el" href="rotating__hump__sol_8h_source.html#l00161">ecu_scheme::experiments::RotatingHumpSolution&lt; SCALAR &gt;::fe_space_</a>, <a class="el" href="ref__el_8h_source.html#l00150">lf::base::RefEl::kSegment()</a>, <a class="el" href="ref__el_8h_source.html#l00158">lf::base::RefEl::kTria()</a>, <a class="el" href="coomatrix_8h_source.html#l00172">lf::assemble::COOMatrix&lt; SCALAR &gt;::makeSparse()</a>, and <a class="el" href="classlf_1_1assemble_1_1_dof_handler.html#abb2653388e7c8ee14bd835c1bd854a89">lf::assemble::DofHandler::NumDofs()</a>.</p>
 
 </div>
 </div>
@@ -397,9 +419,9 @@ template&lt;typename SCALAR &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8h_source.html#l00160">160</a> of file <a class="el" href="rotating__hump__sol_8h_source.html">rotating_hump_sol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rotating__hump__sol_8h_source.html#l00161">161</a> of file <a class="el" href="rotating__hump__sol_8h_source.html">rotating_hump_sol.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="rotating__hump__sol_8h_source.html#l00058">ecu_scheme::experiments::RotatingHumpSolution&lt; SCALAR &gt;::ComputeSolution()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="rotating__hump__sol_8h_source.html#l00077">ecu_scheme::experiments::RotatingHumpSolution&lt; SCALAR &gt;::ComputeSolution()</a>.</p>
 
 </div>
 </div>
