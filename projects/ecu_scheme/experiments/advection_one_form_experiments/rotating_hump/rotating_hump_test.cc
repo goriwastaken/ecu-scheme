@@ -13,7 +13,7 @@
 
 /**
  * @brief Rotating Hump Problem for 2-dimensional pure transport problem of
- * differential 1-forms
+ * differential 1-forms from section 5.2 of the thesis
  */
 int main(int argc, char* argv[]) {
   if (argc != 2 && argc != 1 && argc != 3) {
@@ -33,8 +33,6 @@ int main(int argc, char* argv[]) {
     refinement_levels = std::stoi(argv[1]);
     eps_for_refinement = 0;  // pure transport problem
   }
-  std::cout << "Refinement levels: " << refinement_levels << '\n';
-  std::cout << "Epsilon for refinement: " << eps_for_refinement << '\n';
 
   // setup is \Omega = [-1, 1]^2
   // Lipschitz continuous velocity field
@@ -51,8 +49,8 @@ int main(int argc, char* argv[]) {
   };
   const auto kBoundaryConditionBump = [](const Eigen::Vector2d& xh) {
     const double x_norm = xh.norm();
+    const double phi = std::pow(std::sin(M_PI * x_norm), 2);
     if (x_norm <= 1.0) {
-      const double phi = std::pow(std::sin(M_PI * x_norm), 2);
       return (Eigen::Vector2d() << phi, phi).finished();
     }
     return (Eigen::Vector2d() << 0.0, 0.0).finished();
@@ -98,7 +96,7 @@ int main(int argc, char* argv[]) {
       lf::refinement::GenerateMeshHierarchyByUniformRefinemnt(
           mesh_p, refinement_levels);
   lf::refinement::MeshHierarchy& multi_mesh{*mesh_hierarchy};
-  multi_mesh.PrintInfo(std::cout);
+  //  multi_mesh.PrintInfo(std::cout);
 
   ecu_scheme::post_processing::ExperimentSolutionWrapper<double>
       solution_collection_wrapper_linear{
@@ -133,37 +131,6 @@ int main(int argc, char* argv[]) {
       ecu_scheme::post_processing::concat(
           "rot_hump_linear", "_", refinement_levels, "_", eps_for_refinement),
       true);
-
-  // debug L2 error computation
-  //  for (int l = 0; l < L; ++l) {
-  //    auto mesh_l = multi_mesh.getMesh(l);
-  //    auto fe_space_l_linear =
-  //        std::make_shared<lf::uscalfe::FeSpaceLagrangeO1<double>>(mesh_l);
-  //
-  //    Eigen::VectorXd final_time_sol_vector =
-  //        solution_collection_wrapper_linear.final_time_solutions.at(l);
-  //    ecu_scheme::assemble::MeshFunctionOneForm<double> mf_one_form(
-  //        final_time_sol_vector, mesh_l);
-  //
-  //
-  //    //    auto mf_diff = lf::uscalfe::operator-(mf_one_form, mf_exact_sol);
-  //    auto mf_diff = mf_one_form - mf_exact_sol;
-  //
-  //    // prepare extra info for L2norm function
-  //    auto square_vector =
-  //        [](Eigen::Matrix<double, Eigen::Dynamic, 1> a) -> double {
-  //      return a.squaredNorm();
-  //    };
-  //    lf::quad::QuadRule quad_rule =
-  //        lf::quad::make_QuadRule(lf::base::RefEl::kTria(), 10);
-  //
-  //    // get L2_error
-  //    const std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>>
-  //        L2_error_bundle = ecu_scheme::post_processing::L2norm(
-  //            mesh_l, mf_diff, square_vector, quad_rule);
-  //    std::cout << "Ndofs: " << fe_space_l_linear->LocGlobMap().NumDofs()
-  //              << " L2-error: " << std::get<0>(L2_error_bundle) << "\n";
-  //  }
 
   return 0;
 }

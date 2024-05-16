@@ -14,25 +14,16 @@
 #include <Eigen/SparseLU>
 #include <memory>
 
+#include "bdc_utils.h"
 #include "lf/mesh/mesh.h"
 #include "lf/uscalfe/uscalfe.h"
 
 namespace ecu_scheme::assemble {
 
-void EnforceBoundaryConditions(
-    const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>> &fe_space,
-    lf::assemble::COOMatrix<double> &A, Eigen::VectorXd &phi,
-    std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet);
-
-void EnforceBoundaryConditionsOnRotInflow(
-    const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>> &fe_space,
-    lf::assemble::COOMatrix<double> &A, Eigen::VectorXd &phi,
-    std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet);
-
 /**
  * @brief Assemble the SUPG element matrix for the convection-diffusion boundary
- * value problem where the implementation is based on a combination of
- * techniques from the NumPDE Lecture
+ * for quadratic Lagrange FE value problem where the implementation is based on
+ * a combination of techniques from the NumPDE lecture document
  * @tparam MESHFUNCTION_V type of mesh function providing the velocity field
  */
 template <class MESHFUNCTION_V>
@@ -148,64 +139,22 @@ SUPGElementMatrixProvider<MESHFUNCTION_V>::Eval(const lf::mesh::Entity &cell) {
   return elem_mat;
 }
 
-/** Mark mesh nodes located on the (closed) inflow boundary */
-template <typename VELOCITY>
-lf::mesh::utils::CodimMeshDataSet<bool> flagNodesOnInflowBoundary(
-    const std::shared_ptr<const lf::mesh::Mesh> &mesh_p, VELOCITY velo) {
-  static_assert(lf::mesh::utils::isMeshFunction<VELOCITY>);
-  // Array for flags
-  lf::mesh::utils::CodimMeshDataSet<bool> nd_inflow_flags(mesh_p, 2, false);
-  // Reference coordinates of center of gravity of a triangle
-  const Eigen::MatrixXd c_hat = Eigen::Vector2d(1.0 / 3.0, 1.0 / 3.0);
-  // Reference coordinates of midpoints of edges
-  const Eigen::MatrixXd mp_hat =
-      (Eigen::Matrix<double, 2, 3>() << 0.5, 0.5, 0.0, 0.0, 0.5, 0.5)
-          .finished();
-  // Find edges (codim = 1) on the boundary
-  lf::mesh::utils::CodimMeshDataSet<bool> ed_bd_flags(
-      lf::mesh::utils::flagEntitiesOnBoundary(mesh_p, 1));
-  // Run through all cells of the mesh and determine
-  for (const lf::mesh::Entity *cell : mesh_p->Entities(0)) {
-    // Fetch geometry object for current cell
-    const lf::geometry::Geometry &K_geo{*(cell->Geometry())};
-    LF_ASSERT_MSG(cell->RefEl() == lf::base::RefEl::kTria(),
-                  "Only implemented for triangles");
-    LF_ASSERT_MSG(K_geo.DimGlobal() == 2, "Mesh must be planar");
-    // Obtain physical coordinates of barycenter of triangle
-    const Eigen::Vector2d center{K_geo.Global(c_hat).col(0)};
-    // Get velocity values in the midpoints of the edges
-    auto velo_mp_vals = velo(*cell, mp_hat);
-    // Retrieve pointers to all edges of the triangle
-    nonstd::span<const lf::mesh::Entity *const> edges{cell->SubEntities(1)};
-    LF_ASSERT_MSG(edges.size() == 3, "Triangle must have three edges!");
-    for (int k = 0; k < 3; ++k) {
-      if (ed_bd_flags(*edges[k])) {
-        const lf::geometry::Geometry &ed_geo{*(edges[k]->Geometry())};
-        const Eigen::MatrixXd ed_pts{lf::geometry::Corners(ed_geo)};
-        // Direction vector of the edge
-        const Eigen::Vector2d dir = ed_pts.col(1) - ed_pts.col(0);
-        // Rotate counterclockwise by 90 degrees
-        const Eigen::Vector2d ed_normal = Eigen::Vector2d(dir(1), -dir(0));
-        // For adjusting direction of normal so that it points into the exterior
-        // of the domain
-        const int ori = (ed_normal.dot(center - ed_pts.col(0)) > 0) ? -1 : 1;
-        // Check angle of exterior normal and velocity vector
-        const int v_rel_ori =
-            ((velo_mp_vals[k].dot(ed_normal) > 0) ? 1 : -1) * ori;
-        if (v_rel_ori < 0) {
-          // Inflow: obtain endpoints of the edge and mark them
-          nonstd::span<const lf::mesh::Entity *const> endpoints{
-              edges[k]->SubEntities(1)};
-          LF_ASSERT_MSG(endpoints.size() == 2, "Edge must have two endpoints!");
-          nd_inflow_flags(*endpoints[0]) = true;
-          nd_inflow_flags(*endpoints[1]) = true;
-        }
-      }
-    }
-  }
-  return nd_inflow_flags;
-}
-
+/**
+ * @brief Solve the convection-diffusion boundary value problem using the SUPG
+ * method for quadratic Lagrangian FE space
+ * @tparam DIFFUSION_COEFF diffusion coefficient type
+ * @tparam CONVECTION_COEFF convection coefficient type
+ * @tparam FUNCTOR_F the source function type
+ * @tparam FUNCTOR_G Dirichlet boundary function type
+ * @param fe_space underlying FE space
+ * @param eps epsilon parameter for the diffusive term
+ * @param v velocity field
+ * @param f source function
+ * @param g Dirichlet boundary function
+ * @param flagInflow flag to indicate what kind of inflow boundary we have, if
+ * true we have rotational inflow, otherwise we have the standard inflow
+ * @return solution vector
+ */
 template <typename DIFFUSION_COEFF, typename CONVECTION_COEFF,
           typename FUNCTOR_F, typename FUNCTOR_G>
 Eigen::VectorXd SolveCDBVPSupgQuad(
@@ -243,30 +192,14 @@ Eigen::VectorXd SolveCDBVPSupgQuad(
                                       phi);
 
   // IMPOSE DIRICHLET BOUNDARY CONDITIONS ON INFLOW BOUNDARY
-  //  Eigen::VectorXd g_coeffs = lf::fe::NodalProjection(*fe_space, mf_g);
-  //  auto inflow_nodes{flagNodesOnInflowBoundary(mesh_p, mf_v)};
-  //  lf::assemble::FixFlaggedSolutionCompAlt<double>(
-  //      [&inflow_nodes, &g_coeffs, &dofh](lf::assemble::glb_idx_t
-  //      dof_idx)->std::pair<bool,double>{
-  //        const lf::mesh::Entity& dofh_node{dofh.Entity(dof_idx)};
-  //        LF_ASSERT_MSG(dofh_node.RefEl() == lf::base::RefEl::kPoint(), "Dofs
-  //        must correspond to points"); return {inflow_nodes(dofh_node),
-  //        g_coeffs[dof_idx]};
-  //      }, A, phi);
+
   if (!flagInflow) {
+    //    assemble::utils::EnforceBoundaryConditions(fe_space, A, phi, g);
     EnforceBoundaryConditions(fe_space, A, phi, g);
   } else {
     EnforceBoundaryConditionsOnRotInflow(fe_space, A, phi, g);
+    //    ::utils::EnforceBoundaryConditionsOnRotInflow(fe_space, A, phi, g);
   }
-
-  // IMPOSE DIRICHLET ON BOUNDARY
-  //  auto bd_flags{lf::mesh::utils::flagEntitiesOnBoundary(mesh_p, 1)};
-  //  auto
-  //  ess_bdc_flags_values{lf::fe::InitEssentialConditionFromFunction(*fe_space,
-  //  bd_flags, mf_g)}; lf::assemble::FixFlaggedSolutionComponents<double>(
-  //      [&ess_bdc_flags_values](lf::uscalfe::glb_idx_t gdof_idx){
-  //        return ess_bdc_flags_values[gdof_idx];
-  //      }, A, phi);
 
   // SOLVE LINEAR SYSTEM
   Eigen::SparseMatrix<double> A_crs = A.makeSparse();

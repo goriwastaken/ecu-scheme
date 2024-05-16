@@ -11,7 +11,8 @@
 #include "post_processing.h"
 
 /**
- * @brief Test of Convergence: Constant Velocity
+ * @brief Constant Velocity Experiment for the 2-dimensional pure transport
+ * problem from section 5.1.3 of the thesis
  */
 int main(int argc, char* argv[]) {
   if (argc != 3 && argc != 1 && argc != 4) {
@@ -29,8 +30,6 @@ int main(int argc, char* argv[]) {
     refinement_levels = std::stoi(argv[1]);
     //    eps_for_refinement = std::stod(argv[2]);
   }
-  std::cout << "Refinement levels: " << refinement_levels << '\n';
-  std::cout << "Epsilon for refinement: " << eps_for_refinement << '\n';
 
   ecu_scheme::mesh::BasicMeshBuilder builder;
   builder.SetNumCellsX(2);
@@ -65,10 +64,6 @@ int main(int argc, char* argv[]) {
                        std::sin(0.5 * M_PI * diff) * (-0.5 * M_PI);
     return u_x + u_y;
   };
-  //  const auto kExactSolution = [kDirichletFunction](const Eigen::Vector2d&
-  //  x){
-  //    return kDirichletFunction(x);
-  //  };
   const auto kExactSolution = [kBumpFunction](const Eigen::Vector2d& x) {
     return kBumpFunction(x(0) - x(1));
   };
@@ -117,8 +112,6 @@ int main(int argc, char* argv[]) {
 
   // get number of levels
   auto L = multi_mesh.NumLevels();
-  std::cout << "checking multimesh levels " << multi_mesh.NumLevels()
-            << std::endl;
   LF_ASSERT_MSG(L == refinement_levels + 1,
                 "Number of levels in mesh hierarchy is not equal to the number "
                 "of refinement levels");
@@ -159,8 +152,8 @@ int main(int argc, char* argv[]) {
   //  ecu_scheme::post_processing::convergence_report_oneform<double>(solution_collection_wrapper,
   //  mf_exact_solution,
   //                                                                 ecu_scheme::post_processing::concat("const_velo_quad","_",refinement_levels,"_",eps_for_refinement));
-  std::cout << "Comparison with other methods - Quadratic FE space"
-            << "\n";
+
+  // Comparison with other methods - Quadratic FE space
   std::vector<
       std::pair<ecu_scheme::post_processing::ExperimentSolutionWrapper<double>,
                 std::string>>

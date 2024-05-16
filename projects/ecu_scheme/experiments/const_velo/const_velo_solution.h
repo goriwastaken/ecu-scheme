@@ -22,18 +22,11 @@
 namespace ecu_scheme::experiments {
 
 /**
- * @brief Enforces the Dirichlet boundary conditions at the inflow boundary
- * @tparam SCALAR template parameter indicating the scalar type
- * @param fe_space corresponding finite element space
- * @param A Galerkin system matrix
- * @param phi Right-hand side vector of the linear system
- * @param dirichlet Dirichlet function to be enforced at the inflow boundary
+ * @brief Class for generating the Constant Velocity experiment setup and
+ * computing the solution
+ * @tparam SCALAR the scalar type of an underlying Lagrangian finite element
+ * space
  */
-void EnforceBoundaryConditions(
-    const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>> &fe_space,
-    lf::assemble::COOMatrix<double> &A, Eigen::VectorXd &phi,
-    std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet);
-
 template <typename SCALAR>
 class ConstVeloSolution {
  public:
@@ -49,6 +42,16 @@ class ConstVeloSolution {
           &fe_space)
       : fe_space_(fe_space) {}
 
+  /**
+   * @brief Computes the solution vector of the Constant Velocity experiment
+   * @param dirichlet Dirichlet boundary condition
+   * @param velocity velocity field assumed to be of the form \f$ (c,c)^T \f$
+   * where \f$c\f$ is some constant
+   * @param test_function source function
+   * @param method_name should be either "UPWIND" or "STABLE_UPWIND"
+   * representing the midpoint and 7-point upwind scheme respectively
+   * @return vector of solution coefficients
+   */
   Eigen::VectorXd ComputeSolution(
       std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet,
       std::function<Eigen::Matrix<double, 2, 1, 0>(
@@ -94,7 +97,9 @@ class ConstVeloSolution {
         load_provider(fe_space_, mf_test_function);
     lf::assemble::AssembleVectorLocally(0, dofh, load_provider, phi);
 
-    EnforceBoundaryConditions(fe_space_, B, phi, dirichlet);
+    //    EnforceBoundaryConditions(fe_space_, B, phi, dirichlet);
+    ecu_scheme::assemble::EnforceBoundaryConditions(fe_space_, B, phi,
+                                                    dirichlet);
 
     Eigen::SparseMatrix<double> B_crs = B.makeSparse();
     Eigen::SparseLU<Eigen::SparseMatrix<double>> solver;

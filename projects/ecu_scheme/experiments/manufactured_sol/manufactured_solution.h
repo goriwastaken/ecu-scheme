@@ -17,13 +17,14 @@
 
 namespace ecu_scheme::experiments {
 
-void EnforceBoundaryConditions(
-    const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>> &fe_space,
-    lf::assemble::COOMatrix<double> &A, Eigen::VectorXd &phi,
-    std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet);
+// void EnforceBoundaryConditions(
+//     const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>>
+//     &fe_space, lf::assemble::COOMatrix<double> &A, Eigen::VectorXd &phi,
+//     std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet);
 
 /**
- * @brief Class for computing the manufactured solution for the ECU scheme
+ * @brief Class for generating the Manufactured Solution experiment setup and computing its solution
+ * @tparam SCALAR scalar type of underlying FE space
  */
 template <typename SCALAR>
 class ManufacturedSolutionExperiment {
@@ -49,12 +50,12 @@ class ManufacturedSolutionExperiment {
       : fe_space_(fe_space) {}
 
   /**
-   * @brief Computes the manufactured solution for the ECU scheme
+   * @brief Computes the manufactured solution for the midpoint upwind scheme
    * @param eps Epsilon diffusion coefficient
    * @param velocity functor for the velocity field
    * @param test test function f
-   * @param dirichlet dirichlet function g
-   * @return
+   * @param dirichlet Dirichlet function g
+   * @return Solution vector
    */
   Eigen::Vector<double, Eigen::Dynamic> ComputeSolution(
       double eps,
@@ -144,7 +145,7 @@ class ManufacturedSolutionExperiment {
   }  // end ComputeSolution
 
   /**
-   * @brief Solves the Convection-Diffusion BVP with nonhomogeneous Dirichlet
+   * @brief Solves the Convection-Diffusion BVP with non-homogeneous Dirichlet
    * boundary conditions using the SUPG method and quadratic FE space
    * @param eps Epsilon diffusion coefficient
    * @param velocity functor for the velocity field
@@ -195,17 +196,19 @@ class ManufacturedSolutionExperiment {
 
     // IMPOSE DIRICHLET CONDITIONS:
     // Create boundary flags
-    auto bd_flags{lf::mesh::utils::flagEntitiesOnBoundary(mesh_p, 1)};
-    // Fetch flags and values for DOFs located on the boundary
-    auto ess_bdc_flags_values{lf::fe::InitEssentialConditionFromFunction(
-        *fe_space_, bd_flags, mf_g_dirichlet)};
-    // Eliminate Dirichlet dofs from linear system
-    lf::assemble::FixFlaggedSolutionComponents<double>(
-        [&ess_bdc_flags_values](lf::uscalfe::glb_idx_t gdof_idx) {
-          return ess_bdc_flags_values[gdof_idx];
-        },
-        A, phi);
-    //      EnforceInflowBDCOneform(fe_space_, A, phi, dirichlet);
+    //    auto bd_flags{lf::mesh::utils::flagEntitiesOnBoundary(mesh_p, 1)};
+    //    // Fetch flags and values for DOFs located on the boundary
+    //    auto ess_bdc_flags_values{lf::fe::InitEssentialConditionFromFunction(
+    //        *fe_space_, bd_flags, mf_g_dirichlet)};
+    //    // Eliminate Dirichlet dofs from linear system
+    //    lf::assemble::FixFlaggedSolutionComponents<double>(
+    //        [&ess_bdc_flags_values](lf::uscalfe::glb_idx_t gdof_idx) {
+    //          return ess_bdc_flags_values[gdof_idx];
+    //        },
+    //        A, phi);
+
+    ecu_scheme::assemble::EnforceBoundaryConditions(fe_space_, A, phi,
+                                                    dirichlet);
 
     // SOLVE LINEAR SYSTEM
     Eigen::SparseMatrix<double> A_crs = A.makeSparse();
@@ -223,12 +226,13 @@ class ManufacturedSolutionExperiment {
   }  // end ComputeSUPGSolution
 
   /**
-   * @brief Implemented only for quadratic FE space
-   * @param eps
-   * @param velocity
-   * @param test
-   * @param dirichlet
-   * @return
+   * @brief Compute the solution with the 7-point (stable) upwind scheme.
+   * This method is implemented for quadratic Lagrangian FE only
+   * @param eps diffusion coefficient epsilogn
+   * @param velocity velocity field functor
+   * @param test source function
+   * @param dirichlet Dirichlet boundary condition function
+   * @return Solution vector
    */
   Eigen::Vector<double, Eigen::Dynamic> ComputeStableSolution(
       double eps,
@@ -274,16 +278,17 @@ class ManufacturedSolutionExperiment {
         load_provider(fe_space_, mf_f_test_function);
     lf::assemble::AssembleVectorLocally(0, dofh, load_provider, phi);
     // IMPOSE DIRICHLET CONDITIONS:
-    auto bd_flags{lf::mesh::utils::flagEntitiesOnBoundary(mesh_p, 1)};
-    auto ess_bdc_flags_values{lf::fe::InitEssentialConditionFromFunction(
-        *fe_space_, bd_flags, mf_g_dirichlet)};
-    lf::assemble::FixFlaggedSolutionComponents<double>(
-        [&ess_bdc_flags_values](lf::uscalfe::glb_idx_t gdof_idx) {
-          return ess_bdc_flags_values[gdof_idx];
-        },
-        A, phi);
-    //      EnforceInflowBDCOneform(fe_space_, A, phi, dirichlet);
+    //    auto bd_flags{lf::mesh::utils::flagEntitiesOnBoundary(mesh_p, 1)};
+    //    auto ess_bdc_flags_values{lf::fe::InitEssentialConditionFromFunction(
+    //        *fe_space_, bd_flags, mf_g_dirichlet)};
+    //    lf::assemble::FixFlaggedSolutionComponents<double>(
+    //        [&ess_bdc_flags_values](lf::uscalfe::glb_idx_t gdof_idx) {
+    //          return ess_bdc_flags_values[gdof_idx];
+    //        },
+    //        A, phi);
 
+    ecu_scheme::assemble::EnforceBoundaryConditions(fe_space_, A, phi,
+                                                    dirichlet);
     // SOLVE LINEAR SYSTEM
     Eigen::SparseMatrix<double> A_crs = A.makeSparse();
     Eigen::SparseLU<Eigen::SparseMatrix<double>> solver;
@@ -299,6 +304,15 @@ class ManufacturedSolutionExperiment {
     return solution_vector;
   }  // end ComputeStableSolution
 
+  /**
+   * @brief Compute the solution with the 15-point upwind scheme.
+   * Implemented for quadratic Lagrangian FE space
+   * @param eps diffusion coefficient epsilon
+   * @param velocity velocity field functor
+   * @param test source function
+   * @param dirichlet Dirichlet boundary condition function
+   * @return Solution vector
+   */
   Eigen::Vector<double, Eigen::Dynamic> ComputeFifteenPointQuadRuleSolution(
       double eps,
       std::function<Eigen::Matrix<double, 2, 1, 0>(
@@ -354,7 +368,8 @@ class ManufacturedSolutionExperiment {
     //          [&ess_bdc_flags_values](lf::uscalfe::glb_idx_t gdof_idx){
     //            return ess_bdc_flags_values[gdof_idx];
     //          }, A, phi);
-    EnforceBoundaryConditions(fe_space_, A, phi, dirichlet);
+    ecu_scheme::assemble::EnforceBoundaryConditions(fe_space_, A, phi,
+                                                    dirichlet);
 
     // SOLVE LINEAR SYSTEM
     Eigen::SparseMatrix<double> A_crs = A.makeSparse();

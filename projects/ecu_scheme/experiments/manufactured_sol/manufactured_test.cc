@@ -10,39 +10,33 @@
 #include "mesh.h"
 #include "post_processing.h"
 
+/**
+ * @brief Manufactured Solution Experiment for the 2-dimensional
+ * convection-diffusion problem detailed in section 5.1.1 from the thesis
+ */
 int main(int argc, char *argv[]) {
   if (argc != 3 && argc != 1) {
     std::cerr << "Usage: " << argv[0] << " refinement_levels eps " << std::endl;
     return -1;
   }
   // Diffusion coefficient for the regular refinement case
-  double eps_for_refinement = 1;
+  double eps_for_refinement = 1e-8;
   // Number of refinement levels
-  unsigned int refinement_levels = 7;
+  unsigned int refinement_levels = 6;
   // Adjust the number of refinement levels and the diffusion coefficient if the
   // user specified them
   if (argc == 3) {
     refinement_levels = std::stoi(argv[1]);
     eps_for_refinement = std::stod(argv[2]);
-    if (eps_for_refinement < 1.0) {
-      std::cout << " good eps read " << eps_for_refinement << "\n";
-    }
   }
-  std::cout << "Refinement levels: " << refinement_levels << '\n';
-  std::cout << "Epsilon for refinement: " << eps_for_refinement << '\n';
 
   ecu_scheme::mesh::BasicMeshBuilder builder;
   builder.SetNumCellsX(2);
   builder.SetNumCellsY(2);
   std::shared_ptr<lf::mesh::Mesh> mesh_p = builder.Build();
-  // build mesh on subdomain [0,0.9]x[0,0.9]
-  //  std::shared_ptr<lf::mesh::Mesh> mesh_p = builder.Build(0.0, 0.0, 0.9,
-  //  0.9);
 
   auto fe_space =
       std::make_shared<lf::uscalfe::FeSpaceLagrangeO2<double>>(mesh_p);
-
-  //  const lf::assemble::DofHandler &dofh{fe_space->LocGlobMap()};
 
   // Manufactured solution diffusion coefficient - only used for plotting the
   // solution
@@ -142,7 +136,7 @@ int main(int argc, char *argv[]) {
       lf::refinement::GenerateMeshHierarchyByUniformRefinemnt(
           mesh_p, refinement_levels);
   lf::refinement::MeshHierarchy &multi_mesh{*multi_mesh_p};
-  multi_mesh.PrintInfo(std::cout);
+  //  multi_mesh.PrintInfo(std::cout);
 
   // Initialize solution wrapper with the determined refinement levels, the mesh
   // hierarchy, and the yet empty vector of solutions
@@ -190,7 +184,6 @@ int main(int argc, char *argv[]) {
                     << multi_mesh.NumLevels()
                     << " is not equal to the number of refinement levels");
   for (int l = 0; l < L; ++l) {
-    std::cout << "Level " << l << " of manufactured sol" << '\n';
     // Compute finite element solution for every level and wrap every solution
     // vector in a vector
     std::shared_ptr<const lf::mesh::Mesh> mesh_l{multi_mesh.getMesh(l)};
@@ -265,27 +258,8 @@ int main(int argc, char *argv[]) {
     solution_collection_wrapper_supg.final_time_solutions.push_back(
         solution_vector_supg);
   }
-  //  // Process the errors in the quadratic FE case
-  //  std::cout << "Convergence of manufactured solution with quadratic FE\n";
-  //  ecu_scheme::post_processing::convergence_report_oneform<
-  //      double, decltype(mf_exact_solution)>(
-  //      solution_collection_wrapper, mf_exact_solution,
-  //      ecu_scheme::post_processing::concat("manufactured_solution_conv", "_",
-  //                                          refinement_levels, "_",
-  //                                          eps_for_refinement));
-  //  // Process the errors in the linear FE case
-  //  std::cout << "Convergence of manufactured solution with linear FE\n";
-  //  ecu_scheme::post_processing::convergence_report_oneform<
-  //      double, decltype(mf_exact_solution)>(
-  //      solution_collection_wrapper_linear, mf_exact_solution,
-  //      ecu_scheme::post_processing::concat("manufactured_solution_conv_linear",
-  //                                          "_", refinement_levels, "_",
-  //                                          eps_for_refinement),
-  //      true);
 
-  // Comparison with SUPG
-  std::cout << "Comparison with SUPG -- Linear FE space "
-            << "\n";
+  // Comparison with SUPG - Linear FE space
   ecu_scheme::post_processing::convergence_comparison_toSUPG<
       double, decltype(mf_exact_solution)>(
       solution_collection_wrapper_linear, solution_collection_wrapper_supg,
@@ -296,8 +270,6 @@ int main(int argc, char *argv[]) {
       true);
 
   // Comparison with multiple methods - Quadratic FE space
-  std::cout << "Comparison with multiple methods -- Quadratic FE space"
-            << "\n";
   std::vector<
       std::pair<ecu_scheme::post_processing::ExperimentSolutionWrapper<double>,
                 std::string>>
@@ -320,39 +292,6 @@ int main(int argc, char *argv[]) {
       ecu_scheme::post_processing::concat(
           "manufactured_solution_quad_comparison", "_", refinement_levels, "_",
           eps_for_refinement));
-
-  //  // Comparison with SUPG - Quadratic FE space
-  //  std::cout << "Comparison with SUPG -- Quadratic FE space " << "\n";
-  //  ecu_scheme::post_processing::convergence_comparison_toSUPG<
-  //      double, decltype(mf_exact_solution)>(
-  //      solution_collection_wrapper,
-  //      solution_collection_wrapper_supg_quadratic, mf_exact_solution,
-  //      ecu_scheme::post_processing::concat(
-  //          "manufactured_solution_conv_comparison_quadratic", "_",
-  //          refinement_levels, "_", eps_for_refinement));
-
-  //  // Comparison with Stable Upwind Scheme -- Quadratic FE space
-  //  std::cout << "Comparison with Stable Upwind scheme -- Quadratic FE space "
-  //  << "\n";
-  //  ecu_scheme::post_processing::convergence_comparison_toSUPG<double,
-  //  decltype(mf_exact_solution)>(
-  //      solution_collection_wrapper,
-  //      solution_collection_wrapper_stable_upwind, mf_exact_solution,
-  //      ecu_scheme::post_processing::concat(
-  //          "manufactured_solution_conv_comparison_stable_vs_midpoint", "_",
-  //          refinement_levels, "_", eps_for_refinement));
-
-  // Comparison with 15-point quadrature rule Upwind Scheme -- Quadratic FE
-  // space
-  //  std::cout << "Comparison with 15-point quadrature rule Upwind scheme --
-  //  Quadratic FE space " << "\n";
-  //  ecu_scheme::post_processing::convergence_comparison_toSUPG<double,
-  //  decltype(mf_exact_solution)>(
-  //      solution_collection_wrapper,
-  //      solution_collection_wrapper_fifteen_point, mf_exact_solution,
-  //      ecu_scheme::post_processing::concat(
-  //          "manufactured_solution_conv_comparison_15point_vs_midpoint", "_",
-  //          refinement_levels, "_", eps_for_refinement));
 
   return 0;
 }

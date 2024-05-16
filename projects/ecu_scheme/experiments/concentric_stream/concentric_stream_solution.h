@@ -22,21 +22,9 @@
 namespace ecu_scheme::experiments {
 
 /**
- * @brief Enforces the Dirichlet boundary conditions at the inflow boundary
- * @tparam SCALAR template parameter indicating the scalar type
- * @param fe_space corresponding finite element space
- * @param A Galerkin system matrix
- * @param phi Right-hand side vector of the linear system
- * @param dirichlet Dirichlet function to be enforced at the inflow boundary
- */
-void EnforceBoundaryConditions(
-    const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>> &fe_space,
-    lf::assemble::COOMatrix<double> &A, Eigen::VectorXd &phi,
-    std::function<double(const Eigen::Matrix<double, 2, 1, 0> &)> dirichlet);
-
-/**
  * @brief Flags all nodes on the inflow boundary - basically a different
- * implementation to do the same thing as EnforceInflowBDCOneform
+ * implementation to do the same thing as the methods from the utils namespace
+ * but mainly used for debugging purposes
  * @param mesh_p underlying mesh
  * @param velocity velocity field
  * @return Data set of flags for nodes on the inflow boundary
@@ -47,6 +35,12 @@ lf::mesh::utils::CodimMeshDataSet<bool> flagNodesOnInflowBoundary(
         Eigen::Matrix<double, 2, 1, 0>(const Eigen::Matrix<double, 2, 1, 0> &)>
         velocity);
 
+/**
+ * @brief Class for generating the Concentric Stream experiment setup and
+ * computing the solution
+ * @tparam SCALAR the scalar type of an underlying Lagrangian finite element
+ * space
+ */
 template <typename SCALAR>
 class ConcentricStreamSolution {
  public:
@@ -58,6 +52,15 @@ class ConcentricStreamSolution {
           &fe_space)
       : fe_space_(fe_space) {}
 
+  /**
+   * @brief Compute the solution for the given experiment
+   * This implementation imposed Dirichlet boundary conditions based on the
+   * flagNodesInflowBoundary method (mainly debugging purposes)
+   * @param eps Diffusion coefficient epsilon
+   * @param velocity underlying velocity field
+   * @param dirichlet Dirichlet boundary function
+   * @return vector of solution coefficients
+   */
   Eigen::Vector<double, Eigen::Dynamic> ComputeSolution(
       double eps,
       std::function<Eigen::Matrix<double, 2, 1, 0>(
@@ -153,13 +156,18 @@ class ConcentricStreamSolution {
     return solution_vector;
   }  // end ComputeSolution
   /**
-   * @brief Compute the solution for the given problem using multiple methods
-   * @param eps
-   * @param velocity
-   * @param dirichlet
+   * @brief Compute the solution for the Concentric Stream experiment with the
+   * option of specifying the specific Upwind scheme used This method imposes
+   * Dirichlet boundary conditions on the inflow boundary as presented in the
+   * thesis The possible options for Upwind schemes are {"UPWIND",
+   * "STABLE_UPWIND", "15P_UPWIND"}, corresponding to the midpoint upwind, the
+   * 7-point (stable) upwind, and the 15-point upwind scheme
+   * @param eps diffusion coefficient
+   * @param velocity velocity field
+   * @param dirichlet Dirichlet boundary function
    * @param method_name should be either {"UPWIND", "STABLE_UPWIND",
    * "15P_UPWIND"}
-   * @return
+   * @return vector of solution coefficients
    */
   Eigen::Vector<double, Eigen::Dynamic> ComputeSolutionMultipleMethods(
       double eps,
@@ -263,7 +271,9 @@ class ConcentricStreamSolution {
     //    auto rank = check_rank.rank();
     //    auto det_val = check_rank.absDeterminant();
     // IMPOSE DIRICHLET BOUNDARY CONDITIONS ON INFLOW BOUNDARY
-    EnforceBoundaryConditions(fe_space_, A, phi, dirichlet);
+    //    EnforceBoundaryConditions(fe_space_, A, phi, dirichlet);
+    ecu_scheme::assemble::EnforceBoundaryConditionsOnRotInflow(fe_space_, A,
+                                                               phi, dirichlet);
 
     // uncomment for debug smallest singular value of matrix
     //        if(method_name == "15P_UPWIND"){

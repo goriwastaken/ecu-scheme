@@ -14,28 +14,81 @@ namespace ecu_scheme::assemble {
 
 /**
  * @brief Prepare the 15-point quadrature rule for the reference triangle
+ * Location of points is generated such that:
+ * they have the form \f$(\frac{i}{p}, \frac{j}{p})\f$ for i, j integeres in
+ * {0,1,...,p} and \f$i+j \leq p\f$ Weights are computed such that the
+ * quadrature rule is exact for polynomials of degree 4
  * @return a vector of pairs, where each pair contains a quadrature point and
  * its weight
  */
 std::vector<std::tuple<Eigen::Vector2d, double, bool>>
 prepareFifteenPointQuadRule();
 
+/**
+ * @brief Computes the masses m(p) of all vertices of triangles in the mesh
+ * @param mesh_p underlying mesh
+ * @return Data structure containing the masses m(p) for all vertices of the
+ * mesh
+ */
 lf::mesh::utils::CodimMeshDataSet<double> initMassesVerticesFifteenQuadRule(
     const std::shared_ptr<const lf::mesh::Mesh> &mesh_p);
 
+/**
+ * @brief Computes the masses m(p) of all midpoints of edges of triangles in the
+ * mesh
+ * @param mesh_p underlying mesh
+ * @return Data structure containing the masses m(p) for all midpoints of edges
+ * of the mesh
+ */
 lf::mesh::utils::CodimMeshDataSet<double>
 initMassesEdgeMidpointsFifteenQuadRule(
     const std::shared_ptr<const lf::mesh::Mesh> &mesh_p);
 
+/**
+ * @brief Computes the masses m(p) of all quadrature points lying on edges (that
+ * are not midpoints of the edge) of triangles in the mesh
+ * @param mesh_p underlying mesh
+ * @return Data structure containing the masses m(p) for all quadrature points
+ * lying on edges of the mesh
+ */
 lf::mesh::utils::CodimMeshDataSet<double> initMassesEdgeOffFifteenQuadRule(
     const std::shared_ptr<const lf::mesh::Mesh> &mesh_p);
 
+/**
+ * @brief Computes the masses m(p) of all quadrature points lying inside
+ * triangle cells of the mesh
+ * @param mesh_p underlying mesh
+ * @return Data structure containing the masses m(p) for all quadrature points
+ * lying inside triangle cells of the mesh
+ */
 lf::mesh::utils::CodimMeshDataSet<double> initMassesCellsFifteenQuadRule(
     const std::shared_ptr<const lf::mesh::Mesh> &mesh_p);
 
+/**
+ * @brief Class providing the element matrix for the 15-point upwind scheme
+ * The element matrix provider evaluates the convective bilinear form for the
+ * 15-point upwind scheme \f$ b_h^{full}(u_h,v_h) \f$ presented in section 2.1.1
+ * of the thesis
+ * @tparam SCALAR scalar type of the FE space
+ * @tparam FUNCTOR velocity field functor type
+ */
 template <typename SCALAR, typename FUNCTOR>
 class FifteenPointUpwindMatrixProvider {
  public:
+  /**
+   * @brief Constructor for the Element Matrix Provider for the 15-point upwind
+   * scheme
+   * @param fe_space reference to the FE space
+   * @param v velocity field
+   * @param masses_vertices Data structure containing the masses m(p) for all
+   * vertices of the mesh
+   * @param masses_edge_midpoints Data structure containing the masses m(p) for
+   * all midpoints of edges of the mesh
+   * @param masses_edges Data structure containing the masses m(p) for all
+   * quadrature points lying on edges of the mesh
+   * @param masses_cells Data structure containing the masses m(p) for all
+   * quadrature points lying inside triangle cells of the mesh
+   */
   FifteenPointUpwindMatrixProvider(
       const std::shared_ptr<lf::fe::ScalarFESpace<SCALAR>> &fe_space, FUNCTOR v,
       lf::mesh::utils::CodimMeshDataSet<double> masses_vertices,
@@ -43,8 +96,14 @@ class FifteenPointUpwindMatrixProvider {
       lf::mesh::utils::CodimMeshDataSet<double> masses_edges,
       lf::mesh::utils::CodimMeshDataSet<double> masses_cells);
 
+  /**
+   * @brief Evaluates the element matrix for a given entity
+   * @param entity underlying entity
+   * @return Element matrix for the 15-point upwind scheme
+   */
   Eigen::Matrix<SCALAR, 6, 6> Eval(const lf::mesh::Entity &entity);
 
+  /** @brief Default implementation: all cells are active */
   bool isActive(const lf::mesh::Entity & /*entity*/) const { return true; }
 
  private:

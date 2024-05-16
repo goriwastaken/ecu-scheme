@@ -6,13 +6,30 @@
 
 namespace ecu_scheme::assemble {
 
+/**
+ * @brief Class representing the implementation of a Mesh Function for 1-forms
+ * @tparam SCALAR the SCALAR type of the coefficient vector
+ */
 template <typename SCALAR>
 class MeshFunctionOneForm {
  public:
+  /**
+   * @brief Constructor for Mesh Function of 1-forms
+   * @param mu basis function coefficient vector in global coordinates
+   * @param mesh_p underlying mesh
+   */
   MeshFunctionOneForm(const Eigen::Matrix<SCALAR, Eigen::Dynamic, 1>& mu,
                       const std::shared_ptr<const lf::mesh::Mesh>& mesh_p)
       : mu_(mu), mesh_p_(mesh_p) {}
-
+  /**
+   * @brief Evaluates the basis function of 1-forms at local coordinates of a
+   * cell This implementation concerns only first order edge elements on
+   * triangular cells
+   * @param entity reference to the cell
+   * @param local_coords local coordinates of the cell
+   * @return vector of the sum of edge element basis functions at local
+   * coordinates
+   */
   std::vector<Eigen::Matrix<SCALAR, Eigen::Dynamic, 1>> operator()(
       const lf::mesh::Entity& entity,
       const Eigen::MatrixXd& local_coords) const;

@@ -11,31 +11,71 @@
 
 namespace ecu_scheme::assemble {
 
+/**
+ * @brief Computes the masses m(p) for the \f$b_h^{vmb}\f$ scheme of all
+ * vertices of the mesh
+ * @param mesh_p underlying mesh
+ * @return Data structure containing the masses m(p) for all vertices of the
+ * mesh
+ */
 lf::mesh::utils::CodimMeshDataSet<double> initMassesVert(
     const std::shared_ptr<const lf::mesh::Mesh> &mesh_p);
 
+/**
+ * @brief Computes the masses m(p) for the \f$b_h^{vmb}\f$ scheme of all
+ * midpoints of edges of the mesh
+ * @param mesh_p underlying mesh
+ * @return Data structure containing the masses m(p) for all midpoints of edges
+ * of the mesh
+ */
 lf::mesh::utils::CodimMeshDataSet<double> initMassesEdges(
     const std::shared_ptr<const lf::mesh::Mesh> &mesh_p);
 
+/**
+ * @brief Computes the masses m(p) for the \f$b_h^{vmb}\f$ scheme of all cells
+ * of the mesh
+ * @param mesh_p underlying mesh
+ * @return Data structure containing the masses m(p) for all cells of the mesh
+ */
 lf::mesh::utils::CodimMeshDataSet<double> initMassesCells(
     const std::shared_ptr<const lf::mesh::Mesh> &mesh_p);
 
 /**
- * @brief only for quadratic FE spaces
- * @tparam SCALAR
- * @tparam FUNCTOR
+ * @brief Class providing the element matrix for the 7-point upwind scheme
+ * The element matrix provider evaluates the convective bilinear form for the
+ * 7-point upwind scheme \f$ b_h^{vmb}(u_h,v_h) \f$ presented in section 2.1.1
+ * of the thesis
+ * @tparam SCALAR the scalar type of the FE space
+ * @tparam FUNCTOR the type of the velocity field \f$\vec{\beta}\f$
  */
 template <typename SCALAR, typename FUNCTOR>
 class StableConvectionUpwindMatrixProvider {
  public:
+  /**
+   * @brief Constructor for the 7-point scheme element matrix provider
+   * @param fe_space underlying FE space
+   * @param v velocity field \f$\vec{\beta}\f$
+   * @param masses_vertices Data structure containing the masses m(p) for all
+   * vertices of the mesh
+   * @param masses_edges Data structure containing the masses m(p) for all
+   * midpoints of edges of the mesh
+   * @param masses_cells Data structure containing the masses m(p) for all cells
+   * of the mesh
+   */
   StableConvectionUpwindMatrixProvider(
       const std::shared_ptr<lf::fe::ScalarFESpace<SCALAR>> &fe_space, FUNCTOR v,
       lf::mesh::utils::CodimMeshDataSet<double> masses_vertices,
       lf::mesh::utils::CodimMeshDataSet<double> masses_edges,
       lf::mesh::utils::CodimMeshDataSet<double> masses_cells);
 
+  /**
+   * @brief Evaluates the element matrix for a given entity
+   * @param entity underlying entity
+   * @return Element matrix
+   */
   Eigen::Matrix<SCALAR, 6, 6> Eval(const lf::mesh::Entity &entity);
 
+  /** @brief Default implementation: all cells are active */
   bool isActive(const lf::mesh::Entity & /*entity*/) const { return true; }
 
  private:
@@ -218,10 +258,6 @@ StableConvectionUpwindMatrixProvider<SCALAR, FUNCTOR>::Eval(
     Eigen::Matrix<double, 2, 6> grads =
         gradientsLocalShapeFunctions(all_nodes.col(l));
     Eigen::Matrix<double, 1, 6> contribution = vl.transpose() * grads;
-    //      Eigen::Matrix<double, 1, 6> shapeFunctionsContribution =
-    //      localShapeFunctions(all_nodes.col(l)); Eigen::Matrix<double, 1, 6>
-    //      totalFunctionContribution =
-    //      contribution.cwiseProduct(shapeFunctionsContribution);
 
     // Vertex a^l is upwind iff product of v(a^l) with both adjacent normals is
     // positive
@@ -263,11 +299,6 @@ StableConvectionUpwindMatrixProvider<SCALAR, FUNCTOR>::Eval(
             .cwiseProduct(localShapeFunctions(barycenter));
     element_matrix.row(l) += barycenter_row_contribution;
   }
-  //  Eigen::Matrix<double, 6, 6> barycenter_contribution =
-  //  masses_cells_(entity) * (v_(barycenter).transpose() *
-  //  gradientsLocalShapeFunctions(barycenter)).transpose() *
-  //  localShapeFunctions(barycenter); element_matrix +=
-  //  barycenter_contribution;
 
   return element_matrix;
 }

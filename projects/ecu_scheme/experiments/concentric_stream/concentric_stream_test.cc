@@ -11,6 +11,10 @@
 #include "mesh.h"
 #include "post_processing.h"
 
+/**
+ * @brief Concentric Streamlines Problem for 2-dimensional pure transport
+ * problem from section 5.1.2 of the thesis
+ */
 int main(int argc, char* argv[]) {
   if (argc != 3 && argc != 1) {
     std::cerr << "Usage: " << argv[0] << " refinement_levels eps " << std::endl;
@@ -156,7 +160,6 @@ int main(int argc, char* argv[]) {
   auto L = multi_mesh.NumLevels();
   LF_ASSERT_MSG(L == refinement_levels + 1, "Number of levels is not correct");
   for (int l = 0; l < L; ++l) {
-    std::cout << "Level " << l << '\n';
     auto mesh_l = multi_mesh.getMesh(l);
     // Quadratic case
     auto fe_space_l =
@@ -223,19 +226,7 @@ int main(int argc, char* argv[]) {
   //      true
   //      );
 
-  // Comparison with SUPG -- Quadratic FE space
-  //  std::cout << "Comparison with SUPG - Quadratic FE space" << "\n";
-  //  ecu_scheme::post_processing::convergence_comparison_toSUPG<double,
-  //  decltype(mf_u_exact)>(
-  //      solution_collection_wrapper_quad,
-  //      solution_collection_wrapper_supg_quad, mf_u_exact,
-  //      ecu_scheme::post_processing::concat(
-  //          "concentric_stream_solution_comparison_quad", "_",
-  //          refinement_levels, "_", eps_for_refinement)
-  //  );
-
-  std::cout << "Comparison with other methods - Quadratic FE space"
-            << "\n";
+  // COmparison with other methods - Quadratic FE space
   std::vector<
       std::pair<ecu_scheme::post_processing::ExperimentSolutionWrapper<double>,
                 std::string>>

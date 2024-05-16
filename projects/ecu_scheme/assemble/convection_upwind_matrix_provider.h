@@ -51,9 +51,15 @@ lf::mesh::utils::CodimMeshDataSet<double> initializeMassesQuadraticEdges(
 Eigen::Matrix<double, 2, 3> computeOutwardNormalsTria(
     const lf::mesh::Entity& entity);
 
-Eigen::Matrix<double, 2, 3> computeOutwardNormalsTriaAlt(
-    const lf::mesh::Entity& entity);
-
+/**
+ * @brief Class for the computation of the element matrix corresponding to the
+ * convective term The element matrix provider evaluates the convective bilinear
+ * form for the midpoint upwind scheme: \f[ b_h^m(u_h, v_h){\big|}_{T} =
+ * \frac{|T|}{3} \sum_{\vec{m}_i \in \mathcal{E}(T)}{\vec{\beta}(\vec{m}_i)
+ * \cdot (\grad u_h){\big|}_{T_{m^i}^{upw}}(\vec{m}_i)} \ v_h(\vec{m}_i) \f]
+ * @tparam SCALAR scalar type of the velocity field
+ * @tparam FUNCTOR type of the velocity field
+ */
 template <typename SCALAR, typename FUNCTOR>
 class ConvectionUpwindMatrixProvider {
  public:
@@ -70,10 +76,12 @@ class ConvectionUpwindMatrixProvider {
   /**
    * @brief Constructor for the ConvectionUpwindMatrixProvider class for the
    * quadratic finite element space
-   * @param fe_space
-   * @param v
-   * @param masses_vertices
-   * @param masses_edges
+   * @param fe_space reference to the finite element space
+   * @param v functor for the velocity field
+   * @param masses_vertices Data structure containing the masses m(p) for all
+   * vertices of the mesh
+   * @param masses_edges Data structure containing the masses m(p) for all edge
+   * midpoints of the mesh
    */
   ConvectionUpwindMatrixProvider(
       const std::shared_ptr<lf::fe::ScalarFESpace<SCALAR>>& fe_space, FUNCTOR v,
@@ -81,7 +89,7 @@ class ConvectionUpwindMatrixProvider {
       lf::mesh::utils::CodimMeshDataSet<double> masses_edges);
 
   /**
-   * @brief main routine for the computation of element matrices of variable
+   * @brief Main routine for the computation of element matrices of variable
    * size depending on the finite element space
    * @param entity reference to the TRIANGULAR cell for which the element matrix
    * is to be computed

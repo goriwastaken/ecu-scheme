@@ -11,16 +11,43 @@
 
 namespace ecu_scheme::assemble {
 
+/**
+ * @brief Class providing the edge element mass matrix for a given FE space and
+ * velocity field \f$\vec{\beta}\f$. The element matrix provider evaluates part
+ * of the bilinear form for 1-forms from section 3.1, namely:
+ * \f[
+ * (\omega_h, \eta_h) \mapsto \int_T \mathcal{I}_{\vec{\beta},
+ * 1}^1(\mathrm{i}_{\vec{\beta}} \mathrm{d}^1 \omega_h) \wedge \star \eta_h \f]
+ * where the basis functions for \f$\omega_h, \ \eta_h \f$ are the edge element
+ * basis functions defined as:
+ * @f[
+ * \mathbf{\psi}_i = s_i (\lambda_i \mathbf{grad}_{\Gamma}(\lambda_{i+1}) -
+ * \lambda_{i+1} \mathbf{grad}_{\Gamma}(\lambda_{i}))
+ * @f]
+ *
+ * @tparam SCALAR the scalar type of the FE space
+ * @tparam FUNCTOR the type of the velocity field \f$\vec{\beta}\f$
+ */
 template <typename SCALAR, typename FUNCTOR>
 class EdgeElementMassMatrixProvider {
  public:
+  /**
+   * @brief Constructor for the edge element mass matrix provider
+   * @param fe_space the FE space
+   * @param v the velocity field \f$\vec{\beta}\f$
+   */
   EdgeElementMassMatrixProvider(
       const std::shared_ptr<lf::fe::ScalarFESpace<SCALAR>>& fe_space,
       FUNCTOR v);
-
+  /**
+   * @brief Evaluates the edge element mass matrix for a given entity
+   * @param entity reference to the entity
+   * @return Edge element mass matrix
+   */
   Eigen::Matrix<SCALAR, Eigen::Dynamic, Eigen::Dynamic> Eval(
       const lf::mesh::Entity& entity) const;
 
+  /** @brief Default implementation: all cells are active */
   bool isActive(const lf::mesh::Entity& /*entity*/) const { return true; }
 
  private:

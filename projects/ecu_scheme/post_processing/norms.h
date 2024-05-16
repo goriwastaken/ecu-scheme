@@ -15,6 +15,23 @@
 
 namespace ecu_scheme::post_processing {
 
+/**
+ * @brief Compute L2-error norm for given Mesh Function and cell-wise errors for
+ * plotting purposes This implementation is used instead of the usual LehrFEM++
+ * methods for the L2-error computation of Mesh Functions corresponding to
+ * 1-forms
+ * @tparam MF underlying type of Mesh Function
+ * @tparam SQ_F type of the square function (can be for scalar or vector-valued
+ * functions)
+ * @param mesh_p pointer to the mesh
+ * @param f Mesh Function representing the difference between the exact solution
+ * and FE solution
+ * @param sq_f squaring function (either applied to scalar or vector-valued
+ * functions)
+ * @param quad_rule qudrature rule for computing the norm
+ * @return Pair containing the L2-error norm of the Mesh Function and data
+ * structure of cell-wise errors for the mesh
+ */
 template <class MF, typename SQ_F>
 std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> L2norm(
     const std::shared_ptr<const lf::mesh::Mesh>& mesh_p, const MF& f,
@@ -45,40 +62,6 @@ std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> L2norm(
     squared_sum += local_squared_sum;
   }
   return std::make_pair(std::sqrt(squared_sum), cell_errors);
-}
-
-template <typename MF, typename SQ_F>
-std::pair<double, lf::mesh::utils::CodimMeshDataSet<double>> H1seminorm(
-    const std::shared_ptr<const lf::mesh::Mesh>& mesh_p, const MF& f,
-    const SQ_F& sq_f, const lf::quad::QuadRule& quad_rule) {
-  // Store intermediate squared sums of cells
-  double glob_max = 0.0;
-
-  // Dataset for storing the cellwise integrals
-  lf::mesh::utils::CodimMeshDataSet<double> cell_errors(mesh_p, 0);
-
-  // Get reference coordinates of the cells
-  const Eigen::MatrixXd local_ref_coords = quad_rule.Points();
-  // const Eigen::VectorXd local_weights = quad_rule.Weights();
-  const lf::base::size_type num_local_qpts = quad_rule.NumPoints();
-
-  // Iterate over all cells
-  for (const lf::mesh::Entity* e : mesh_p->Entities(0)) {
-    auto values = f(*e, local_ref_coords);
-
-    double loc_max = 0.0;
-    for (lf::base::size_type i = 0; i < num_local_qpts; ++i) {
-      double temp = sq_f(values.col(i));
-      if (temp > loc_max) {
-        loc_max = temp;
-      }
-      if (temp > glob_max) {
-        glob_max = temp;
-      }
-    }
-    cell_errors(*e) = std::sqrt(loc_max);
-  }
-  return std::make_pair(std::sqrt(glob_max), cell_errors);
 }
 
 }  // namespace ecu_scheme::post_processing

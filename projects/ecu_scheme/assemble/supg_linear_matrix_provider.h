@@ -15,11 +15,6 @@
 
 namespace ecu_scheme::assemble {
 
-void InflowBC(
-    const std::shared_ptr<lf::uscalfe::UniformScalarFESpace<double>>& fe_space,
-    lf::assemble::COOMatrix<double>& A, Eigen::VectorXd& phi,
-    std::function<double(const Eigen::Matrix<double, 2, 1, 0>&)> dirichlet);
-
 /**
  *@brief Computes the diameter of a TRIANGULAR mesh entity
  */
@@ -93,7 +88,7 @@ template <typename FUNCTOR_EPS, typename FUNCTOR_V, typename FUNCTOR_F>
 class SupgStabilizationEMP {
  public:
   /**
-   * @brief
+   * @brief Constructor for the stabilization term
    * @param eps  diffusion coefficient
    * @param v  velocity field
    * @param f source function
@@ -157,7 +152,17 @@ Eigen::Matrix3d SupgStabilizationEMP<FUNCTOR_EPS, FUNCTOR_V, FUNCTOR_F>::Eval(
 
 /**
  * @brief Solves the Convection-Diffusion BVP with nonhomogeneous Dirichlet
- * boundary conditions using the SUPG method
+ * boundary conditions using the SUPG method in the linear FE case
+ * @tparam DIFFUSION_COEFF diffusion coefficient
+ * @tparam CONVECTION_COEFF convection coefficient
+ * @tparam FUNCTOR_F source function
+ * @tparam FUNCTOR_G Dirichlet boundary function
+ * @param fe_space underlying FE space
+ * @param eps parameter for the diffusive term
+ * @param v velocity field
+ * @param f source function
+ * @param g Dirichlet boundary function
+ * @return Solution vector
  */
 template <typename DIFFUSION_COEFF, typename CONVECTION_COEFF,
           typename FUNCTOR_F, typename FUNCTOR_G>
@@ -218,7 +223,6 @@ Eigen::VectorXd SolveCDBVPSupg(
         return ess_bdc_flags_values[gdof_idx];
       },
       A, phi);
-  //    InflowBC(fe_space, A, phi, g);
 
   // SOLVE LINEAR SYSTEM
   Eigen::SparseMatrix A_crs = A.makeSparse();

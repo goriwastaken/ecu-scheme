@@ -34,6 +34,12 @@ struct ExperimentSolutionWrapper {
   std::vector<Eigen::VectorXd> final_time_solutions;
 };
 
+/**
+ * @brief Least squares fitting to a line
+ * @param x Vector of x-coordinates of points
+ * @param y Vector of y-coordinates of points
+ * @return Coefficients of the linear polynomial, second of which is its slope
+ */
 Eigen::Vector2d linearFit(const Eigen::VectorXd& x, const Eigen::VectorXd& y) {
   assert(x.rows() == y.rows());
   Eigen::Matrix<double, Eigen::Dynamic, 2> X(x.rows(), 2);
@@ -44,6 +50,15 @@ Eigen::Vector2d linearFit(const Eigen::VectorXd& x, const Eigen::VectorXd& y) {
   return X.fullPivHouseholderQr().solve(y);
 }
 
+/**
+ * @brief Compute an estimated rate of convergence given the errors and number
+ * of DOFs
+ * @param N vector containing the number of DOFs for each error
+ * @param err vector containing the error norms
+ * @param from_index indicate the index to truncate the data from to avoid
+ * possible pre-asymptotic behaviour(by default 0)
+ * @return estimated rate of convergence
+ */
 double eoc(Eigen::VectorXd& N, Eigen::VectorXd& err,
            unsigned int from_index = 0) {
   const unsigned dim = N.size();
@@ -80,6 +95,14 @@ static std::string concat(Args&&... args) {
   return oss.str();
 }
 
+/**
+ * @brief Create a VTK file containing the plot of an analytic solution function
+ * @tparam SCALAR scalar type of the underlying FE space
+ * @tparam MF type of the Mesh Function
+ * @param fe_space underlying FE space
+ * @param mf_analytic Mesh Function representing the target to visualise
+ * @param file_name file name of resulting VTK visualization
+ */
 template <typename SCALAR, typename MF>
 void output_meshfunction_paraview(
     std::shared_ptr<const lf::fe::ScalarFESpace<SCALAR>> fe_space,
@@ -94,6 +117,14 @@ void output_meshfunction_paraview(
   vtk_writer.WritePointData(concat(file_name, "_solution"), mf_analytic);
 }
 
+/**
+ * @brief Create a VTK file containing the visualization of an FE solution on an
+ * underlying FE space
+ * @tparam SCALAR type for the FE space
+ * @param fe_space underlying FE space
+ * @param solution_vec vector of solution coefficients
+ * @param experiment_name file name of resulting VTK visualization
+ */
 template <typename SCALAR>
 void output_results(
     const std::shared_ptr<lf::fe::ScalarFESpace<SCALAR>>& fe_space,
@@ -109,6 +140,21 @@ void output_results(
   vtk_writer.WritePointData(concat(experiment_name, "_solution_high"), mf_sol);
 }
 
+/**
+ * @brief Report convergence results for the Advection of 1-forms experiment
+ * from section 5.2 This method creates a CSV file containing number of DOFs,
+ * L2-error norms, and corresponding mesh width for each refinement level
+ * treated in the respective experiment setup
+ * @tparam SCALAR scalar type of the Lagrangian FE space
+ * @tparam MF Mesh Function type
+ * @param solution_collection_wrapper data structure containing relevant
+ * experiment results such as solution vectors, the corresponding mesh
+ * hierarchy, number of refinement levels
+ * @param mf_exact_solution Mesh Function of the exact solution from the
+ * experiment
+ * @param experiment_name file name of the resulting CSV file
+ * @param isLinear flag to indicate the order of elements (p = 1, 2)
+ */
 template <typename SCALAR, typename MF>
 void convergence_report_oneform(
     const ExperimentSolutionWrapper<SCALAR>& solution_collection_wrapper,
@@ -218,10 +264,25 @@ void convergence_report_oneform(
   L2norm_csv_file.close();
 
   // Plot the computed L2error rate
-  double eoc_value = eoc(Ndof_array, errors_array);
-  std::cout << "EOC value: " << eoc_value << "\n";
+  double const eoc_value = eoc(Ndof_array, errors_array);
+  //  std::cout << "EOC value: " << eoc_value << "\n";
 }
 
+/**
+ * @brief Realise a convergence comparison between two different methods (used
+ * to compare a specific upwind scheme against SUPG) Note that the experiment
+ * setup is obviously assumed to be the same for both methods
+ * @tparam SCALAR scalar type of the FE space
+ * @tparam MF Mesh Function type
+ * @param solution_collection_wrapper_one data structure containing experiment
+ * results and mesh hierarchy for first method
+ * @param solution_collection_wrapper_two data structure containing experiment
+ * results and mesh hierarchy for second method
+ * @param mf_exact_solution Mesh Function of the underlying exact solution
+ * @param experiment_name file name of the resulting CSV convergence report
+ * @param isLinear flag for indicating if the underlying Lagrangian FE space is
+ * linear or quadratic (default is quadratic)
+ */
 template <typename SCALAR, typename MF>
 void convergence_comparison_toSUPG(
     const ExperimentSolutionWrapper<SCALAR>& solution_collection_wrapper_one,
@@ -247,8 +308,8 @@ void convergence_comparison_toSUPG(
   // mesh corresponding to a refinement level
   lf::refinement::MeshHierarchy& multi_mesh{
       *solution_collection_wrapper_one.mesh_hierarchy_p};
-  std::cout << "Results processing mesh hierarchy info: \n";
-  multi_mesh.PrintInfo(std::cout);
+  //  std::cout << "Results processing mesh hierarchy info: \n";
+  //  multi_mesh.PrintInfo(std::cout);
   // get number of levels
   auto L = multi_mesh.NumLevels();
 
@@ -295,18 +356,21 @@ void convergence_comparison_toSUPG(
     // Add results to L2norm_csv_file file
     L2norm_csv_file << fe_space->LocGlobMap().NumDofs() << "," << kHMax << ","
                     << L2_error_one << "," << L2_error_two << "\n";
-    std::cout << std::left << std::setw(10) << fe_space->LocGlobMap().NumDofs()
-              << std::left << std::setw(16) << L2_error_one << std::left
-              << std::setw(16) << L2_error_two << std::endl;  // debug purpose
+    //    std::cout << std::left << std::setw(10) <<
+    //    fe_space->LocGlobMap().NumDofs()
+    //              << std::left << std::setw(16) << L2_error_one << std::left
+    //              << std::setw(16) << L2_error_two << std::endl;  // debug
+    //              purpose
   }
 
   // Plot the computed L2error rate
-  double eoc_value = eoc(Ndof_array, errors_array);
-  std::cout << "EOC value: " << eoc_value << "\n";
+  double const eoc_value = eoc(Ndof_array, errors_array);
+  //  std::cout << "EOC value: " << eoc_value << "\n";
 }
 
 /**
- * @brief Compare the convergence of multiple methods
+ * @brief Realise a convergence comparison of multiple methods and bundle them
+ * in a CSV file in order to allow a general comparison of all schemes used
  * @tparam SCALAR type of the solution vector
  * @tparam MF type of exact solution mesh function
  * @param solution_wrappers_with_name vector of pairs containing the
@@ -351,8 +415,8 @@ void convergence_comparison_multiple_methods(
   // Obtain mesh hierarchy used, same for each method so take the first
   lf::refinement::MeshHierarchy& multi_mesh{
       *solution_wrappers_with_name.at(0).first.mesh_hierarchy_p};
-  std::cout << "Results processing mesh hierarchy info: \n";
-  multi_mesh.PrintInfo(std::cout);
+  //  std::cout << "Results processing mesh hierarchy info: \n";
+  //  multi_mesh.PrintInfo(std::cout);
   // get number of levels
   auto L = multi_mesh.NumLevels();
 
@@ -400,8 +464,8 @@ void convergence_comparison_multiple_methods(
     L2norm_csv_file << "\n";
   }
   // Plot the computed L2error rate
-  double eoc_value = eoc(Ndof_array, errors_array);
-  std::cout << "EOC value: " << eoc_value << "\n";
+  double const eoc_value = eoc(Ndof_array, errors_array);
+  //  std::cout << "EOC value: " << eoc_value << "\n";
 }
 
 }  // namespace ecu_scheme::post_processing
